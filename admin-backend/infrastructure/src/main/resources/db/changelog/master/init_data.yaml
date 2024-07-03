@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-06-20-0001
+      author: hb
+      context: prod
+      labels: init-data
+      runOrder: last
+      changes:
+        - sqlFile:
+            path: ../data/init_data.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ";"
+            stripComments: true

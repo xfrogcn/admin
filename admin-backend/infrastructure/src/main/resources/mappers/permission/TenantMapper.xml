@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xfrog.platform.infrastructure.permission.mapper.TenantMapper">
+    <select id="queryAllBy" resultType="com.xfrog.platform.application.permission.api.dto.TenantDTO">
+        SELECT t.*
+        FROM tenants t
+        <where>
+            t.deleted = false
+            <if test="queryDTO.keyword != null and queryDTO.keyword != ''">
+                AND ( t.name LIKE CONCAT('%', #{queryDTO.keyword}, '%') OR t.memo LIKE CONCAT('%', #{queryDTO.keyword}, '%'))
+            </if>
+            <if test="queryDTO.enabled != null">
+                AND t.enabled = #{queryDTO.enabled}
+            </if>
+            <include refid="common.rangeCondition">
+                <property name="range" value="queryDTO.createdTime"/>
+                <property name="fieldName" value= "t.created_time"/>
+            </include>
+        </where>
+
+    </select>
+</mapper>

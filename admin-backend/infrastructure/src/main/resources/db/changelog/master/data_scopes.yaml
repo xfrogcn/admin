@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-06-01-data_scopes-0001
+      author: hb
+      comments: 创建data_scopes表
+      context: prod
+      labels: data_scopes-table
+      changes:
+        - createTable:
+            tableName: data_scopes
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  remarks: ID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: target_id
+                  type: BIGINT
+                  remarks: 目标ID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: target_type
+                  type: VARCHAR(32)
+                  remarks: 目标类型
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scope_type
+                  type: VARCHAR(32)
+                  remarks: 数据范围类型
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scope_id
+                  type: BIGINT
+                  remarks: 数据范围ID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: BIGINT
+                  remarks: 创建人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_time
+                  type: TIMESTAMP
+                  remarks: 创建时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_by
+                  type: BIGINT
+                  remarks: 更新人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_time
+                  type: TIMESTAMP
+                  remarks: 更新时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  remarks: 是否删除标志
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+              - column:
+                  name: deleted_by
+                  type: BIGINT
+                  remarks: 删除人
+              - column:
+                  name: deleted_time
+                  type: TIMESTAMP
+                  remarks: 删除时间
+        - createIndex:
+            indexName: idx_data_scopes_target
+            tableName: data_scopes
+            unique: false
+            columns:
+              - column:
+                  name: target_id
+              - column:
+                  name: target_type

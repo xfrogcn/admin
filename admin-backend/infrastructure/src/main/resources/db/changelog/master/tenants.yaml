@@ -1,0 +1,106 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-06-21-tenants-0001
+      author: hb
+      comments: 创建tenants表
+      context: prod
+      labels: tenants-table
+      changes:
+        - createTable:
+            tableName: tenants
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    comment: 'ID'
+              - column:
+                  name: code
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+                    comment: '租户编码，其他表中存编码'
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    comment: '租户名称'
+              - column:
+                  name: organization_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    comment: '租户对应根组织节点'
+              - column:
+                  name: enabled
+                  type: TINYINT
+                  remarks: 是否启用
+                  constraints:
+                    nullable: true
+                  defaultValue: 0
+              - column:
+                  name: memo
+                  type: VARCHAR(256)
+                  remarks: 租户说明
+                  constraints:
+                    nullable: true
+              - column:
+                  name: admin_user_id
+                  type: BIGINT
+                  remarks: 租户管理员用户ID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: admin_user_name
+                  type: VARCHAR(128)
+                  remarks: 租户管理员用户账号
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_by
+                  type: BIGINT
+                  remarks: 创建人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_time
+                  type: TIMESTAMP
+                  remarks: 创建时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_by
+                  type: BIGINT
+                  remarks: 更新人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_time
+                  type: TIMESTAMP
+                  remarks: 更新时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  remarks: 是否删除标志
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+              - column:
+                  name: deleted_by
+                  type: BIGINT
+                  remarks: 删除人
+                  constraints:
+                    nullable: true
+              - column:
+                  name: deleted_time
+                  type: TIMESTAMP
+                  remarks: 删除时间
+                  constraints:
+                    nullable: true
+        - addUniqueConstraint:
+            constraintName: uidx_tenants_code
+            columnNames: code
+            tableName: tenants

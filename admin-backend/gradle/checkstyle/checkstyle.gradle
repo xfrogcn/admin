@@ -1,0 +1,13 @@
+apply plugin: 'checkstyle'
+
+checkstyle {
+    sourceSets = [sourceSets.main]
+    maxWarnings = 0
+    ignoreFailures = false
+    configFile file("${rootDir}/gradle/checkstyle/checkstyle.xml")
+}
+
+// 忽略的文件列表
+tasks.withType(Checkstyle).configureEach {
+    exclude '**/*Test.java'
+}

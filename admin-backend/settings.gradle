@@ -1,0 +1,22 @@
+pluginManagement {
+    plugins {
+        id 'org.springframework.boot' version "${spring_boot_version}"
+        id 'io.spring.dependency-management' version "${spring_dependency_management_version}"
+        id 'io.freefair.lombok' version "${lombok_version}"
+//        id 'org.flywaydb.flyway' version "${flyway_plugin_version}"
+    }
+
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'admin-app'
+include 'application'
+include 'application-api'
+include 'domain-shared'
+include 'domain'
+include 'infrastructure'
+include 'start'
+include 'common'
+

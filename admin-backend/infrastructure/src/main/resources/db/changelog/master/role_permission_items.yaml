@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-06-01-role_permission_items-0001
+      author: hb
+      comments: 创建role_permission_items表
+      context: prod
+      labels: role_permission_items-table
+      changes:
+        - createTable:
+            tableName: role_permission_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  remarks: ID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  remarks: 角色ID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: permission_item_id
+                  type: BIGINT
+                  remarks: 权限项ID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: BIGINT
+                  remarks: 创建人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_time
+                  type: TIMESTAMP
+                  remarks: 创建时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_by
+                  type: BIGINT
+                  remarks: 更新人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_time
+                  type: TIMESTAMP
+                  remarks: 更新时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  remarks: 是否删除标志
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+              - column:
+                  name: deleted_by
+                  type: BIGINT
+                  remarks: 删除人
+              - column:
+                  name: deleted_time
+                  type: TIMESTAMP
+                  remarks: 删除时间
+        - createIndex:
+            indexName: idx_role_permission_items_role_id
+            tableName: role_permission_items
+            unique: false
+            columns:
+              - column:
+                  name: role_id

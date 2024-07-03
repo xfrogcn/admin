@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="common">
+    <!-- SQL片段定义 -->
+    <sql id="rangeCondition">
+        <if test="${range} != null and ${range}.begin != null">
+            AND ${fieldName} &gt;= #{${range}.begin}
+        </if>
+        <if test="${range} != null and ${range}.end != null">
+            AND ${fieldName} &lt;= #{${range}.end}
+        </if>
+    </sql>
+    <sql id="allSubOrganization">
+        <bind name="parentId" value="''"/>
+        <bind name="orgCode" value="''"/>
+        <if test="${parentId} != null">
+            and EXISTS (
+                SELECT 1 FROM
+                    organizations b
+                WHERE
+                    b.id = #{${parentId}}
+                AND ${orgCode} LIKE CONCAT( b.CODE, '%' )
+            )
+        </if>
+    </sql>
+    <sql id="auditColumns">
+        <bind name="tn" value="''"/>
+        ${tn}created_by,
+        ${tn}created_time,
+        ${tn}updated_by,
+        ${tn}updated_time,
+        ${tn}deleted,
+        ${tn}deleted_by,
+        ${tn}deleted_time
+    </sql>
+</mapper>

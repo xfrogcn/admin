@@ -1,0 +1,13 @@
+task installGitHooks(type: Copy) {
+    from new File(rootDir, 'gradle/git-hooks/pre-push')
+    into new File(rootDir, '.git/hooks')
+    fileMode 0755
+
+    from new File(rootDir, 'gradle/git-hooks/commit-msg')
+    into new File(rootDir, '.git/hooks')
+    fileMode 0755
+}
+
+compileJava {
+    dependsOn installGitHooks
+}

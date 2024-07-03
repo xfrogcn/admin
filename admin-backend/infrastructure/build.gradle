@@ -1,0 +1,35 @@
+//plugins {
+//    id "org.flywaydb.flyway"
+//}
+
+dependencies {
+
+    // JDBC
+    implementation('org.springframework.boot:spring-boot-starter-data-jdbc')
+    // MyBatis
+    implementation('com.baomidou:mybatis-plus-boot-starter')
+    implementation('org.mybatis.spring.boot:mybatis-spring-boot-starter')
+
+    implementation('org.springframework.security:spring-security-core')
+
+    implementation('org.mapstruct:mapstruct')
+    implementation('com.fasterxml.jackson.core:jackson-annotations')
+
+
+    implementation('mysql:mysql-connector-java')
+
+    implementation('org.liquibase:liquibase-core')
+
+    implementation project(':application')
+    implementation project(':common')
+    implementation project(':domain')
+    implementation project(':application-api')
+    implementation project(':domain-shared')
+
+    // JDBC
+    testImplementation('com.baomidou:mybatis-plus-boot-starter-test')
+
+    // mariaDB
+    testImplementation('ch.vorburger.mariaDB4j:mariaDB4j-springboot')
+    testImplementation('org.mariadb.jdbc:mariadb-java-client')
+}

@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-06-01-user_roles-0001
+      author: hb
+      comments: 创建user_roles表
+      context: prod
+      labels: user_roles-table
+      changes:
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  remarks: ID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  remarks: 用户ID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  remarks: 角色ID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: BIGINT
+                  remarks: 创建人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_time
+                  type: TIMESTAMP
+                  remarks: 创建时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_by
+                  type: BIGINT
+                  remarks: 更新人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_time
+                  type: TIMESTAMP
+                  remarks: 更新时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  remarks: 是否删除标志
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+              - column:
+                  name: deleted_by
+                  type: BIGINT
+                  remarks: 删除人
+              - column:
+                  name: deleted_time
+                  type: TIMESTAMP
+                  remarks: 删除时间
+        - addUniqueConstraint:
+            constraintName: uk_user_roles_user_id_role_id
+            tableName: user_roles
+            columnNames: user_id, role_id

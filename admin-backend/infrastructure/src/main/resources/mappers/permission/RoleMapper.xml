@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xfrog.platform.infrastructure.permission.mapper.RoleMapper">
+    <select id="queryRolePermissions" resultType="com.xfrog.platform.application.permission.api.dto.PermissionItemDTO">
+        SELECT
+            pi.id,
+            pi.`code`,
+            pi.`name`,
+            pi.type,
+            pi.parent_id
+        FROM
+            role_permission_items rpi
+            LEFT JOIN permission_items pi ON rpi.permission_item_id = pi.id
+        WHERE
+            rpi.deleted = FALSE
+            AND pi.deleted = FALSE
+            AND rpi.role_id = #{roleId}
+    </select>
+</mapper>

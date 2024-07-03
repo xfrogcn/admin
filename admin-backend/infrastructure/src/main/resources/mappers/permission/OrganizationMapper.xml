@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xfrog.platform.infrastructure.permission.mapper.OrganizationMapper">
+    <select id="queryAll" resultType="com.xfrog.platform.application.permission.api.dto.OrganizationDTO">
+        SELECT
+            org.id,
+            org.NAME,
+            org.parent_id,
+            org.LEVEL,
+            org.STATUS,
+            org.display_order,
+            org.telephone,
+            org.principal,
+            <include refid="common.auditColumns">
+                <property name="tn" value="org."/>
+            </include>
+        FROM
+            organizations org
+        <where>
+            org.deleted = false
+            <if test="queryDTO.keyword != null and queryDTO.keyword != ''">
+                and org.name LIKE CONCAT('%', #{queryDTO.keyword}, '%')
+            </if>
+            <if test="queryDTO.status != null">
+                and org.status=#{queryDTO.status}
+            </if>
+            <include refid="common.allSubOrganization">
+                <property name="parentId" value="queryDTO.parentId"/>
+                <property name="orgCode" value="org.`code`"/>
+            </include>
+        </where>
+
+    </select>
+</mapper>

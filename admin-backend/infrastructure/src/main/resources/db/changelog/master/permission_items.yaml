@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-06-01-permission_items-0001
+      author: hb
+      comments: 创建permission_items表
+      context: prod
+      labels: permission_items-table
+      changes:
+        - createTable:
+            tableName: permission_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  remarks: 权限项ID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(128)
+                  remarks: 权限项编码
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(128)
+                  remarks: 权限项名称
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(32)
+                  remarks: 权限项类型
+                  constraints:
+                    nullable: false
+              - column:
+                  name: platform
+                  type: TINYINT
+                  remarks: 是否为平台权限项
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+              - column:
+                  name: parent_id
+                  type: BIGINT
+                  remarks: 父权限项ID
+              - column:
+                  name: created_by
+                  type: BIGINT
+                  remarks: 创建人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_time
+                  type: TIMESTAMP
+                  remarks: 创建时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_by
+                  type: BIGINT
+                  remarks: 更新人
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_time
+                  type: TIMESTAMP
+                  remarks: 更新时间
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  remarks: 是否删除标志
+                  constraints:
+                    nullable: false
+                  defaultValue: 0
+              - column:
+                  name: deleted_by
+                  type: BIGINT
+                  remarks: 删除人
+              - column:
+                  name: deleted_time
+                  type: TIMESTAMP
+                  remarks: 删除时间

@@ -1,0 +1,6 @@
+dependencies {
+    implementation('org.mapstruct:mapstruct')
+
+    implementation project(':common')
+    implementation project(':domain-shared')
+}

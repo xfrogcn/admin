@@ -1,0 +1,123 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-06-27-0001
+      author: hb
+      context: prod
+      labels: oauth2_request_sessions_table
+      changes:
+        - createTable:
+            tableName: oauth2_request_sessions
+            columns:
+              - column:
+                  name: PRIMARY_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SESSION_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATION_TIME
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: LAST_ACCESS_TIME
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MAX_INACTIVE_INTERVAL
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: EXPIRY_TIME
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PRINCIPAL_NAME
+                  type: VARCHAR(100)
+            constraints:
+              - primaryKey:
+                  name: pk_oauth2_request_sessions
+                  columns:
+                    - PRIMARY_ID
+  - changeSet:
+      id: 2024-06-27-0002
+      author: hb
+      context: prod
+      labels: oauth2_request_sessions_table
+      changes:
+        - createIndex:
+            indexName: idx_oauth2_request_sessions_session_id
+            tableName: oauth2_request_sessions
+            columns:
+              - column:
+                  name: SESSION_ID
+
+  - changeSet:
+      id: 2024-06-27-0003
+      author: hb
+      context: prod
+      labels: oauth2_request_sessions_table
+      changes:
+        - createIndex:
+            indexName: idx_oauth2_request_sessions_expiry_time
+            tableName: oauth2_request_sessions
+            columns:
+              - column:
+                  name: EXPIRY_TIME
+
+  - changeSet:
+      id: 2024-06-27-0004
+      author: hb
+      context: prod
+      labels: oauth2_request_sessions_table
+      changes:
+        - createIndex:
+            indexName: idx_oauth2_request_sessions_principal_name
+            tableName: oauth2_request_sessions
+            columns:
+              - column:
+                  name: PRINCIPAL_NAME
+  - changeSet:
+      id: 2024-06-27-0005
+      author: hb
+      context: prod
+      labels: oauth2_request_sessions_table
+      changes:
+        - createTable:
+            tableName: oauth2_request_sessions_attributes
+            columns:
+              - column:
+                  name: SESSION_PRIMARY_ID
+                  type: CHAR(36)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ATTRIBUTE_NAME
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ATTRIBUTE_BYTES
+                  type: BLOB
+                  constraints:
+                    nullable: false
+            constraints:
+              - primaryKey:
+                  name: pk_oauth2_request_sessions_attributes
+                  columns:
+                    - SESSION_PRIMARY_ID
+                    - ATTRIBUTE_NAME
+              - foreignKey:
+                  name: fk_oauth2_request_sessions_attributes
+                  baseColumnNames: SESSION_PRIMARY_ID
+                  baseTableName: oauth2_request_sessions_attributes
+                  referencedColumnNames: PRIMARY_ID
+                  referencedTableName: oauth2_request_sessions
+                  onDelete: CASCADE

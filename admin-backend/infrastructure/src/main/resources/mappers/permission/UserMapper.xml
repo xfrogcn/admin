@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xfrog.platform.infrastructure.permission.mapper.UserMapper">
+    <select id="queryAllBy" resultType="com.xfrog.platform.application.permission.api.dto.UserDTO">
+        SELECT
+            u.id,
+            u.user_name,
+            u.organization_id,
+            org.`name` as organization_name,
+            u.account_non_expired,
+            u.account_non_locked,
+            u.credentials_non_expired,
+            u.enabled,
+            u.`name`,
+            u.sex,
+            u.mobile_phone,
+            u.email,
+            u.last_login_time,
+            <include refid="common.auditColumns">
+                <property name="tn" value="u."/>
+            </include>
+        FROM admin2.users u
+        LEFT JOIN organizations org ON u.organization_id = org.id
+        <where>
+            u.deleted = false
+            <if test="queryDTO.keyword != null and queryDTO.keyword != ''">
+                AND ( u.name LIKE CONCAT('%', #{queryDTO.keyword}, '%') OR u.user_name LIKE CONCAT('%', #{queryDTO.keyword}, '%'))
+            </if>
+            <include refid="common.allSubOrganization">
+                <property name="parentId" value="queryDTO.organizationId"/>
+                <property name="orgCode" value="org.`code`"/>
+            </include>
+            <if test="queryDTO.enabled != null">
+                AND u.enabled = #{queryDTO.enabled}
+            </if>
+            <include refid="common.rangeCondition">
+                <property name="range" value="queryDTO.lastLoginTime"/>
+                <property name="fieldName" value="u.last_login_time"/>
+            </include>
+            <include refid="common.rangeCondition">
+                <property name="range" value="queryDTO.createdTime"/>
+                <property name="fieldName" value="u.created_time"/>
+            </include>
+        </where>
+
+    </select>
+
+    <update id="updateLastLoginTime">
+        UPDATE users SET last_login_time = #{lastLoginTime} WHERE id = #{userId}
+    </update>
+
+    <select id="queryUserPermissionCodes" resultType="string">
+        SELECT DISTINCT
+            pi.`code`
+        FROM
+            user_roles ur
+            JOIN roles r ON ur.role_id = r.id
+            JOIN role_permission_items rpi ON r.id = rpi.role_id
+            JOIN permission_items pi on rpi.permission_item_id = pi.id
+        WHERE
+            ur.deleted = FALSE
+            AND r.deleted = FALSE
+            AND r.enabled = TRUE
+            AND rpi.deleted = FALSE
+            and pi.deleted = FALSE
+            and ur.user_id = #{userId};
+    </select>
+</mapper>

@@ -1,0 +1,9 @@
+dependencies {
+
+    implementation "jakarta.validation:jakarta.validation-api"
+
+    implementation "org.springframework:spring-web"
+    implementation "io.swagger.core.v3:swagger-annotations"
+    implementation project(':common')
+    implementation project(':domain-shared')
+}

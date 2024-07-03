@@ -1,0 +1,47 @@
+package com.xfrog.platform.application.authserver.event;
+
+import com.xfrog.framework.common.EventPublisher;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
+import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcLogoutAuthenticationToken;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+@Component
+@RequiredArgsConstructor
+public class AuthenticationEventListener implements ApplicationListener<AbstractAuthenticationEvent> {
+
+    private final SessionRegistry sessionRegistry;
+
+    private final OAuth2AuthorizationService authorizationService;
+
+    @Override
+    public void onApplicationEvent(AbstractAuthenticationEvent event) {
+        if (event instanceof AuthenticationSuccessEvent authenticationSuccessEvent) {
+            if (authenticationSuccessEvent.getAuthentication() instanceof OidcLogoutAuthenticationToken authenticationToken) {
+                String sessionId = authenticationToken.getSessionId();
+                if (StringUtils.hasText(sessionId)) {
+                    SessionInformation sessionInformation = sessionRegistry.getSessionInformation(sessionId);
+                    if (sessionInformation != null) {
+                        sessionInformation.expireNow();
+                    }
+                }
+            } else if (authenticationSuccessEvent.getAuthentication() instanceof OAuth2AccessTokenAuthenticationToken accessTokenAuthenticationToken) {
+                // 关联Session与Authorization
+                OAuth2Authorization authorization = authorizationService.findByToken(accessTokenAuthenticationToken.getAccessToken().getTokenValue(), OAuth2TokenType.ACCESS_TOKEN);
+                if (authorization == null) {
+                    return;
+                }
+                EventPublisher.publishEvent(new SessionAuthorizationEvent(authorization));
+            }
+        }
+    }
+}

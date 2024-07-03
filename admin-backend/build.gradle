@@ -1,0 +1,190 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'org.springframework.boot' apply false
+    id 'application'
+}
+
+
+allprojects {
+    apply plugin: 'jacoco'
+
+    group = 'com.skeleton'
+    version = '1.0.0-SNAPSHOT'
+
+
+
+    repositories {
+        // 私有maven仓库
+//        maven {
+//            allowInsecureProtocol = true
+//            url "http://xxx"
+//        }
+        maven {url 'https://maven.aliyun.com/repository/gradle-plugin'}
+        maven {url 'https://maven.aliyun.com/repository/google'}
+        maven {url 'https://maven.aliyun.com/repository/public'}
+        maven {url 'https://maven.aliyun.com/repository/jcenter'}
+        mavenLocal()
+        mavenCentral()
+    }
+
+    configurations.all {
+        // exclude moudle
+//        exclude moudle: 'spring-boot-starter-logging'
+//        exclude group: "io.springfox"
+    }
+
+    sourceCompatibility = "17"
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = "UTF-8"
+    tasks.withType(JavaCompile) {
+        options.encoding="UTF-8"
+    }
+
+}
+
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'java-library'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'maven-publish'
+
+    apply from: "${rootDir}/gradle/checkstyle/checkstyle.gradle"
+
+    dependencyManagement {
+        imports {
+            mavenBom SpringBootPlugin.BOM_COORDINATES
+        }
+        dependencies {
+            dependency "com.baomidou:mybatis-plus-boot-starter:${mybatis_plus_version}"
+            dependency "com.baomidou:mybatis-plus-annotation:${mybatis_plus_version}"
+            dependency "com.baomidou:mybatis-plus-boot-starter-test:${mybatis_plus_version}"
+            dependency "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatis_version}"
+            dependency "com.github.pagehelper:pagehelper-spring-boot-starter:${pagehelper_version}"
+
+            dependency "org.springframework.boot:spring-boot-starter-oauth2-authorization-server:${authorization_server_version}"
+
+            dependency "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+            dependency "org.mapstruct:mapstruct:${mapstruct_version}"
+
+            dependency "com.alibaba:transmittable-thread-local:${transmittable_thread_local_version}"
+
+            dependency "jakarta.validation:jakarta.validation-api:${jakarta_validation_version}"
+
+            dependency "org.liquibase:liquibase-core:${liquibase_version}"
+            dependency "cn.hutool:hutool-core:${hutool_version}"
+
+            dependency "ch.vorburger.mariaDB4j:mariaDB4j-springboot:${test_mariadb_version}"
+            dependency "org.mariadb.jdbc:mariadb-java-client:${test_mariadb_client_version}"
+
+            dependency "io.swagger.core.v3:swagger-annotations:${swagger_annotation_version}"
+            dependency "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapi_version}"
+
+            dependency "com.alibaba:transmittable-thread-local:${ttl_version}"
+
+            dependency "mysql:mysql-connector-java:${mysql_connector_version}"
+        }
+    }
+
+    dependencies {
+        annotationProcessor 'org.projectlombok:lombok'
+        annotationProcessor 'org.mapstruct:mapstruct-processor'
+
+        compileOnly "org.projectlombok:lombok:${lombok_version}"
+
+
+        testAnnotationProcessor 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.mapstruct:mapstruct-processor'
+        testCompileOnly "org.projectlombok:lombok:${lombok_version}"
+        testImplementation platform('org.junit:junit-bom:5.9.1')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testImplementation 'org.assertj:assertj-core'
+    }
+
+    test {
+        useJUnitPlatform()
+        dependsOn 'cleanTest'
+        testLogging {
+            events "skipped", "failed", "passed"
+        }
+    }
+
+    tasks.register('sourcesJar', Jar) {
+        dependsOn classes
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    tasks.register('javadocJar', Jar) {
+        dependsOn javadoc
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    javadoc {
+        options {
+            encoding 'UTF-8'
+            charSet 'UTF-8'
+            author true
+            version true
+            title "基础库"
+        }
+
+        if (JavaVersion.current().isJava9Compatible()) {
+            options.addBooleanOption("html5", true)
+        }
+
+        if (JavaVersion.current().isJava8Compatible()) {
+            options.addStringOption("Xdoclint:none", "-quiet")
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                groupId project.group
+                artifactId project.name
+                version project.version
+
+                from components.java
+
+                artifact javadocJar
+                artifact sourcesJar
+            }
+        }
+
+        repositories {
+            mavenLocal()
+            maven {
+                def releaseRepoUrl = ""
+                def snapshotRepoUrl = ""
+
+                url = version.endsWith("SNAPSHOT") ? snapshotRepoUrl : releaseRepoUrl
+
+                credentials {
+                    username = getRepositoryUsername()
+                    password = getRepositoryPassword()
+                }
+            }
+        }
+    }
+
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+apply from: "${rootDir}/gradle/checkstyle/checkstyle.gradle"
+apply from: "${rootDir}/gradle/jacoco/jacoco.gradle"
+apply from: "${rootDir}/gradle/git-hooks/git-hooks.gradle"
+
+def getRepositoryUsername() {
+    return hasProperty("NEXUS_USERNAME") ? NEXUS_USERNAME : ''
+}
+
+def getRepositoryPassword() {
+    return hasProperty("NEXUS_PASSWORD") ? NEXUS_PASSWORD : ''
+}

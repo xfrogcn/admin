@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+const COMMIT_MSG_MAX_LENGTH = 140
+const COMMIT_FORMAT_REGEX = /\[[A-z0-9_\-&@]+\](?: #((d+)|(N\/A)))? (chore|docs|feat|fix|refactor|style|test): .*$/
+
+const ERROR_BANNER = "==============================================================================================="
+
+const fs = require('fs');
+
+const message_file=process.argv.slice(2)
+const message = fs.readFileSync(message_file[0], 'utf8').trimEnd('\n');
+
+if (message.includes('reverts commit')) {
+    process.exit(0)
+}
+
+if (message.includes('committing a cherry-pick')) {
+    process.exit(0)
+}
+
+if (message.startsWith("Merge branch")) {
+    process.exit(0)
+}
+
+if (message.length > COMMIT_MSG_MAX_LENGTH) {
+    console.error(ERROR_BANNER)
+    console.warn(`Commit message length ${message.length} exceeds the maximum allowed length ${COMMIT_MSG_MAX_LENGTH}`)
+    console.error(ERROR_BANNER)
+    process.exit(1)
+}
+
+if (!message.match(COMMIT_FORMAT_REGEX)) {
+    console.error(ERROR_BANNER)
+    console.warn(`Commit message format invalid. Please follow the format as follows:`)
+    console.info(`[Contributor name] #issue_code chore|docs|feat|fix|refactor|style|test: your_commit_message.`)
+    console.error(ERROR_BANNER)
+    process.exit(1)
+}
