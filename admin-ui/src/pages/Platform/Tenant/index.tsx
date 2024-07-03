@@ -194,7 +194,7 @@ const TenantList: React.FC = () => {
   }
 
   return (
-    <PageContainer>
+    <PageContainer pageHeaderRender={false}>
       <ProTablePage<API.TenantDTO, API.QueryTenantRequestDTO>
         headerTitle={intl.formatMessage({
           id: 'admin.ui.pages.tenant.table-title',

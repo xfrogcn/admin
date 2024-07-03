@@ -188,7 +188,7 @@ const OrganizationList: React.FC = () => {
   }
 
   return (
-    <PageContainer>
+    <PageContainer pageHeaderRender={false}>
       <ProTablePage<withChildrenType<API.OrganizationDTO>, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'admin.ui.pages.organization.table-title',

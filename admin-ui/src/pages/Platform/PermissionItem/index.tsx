@@ -184,7 +184,7 @@ const PermissionItemList: React.FC = () => {
   };
 
   return (
-    <PageContainer>
+    <PageContainer pageHeaderRender={false}>
       <ProTablePage<API.PermissionItemDTO, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'admin.ui.pages.permissionitem.table-title',

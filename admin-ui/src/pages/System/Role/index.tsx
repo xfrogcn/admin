@@ -224,7 +224,7 @@ const RoleList: React.FC = () => {
   };
 
   return (
-    <PageContainer>
+    <PageContainer pageHeaderRender={false}>
       <Row gutter={16} style={{ flex: 1 }}>
         <Col span={10}>
           <Flex style={{ height: '100%' }} vertical>

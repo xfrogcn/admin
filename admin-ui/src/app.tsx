@@ -3,7 +3,7 @@ import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { ProConfigProvider, SettingDrawer } from '@ant-design/pro-components';
 import type { RequestOptions, RunTimeLayoutConfig } from '@umijs/max';
-import { Link, history, useIntl } from '@umijs/max';
+import { Link, history, useAppData, useIntl, useOutlet } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { urls } from './config';
 import { signinRedirectCallbackPath, signoutRedirectCallbackPath, userManager } from './oauth2';
@@ -12,6 +12,9 @@ import services from './services/swagger';
 import { setIntl } from './utils/messageUtils';
 import { valueTypeMap } from './components/ValueTypes';
 import { getCurrentUserPermissionCodes } from './services/swagger/userApi';
+import React from 'react';
+import { UNSAFE_RouteContext, useRoutes } from 'react-router';
+import { PageTabs } from './components/PageTabs';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -122,6 +125,8 @@ export async function getInitialState(): Promise<{
   };
 }
 
+const contents = []
+
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
@@ -144,26 +149,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         //  history.push(loginPath);
       }
     },
-    bgLayoutImgList: [
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
-        left: 85,
-        bottom: 100,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
-        bottom: -68,
-        right: -45,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
-        bottom: 0,
-        left: 0,
-        width: '331px',
-      },
-    ],
+    bgLayoutImgList: [],
     links: isDev
       ? [
           <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
@@ -174,16 +160,17 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       : [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
+    unAccessible: <div>unAccessible</div>,
+    layout: 'top',
     // 增加一个 loading 的状态
     childrenRender: (children) => {
       const intl = useIntl();
       setIntl(intl);
-      // if (initialState?.loading) return <PageLoading />;
+
       return (
         <>
         <ProConfigProvider valueTypeMap={valueTypeMap}>
-          {children}
+          <PageTabs />
           </ProConfigProvider>
           {isDev && (
             <SettingDrawer

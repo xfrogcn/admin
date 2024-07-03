@@ -357,7 +357,7 @@ const UserList: React.FC = () => {
   }
 
   return (
-    <PageContainer>
+    <PageContainer pageHeaderRender={false}>
       <Row gutter={16} style={{ flex: 1 }}>
         <Col xs={0} sm={6} md={6} lg={6} xl={6}>
           <Flex style={{ height: '100%' }} vertical>
