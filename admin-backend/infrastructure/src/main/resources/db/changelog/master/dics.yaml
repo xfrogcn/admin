@@ -1,0 +1,203 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-07-04-0001
+      author: hb
+      context: prod
+      labels: dics-table
+      changes:
+        - createTable:
+            tableName: dics
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    comment: '字典ID'
+              - column:
+                  name: type
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+                    comment: '字典类型'
+              - column:
+                  name: name
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+                    comment: '字典名称'
+              - column:
+                  name: memo
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+                    comment: '说明'
+              - column:
+                  name: created_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    comment: '创建人'
+              - column:
+                  name: created_time
+                  type: timestamp(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '创建时间'
+              - column:
+                  name: updated_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    comment: '更新人'
+              - column:
+                  name: updated_time
+                  type: timestamp(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '更新时间'
+              - column:
+                  name: deleted
+                  type: tinyint
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+                    comment: '是否删除'
+              - column:
+                  name: deleted_by
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    comment: '删除人'
+              - column:
+                  name: deleted_time
+                  type: timestamp(0)
+                  constraints:
+                    nullable: true
+                    comment: '删除时间'
+  - changeSet:
+      id: 2024-07-04-0002
+      author: hb
+      context: prod
+      labels: dic_items-table
+      changes:
+        - createTable:
+            tableName: dic_items
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    comment: '字典项ID'
+              - column:
+                  name: dic_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    comment: '关联的字典ID'
+              - column:
+                  name: enabled
+                  type: tinyint
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+                    comment: '是否启用'
+              - column:
+                  name: display_text
+                  type: varchar(128)
+                  constraints:
+                    nullable: true
+                    comment: '显示名称'
+              - column:
+                  name: lang_code
+                  type: varchar(128)
+                  constraints:
+                    nullable: true
+                    comment: '多语言语料编码'
+              - column:
+                  name: display_order
+                  type: int
+                  constraints:
+                    nullable: false
+                    defaultValue: 100
+                    comment: '显示顺序'
+              - column:
+                  name: value
+                  type: varchar(64)
+                  constraints:
+                    nullable: true
+                    comment: '对应值'
+              - column:
+                  name: ext_value1
+                  type: varchar(256)
+                  constraints:
+                    nullable: true
+                    comment: '扩展值1'
+              - column:
+                  name: ext_value2
+                  type: varchar(256)
+                  constraints:
+                    nullable: true
+                    comment: '扩展值2'
+              - column:
+                  name: memo
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+                    comment: '说明'
+              - column:
+                  name: created_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    comment: '创建人'
+              - column:
+                  name: created_time
+                  type: timestamp(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '创建时间'
+              - column:
+                  name: updated_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    comment: '更新人'
+              - column:
+                  name: updated_time
+                  type: timestamp(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '更新时间'
+              - column:
+                  name: deleted
+                  type: tinyint
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+                    comment: '是否删除'
+              - column:
+                  name: deleted_by
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    comment: '删除人'
+              - column:
+                  name: deleted_time
+                  type: timestamp(0)
+                  constraints:
+                    nullable: true
+                    comment: '删除时间'
+        - createIndex:
+            tableName: dic_items
+            indexName: idx_dic_items_dic_id
+            columns:
+              - column:
+                  name: dic_id

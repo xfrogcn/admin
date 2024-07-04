@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xfrog.platform.infrastructure.base.mapper.DicMapper">
+    <select id="queryAll" resultType="com.xfrog.platform.application.base.dto.DicDTO">
+        SELECT
+        *
+        FROM
+        dics dic
+        <where>
+            dic.deleted = false
+            <if test="queryDTO.keyword != null and queryDTO.keyword != ''">
+                AND dic.name LIKE CONCAT('%', #{queryDTO.keyword}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>
