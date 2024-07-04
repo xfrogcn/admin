@@ -22,8 +22,8 @@ public class DicRepositoryImpl implements DicRepository {
     private static final CaseInsensitiveMap<String, String> ORDER_FIELD_MAP =
             new CaseInsensitiveMap<>(Map.of(
                     "createdTime", "dic.created_time",
-                    "type", "dic.name",
-                    "name", "dic.user_name"));
+                    "type", "dic.type",
+                    "name", "dic.name"));
 
     @Override
     public PageDTO<DicDTO> queryAll(QueryDicRequestDTO queryDTO) {
