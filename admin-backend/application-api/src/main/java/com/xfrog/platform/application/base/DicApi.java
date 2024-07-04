@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Tag(name = "DicApi", description = "字典管理接口")
 @RequestMapping("/api/dics")
 public interface DicApi {
@@ -32,6 +34,10 @@ public interface DicApi {
     @GetMapping("/{dicId}")
     @Operation(summary = "查询字典")
     DicDTO getDic(@PathVariable("dicId") Long dicId);
+
+    @PostMapping("/list/by-types")
+    @Operation(summary = "根据类型查询字典")
+    List<DicDTO> getDicByTypes(@RequestBody List<String> dicTypes);
 
     @PostMapping("/{dicId}")
     @Operation(summary = "更新字典")

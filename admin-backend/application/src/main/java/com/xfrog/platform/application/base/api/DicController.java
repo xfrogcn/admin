@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/dics")
@@ -40,6 +42,11 @@ public class DicController implements DicApi {
     }
 
     @Override
+    public List<DicDTO> getDicByTypes(List<String> dicTypes) {
+        return dicService.getDicByTypes(dicTypes);
+    }
+
+    @Override
     @Authorization("admin:platform:dic:edit")
     public void updateDic(Long dicId, UpdateDicRequestDTO dic) {
         dicService.updateDic(dicId, dic);
@@ -54,12 +61,12 @@ public class DicController implements DicApi {
     @Override
     @Authorization("admin:platform:dic:createitem")
     public Long createDicItem(Long dicId, CreateDicItemRequestDTO requestDTO) {
-        return null;
+        return dicService.createDicItem(dicId, requestDTO);
     }
 
     @Override
     @Authorization("admin:platform:dic:edititem")
     public void updateDicItem(Long dicId, Long itemId, UpdateDicItemRequestDTO requestDTO) {
-
+        dicService.updateDicItem(dicId, itemId, requestDTO);
     }
 }

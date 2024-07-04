@@ -8,6 +8,8 @@ import com.xfrog.platform.application.base.dto.QueryDicRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateDicRequestDTO;
 
+import java.util.List;
+
 public interface DicService {
     Long createDic(CreateDicRequestDTO dic);
 
@@ -18,6 +20,8 @@ public interface DicService {
     PageDTO<DicDTO> listDics(QueryDicRequestDTO queryDTO);
 
     DicDTO getDic(Long dicId);
+
+    List<DicDTO> getDicByTypes(List<String> dicTypes);
 
     Long createDicItem(Long dicId, CreateDicItemRequestDTO requestDTO);
 

@@ -7,6 +7,7 @@ import com.xfrog.platform.application.base.converter.DicDTOToCommandConverter;
 import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.CreateDicRequestDTO;
 import com.xfrog.platform.application.base.dto.DicDTO;
+import com.xfrog.platform.application.base.dto.DicItemDTO;
 import com.xfrog.platform.application.base.dto.QueryDicRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateDicRequestDTO;
@@ -19,6 +20,7 @@ import com.xfrog.platform.domain.base.repository.DicDomainRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -73,7 +75,35 @@ public class DicServiceImpl implements DicService {
 
     @Override
     public DicDTO getDic(Long dicId) {
-        return null;
+        DicDTO dicDTO = dicRepository.findById(dicId);
+        if (dicDTO != null) {
+            fillDicItems(List.of(dicDTO));
+        }
+        return dicDTO;
+    }
+
+    @Override
+    public List<DicDTO> getDicByTypes(List<String> dicTypes) {
+        List<DicDTO> dics = dicRepository.findByTypes(dicTypes);
+        fillDicItems(dics);
+        return dics;
+    }
+
+    private void fillDicItems(List<DicDTO> dics) {
+        if (CollectionUtils.isEmpty(dics)) {
+            return;
+        }
+
+        List<DicItemDTO> dicItems = dicRepository.findItemsByDicId(dics.stream()
+                .map(DicDTO::getId)
+                .toList());
+
+        dics.forEach(dic -> {
+            dic.setDicItems(dicItems.stream()
+                .filter(dicItem -> dicItem.getDicId().equals(dic.getId()))
+                .sorted((a, b) -> a.getDisplayOrder() - b.getDisplayOrder())
+                .toList());
+        });
     }
 
     @Override

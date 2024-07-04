@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -39,6 +38,4 @@ public class DicItemDTO {
     private String memo;
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
-    @Schema(description = "字典项列表")
-    public List<DicItemDTO> dicItems;
 }
