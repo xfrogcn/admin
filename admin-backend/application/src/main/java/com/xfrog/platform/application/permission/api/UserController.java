@@ -8,6 +8,7 @@ import com.xfrog.platform.application.permission.api.dto.UpdateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UserDTO;
 import com.xfrog.platform.application.permission.service.UserService;
 import com.xfrog.platform.application.resourceserver.Authorization;
+import com.xfrog.platform.application.resourceserver.IgnoreDataPermission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -73,11 +74,13 @@ public class UserController implements UserApi {
     }
 
     @Override
+    @IgnoreDataPermission
     public CurrentUserInfoDTO getCurrentUserDetail() {
         return userService.getCurrentUserDetail();
     }
 
     @Override
+    @IgnoreDataPermission
     public List<String> getCurrentUserPermissionCodes() {
         return userService.getCurrentUserPermissionCodes();
     }

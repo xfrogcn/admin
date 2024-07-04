@@ -9,12 +9,14 @@ import com.xfrog.platform.application.permission.api.dto.CreateOrganizationReque
 import com.xfrog.platform.application.permission.api.dto.CreateRoleRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreateTenantRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreateUserRequestDTO;
+import com.xfrog.platform.application.permission.api.dto.GrantDataScopeRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
 import com.xfrog.platform.application.permission.api.dto.QueryTenantRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.TenantDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateTenantRequestDTO;
 import com.xfrog.platform.application.permission.converter.TenantDTOConverter;
 import com.xfrog.platform.application.permission.repository.TenantRepository;
+import com.xfrog.platform.application.permission.service.DataScopeService;
 import com.xfrog.platform.application.permission.service.OrganizationService;
 import com.xfrog.platform.application.permission.service.PermissionItemService;
 import com.xfrog.platform.application.permission.service.RoleService;
@@ -25,6 +27,8 @@ import com.xfrog.platform.domain.permission.aggregate.User;
 import com.xfrog.platform.domain.permission.command.CreateTenantCommand;
 import com.xfrog.platform.domain.permission.repository.TenantDomainRepository;
 import com.xfrog.platform.domain.permission.repository.UserDomainRepository;
+import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
+import com.xfrog.platform.domain.share.permission.DataScopeType;
 import com.xfrog.platform.domain.share.permission.OrganizationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,6 +49,7 @@ public class TenantServiceImpl implements TenantService {
     private final UserService userService;
     private final PermissionItemService permissionItemService;
     private final RoleService roleService;
+    private final DataScopeService dataScopeService;
 
     @Override
     @Transactional
@@ -90,7 +95,18 @@ public class TenantServiceImpl implements TenantService {
 
         // 角色赋权
         List<PermissionItemDTO> permissionItems = permissionItemService.listPermissionItems(false);
-        roleService.grantPermissionItems(roleId, permissionItems.stream().map(pi->pi.getId()).toList());
+        roleService.grantPermissionItems(roleId, permissionItems.stream().map(PermissionItemDTO::getId).toList());
+
+        // 角色数据权限
+        GrantDataScopeRequestDTO grantDataScopeRequestDTO = GrantDataScopeRequestDTO.builder()
+                .targetId(roleId)
+                .targetType(DataScopeTargetType.ROLE)
+                .scopeItems(List.of(GrantDataScopeRequestDTO.DataScopeItem.builder()
+                                .scopeId(0L)
+                                .scopeType(DataScopeType.USER_ORGANIZATION)
+                        .build()))
+                .build();
+        dataScopeService.grantDataScope(grantDataScopeRequestDTO);
 
         // 用户赋权
         userService.grantRoles(createTenantCommand.getAdminUserId(), List.of(roleId));

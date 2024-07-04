@@ -3,10 +3,12 @@ package com.xfrog.platform.application.resourceserver;
 
 import com.xfrog.framework.exception.business.PermissionDeniedException;
 import com.xfrog.framework.exception.business.UnauthenticatedException;
+import com.xfrog.platform.application.common.RequestThreadMarkContext;
 import com.xfrog.platform.application.permission.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -27,8 +29,10 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
     private final ConcurrentHashMap<Method, HashSet<OrStringList>> methodAuthorizationMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Method, Boolean> ignoreDataPermissionMap = new ConcurrentHashMap<>();
     private final UserService userService;
 
      static final class OrStringList {
@@ -67,6 +71,19 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
+        // 数据权限处理 -- 检查是否忽略数据权限
+        Boolean isIgnoreDataPermission = ignoreDataPermissionMap.computeIfAbsent(handlerMethod.getMethod(), (key) -> {
+            if (handlerMethod.getMethod().getAnnotation(IgnoreDataPermission.class) != null) {
+                return true;
+            }
+            return false;
+        });
+        if (isIgnoreDataPermission) {
+            // 设置线程的忽略数据权限标记
+            RequestThreadMarkContext.threadMark().setIgnoreDataScope(true);
+        }
+
+        // 操作权限处理
         Set<OrStringList> permissionCodes = methodAuthorizationMap.computeIfAbsent(handlerMethod.getMethod(), (key) -> {
             Authorization authorization = handlerMethod.getMethod().getAnnotation(Authorization.class);
             if (authorization == null) {

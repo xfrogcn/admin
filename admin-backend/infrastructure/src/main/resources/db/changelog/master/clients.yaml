@@ -159,7 +159,7 @@ databaseChangeLog:
                   value: 'http://localhost:8000/signin-redirect-callback'
               - column:
                   name: post_logout_redirect_uris
-                  value: 'http://localhost:8080/signout-redirect-callback'
+                  value: 'http://localhost:8000/signout-redirect-callback'
               - column:
                   name: scopes
                   value: 'phone,openid,email'
