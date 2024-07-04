@@ -25,9 +25,9 @@ public interface DicApi {
     @Operation(summary = "创建字典")
     Long createDic(@Valid @RequestBody CreateDicRequestDTO dic);
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @Operation(summary = "查询字典列表")
-    PageDTO<DicDTO> listDics(QueryDicRequestDTO queryDTO);
+    PageDTO<DicDTO> listDics(@Valid @RequestBody QueryDicRequestDTO queryDTO);
 
     @GetMapping("/{dicId}")
     @Operation(summary = "查询字典")
@@ -41,11 +41,11 @@ public interface DicApi {
     @Operation(summary = "删除字典")
     void deleteDic(@PathVariable("dicId") Long dicId);
 
-    @PostMapping("/{dicId}")
+    @PostMapping("/{dicId}/items")
     @Operation(summary = "创建字典项")
     Long createDicItem(@PathVariable("dicId") Long dicId, @Valid @RequestBody CreateDicItemRequestDTO requestDTO);
 
-    @PutMapping("/{dicId}/{itemId}")
+    @PutMapping("/{dicId}/items/{itemId}")
     @Operation(summary = "更新字典项")
     void updateDicItem(@PathVariable("dicId") Long dicId, @PathVariable("itemId") Long itemId, @Valid @RequestBody UpdateDicItemRequestDTO requestDTO);
 

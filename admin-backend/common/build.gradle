@@ -8,4 +8,6 @@ dependencies {
     implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
     implementation("com.alibaba:transmittable-thread-local")
     implementation("org.springframework:spring-context")
+    implementation "jakarta.validation:jakarta.validation-api"
+    implementation 'org.mybatis:mybatis'
 }

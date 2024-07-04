@@ -1,5 +1,9 @@
 package com.xfrog.framework.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +18,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PageQueryDTO {
+    @NotNull
+    @Min(1)
     private Integer pageNum;
+    @NotNull
+    @Min(1)
+    @Max(300)
     private Integer pageSize;
+    @Valid
     private List<SortItem> sortItems;
 }

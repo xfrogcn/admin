@@ -25,7 +25,7 @@ import java.util.List;
 public interface UserApi {
     @PostMapping("/list")
     @Operation(summary = "查询用户列表")
-    PageDTO<UserDTO> listUsers(@RequestBody QueryUserRequestDTO queryUserRequestDTO);
+    PageDTO<UserDTO> listUsers(@Valid @RequestBody QueryUserRequestDTO queryUserRequestDTO);
 
     @PostMapping
     @Operation(summary = "创建用户")

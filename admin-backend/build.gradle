@@ -60,7 +60,8 @@ subprojects {
             dependency "com.baomidou:mybatis-plus-boot-starter:${mybatis_plus_version}"
             dependency "com.baomidou:mybatis-plus-annotation:${mybatis_plus_version}"
             dependency "com.baomidou:mybatis-plus-boot-starter-test:${mybatis_plus_version}"
-            dependency "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatis_version}"
+            dependency "org.mybatis:mybatis:${mybatis_version}"
+            dependency "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatis_starter_version}"
             dependency "com.github.pagehelper:pagehelper-spring-boot-starter:${pagehelper_version}"
 
             dependency "org.springframework.boot:spring-boot-starter-oauth2-authorization-server:${authorization_server_version}"

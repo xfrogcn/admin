@@ -23,7 +23,7 @@ public interface TenantApi {
 
     @PostMapping("/list")
     @Operation(summary = "查询租户列表")
-    PageDTO<TenantDTO> listTenants(@RequestBody QueryTenantRequestDTO requestDTO);
+    PageDTO<TenantDTO> listTenants(@Valid @RequestBody QueryTenantRequestDTO requestDTO);
 
     @PutMapping("/{tenantId}")
     @Operation(summary = "更新租户")
