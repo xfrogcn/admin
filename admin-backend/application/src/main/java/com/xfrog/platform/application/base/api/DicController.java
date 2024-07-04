@@ -2,9 +2,11 @@ package com.xfrog.platform.application.base.api;
 
 import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.platform.application.base.DicApi;
+import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.CreateDicRequestDTO;
 import com.xfrog.platform.application.base.dto.DicDTO;
 import com.xfrog.platform.application.base.dto.QueryDicRequestDTO;
+import com.xfrog.platform.application.base.dto.UpdateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateDicRequestDTO;
 import com.xfrog.platform.application.base.service.DicService;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +43,15 @@ public class DicController implements DicApi {
     @Override
     public void deleteDic(Long dicId) {
         dicService.deleteDic(dicId);
+    }
+
+    @Override
+    public Long createDicItem(Long dicId, CreateDicItemRequestDTO requestDTO) {
+        return null;
+    }
+
+    @Override
+    public void updateDicItem(Long dicId, Long itemId, UpdateDicItemRequestDTO requestDTO) {
+
     }
 }

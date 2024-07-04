@@ -2,9 +2,11 @@ package com.xfrog.platform.application.base.service.impl;
 
 import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.platform.application.base.converter.DicDTOToCommandConverter;
+import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.CreateDicRequestDTO;
 import com.xfrog.platform.application.base.dto.DicDTO;
 import com.xfrog.platform.application.base.dto.QueryDicRequestDTO;
+import com.xfrog.platform.application.base.dto.UpdateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateDicRequestDTO;
 import com.xfrog.platform.application.base.repository.DicRepository;
 import com.xfrog.platform.application.base.service.DicService;
@@ -46,5 +48,15 @@ public class DicServiceImpl implements DicService {
     @Override
     public DicDTO getDic(Long dicId) {
         return null;
+    }
+
+    @Override
+    public Long createDicItem(Long dicId, CreateDicItemRequestDTO requestDTO) {
+        return null;
+    }
+
+    @Override
+    public void updateDicItem(Long dicId, Long itemId, UpdateDicItemRequestDTO requestDTO) {
+
     }
 }

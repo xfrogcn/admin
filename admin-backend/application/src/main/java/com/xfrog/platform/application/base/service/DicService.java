@@ -1,9 +1,11 @@
 package com.xfrog.platform.application.base.service;
 
 import com.xfrog.framework.dto.PageDTO;
+import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.CreateDicRequestDTO;
 import com.xfrog.platform.application.base.dto.DicDTO;
 import com.xfrog.platform.application.base.dto.QueryDicRequestDTO;
+import com.xfrog.platform.application.base.dto.UpdateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateDicRequestDTO;
 
 public interface DicService {
@@ -16,4 +18,9 @@ public interface DicService {
     PageDTO<DicDTO> listDics(QueryDicRequestDTO queryDTO);
 
     DicDTO getDic(Long dicId);
+
+    Long createDicItem(Long dicId, CreateDicItemRequestDTO requestDTO);
+
+    void updateDicItem(Long dicId, Long itemId, UpdateDicItemRequestDTO requestDTO);
+
 }
