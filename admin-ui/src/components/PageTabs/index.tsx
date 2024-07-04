@@ -2,7 +2,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { RouteContext } from '@ant-design/pro-components';
 import { history, useAppData } from '@umijs/max';
 import { Flex, Tabs } from 'antd';
-import KeepAlive from 'keepalive-for-react';
+import KeepAlive, { useKeepaliveRef } from 'keepalive-for-react';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useOutlet } from 'react-router';
 
@@ -16,6 +16,10 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
 
   const outlet = useOutlet();
   const location = useLocation();
+
+  const keepalive = useKeepaliveRef();
+
+  console.log(keepalive)
 
   useEffect(() => {
     if (location.pathname === '/') {
@@ -57,6 +61,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
 
       const itemIndex = tabs.findLastIndex((it) => it.key === targetKey);
       if (itemIndex >= 0) {
+        keepalive.current?.removeCache(targetKey as string);
         const newTabs = tabs.filter((it) => it.key !== targetKey);
         if (newTabs.length === 1) {
           newTabs[0].closable = false;
@@ -69,7 +74,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         history.push(switchLocation);
       }
     },
-    [tabs, setTabs],
+    [tabs, setTabs, keepalive],
   );
 
   const removeIcon = tabs.length == 1 ? false : <CloseOutlined />
@@ -95,6 +100,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         cache={isCache}
         max={50}
         strategy={'LRU'}
+        aliveRef={keepalive}
       />
     </Flex>
   );
