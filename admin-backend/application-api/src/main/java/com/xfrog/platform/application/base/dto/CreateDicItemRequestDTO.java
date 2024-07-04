@@ -16,9 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Schema(description = "创建字典项信息请求")
 public class CreateDicItemRequestDTO {
-    @Schema(description = "关联的字典 ID")
-    @NotNull
-    private Long dicId;
     @Schema(description = "是否启用")
     @NotNull
     private Boolean enabled;

@@ -15,6 +15,7 @@ import java.util.List;
 @Repository
 public class DicDomainRepositoryImpl extends BaseDomainRepository<Dic, DicPO, DicMapper>
         implements DicDomainRepository {
+
     public DicDomainRepositoryImpl(DicMapper dicMapper) {
         mapper = dicMapper;
         converter = DicPOConverter.INSTANCE;

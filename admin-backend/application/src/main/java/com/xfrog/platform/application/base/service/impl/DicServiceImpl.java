@@ -4,6 +4,7 @@ import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
 import com.xfrog.platform.application.base.converter.DicDTOToCommandConverter;
+import com.xfrog.platform.application.base.converter.DicItemDTOToCommandConverter;
 import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.CreateDicRequestDTO;
 import com.xfrog.platform.application.base.dto.DicDTO;
@@ -14,9 +15,13 @@ import com.xfrog.platform.application.base.dto.UpdateDicRequestDTO;
 import com.xfrog.platform.application.base.repository.DicRepository;
 import com.xfrog.platform.application.base.service.DicService;
 import com.xfrog.platform.domain.base.aggregate.Dic;
+import com.xfrog.platform.domain.base.aggregate.DicItem;
 import com.xfrog.platform.domain.base.command.CreateDicCommand;
+import com.xfrog.platform.domain.base.command.CreateDicItemCommand;
 import com.xfrog.platform.domain.base.command.UpdateDicCommand;
+import com.xfrog.platform.domain.base.command.UpdateDicItemCommand;
 import com.xfrog.platform.domain.base.repository.DicDomainRepository;
+import com.xfrog.platform.domain.base.repository.DicItemDomainRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +35,7 @@ public class DicServiceImpl implements DicService {
 
     private final DicRepository dicRepository;
     private final DicDomainRepository dicDomainRepository;
+    private final DicItemDomainRepository dicItemDomainRepository;
     private final DicDTOToCommandConverter converter = DicDTOToCommandConverter.INSTANCE;
 
 
@@ -107,12 +113,45 @@ public class DicServiceImpl implements DicService {
     }
 
     @Override
+    @Transactional
     public Long createDicItem(Long dicId, CreateDicItemRequestDTO requestDTO) {
-        return null;
+        Dic dic = dicDomainRepository.findById(dicId);
+        if (dic == null) {
+            throw new NotFoundException("dic not found");
+        }
+
+        if (dicItemDomainRepository.existsByDisplayText(requestDTO.getDisplayText(), null)) {
+            throw new FailedPreconditionException("dic item display text exists");
+        }
+
+        CreateDicItemCommand createDicItemCommand = DicItemDTOToCommandConverter.INSTANCE.requestToCreateCommand(requestDTO);
+        createDicItemCommand.setDicId(dicId);
+
+        DicItem dicItem = DicItem.create(createDicItemCommand);
+
+        return dicItemDomainRepository.save(dicItem).getDicId();
     }
 
     @Override
+    @Transactional
     public void updateDicItem(Long dicId, Long itemId, UpdateDicItemRequestDTO requestDTO) {
+        Dic dic = dicDomainRepository.findById(dicId);
+        if (dic == null) {
+            throw new NotFoundException("dic not found");
+        }
 
+        if (dicItemDomainRepository.existsByDisplayText(requestDTO.getDisplayText(), List.of(itemId))) {
+            throw new FailedPreconditionException("dic item display text exists");
+        }
+
+        DicItem dicItem = dicItemDomainRepository.findById(itemId);
+        if (dicItem == null) {
+            throw new NotFoundException("dic item not found");
+        }
+
+        UpdateDicItemCommand updateDicItemCommand = DicItemDTOToCommandConverter.INSTANCE.requestToUpdateCommand(requestDTO);
+        dicItem.update(updateDicItemCommand);
+
+        dicItemDomainRepository.save(dicItem);
     }
 }
