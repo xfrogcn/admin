@@ -138,6 +138,20 @@ export default {
   "admin.ui.pages.tenant.disable-confirm-desc": '您确定要禁用此租户么？',
   "admin.ui.pages.tenant.enable-confirm-desc": '您确定要启用此租户么？',
 
+  "admin.ui.pages.dic.create-new-title": "新建字典",
+  "admin.ui.pages.dic.edit-title": "修改字典",
+  "admin.ui.pages.dic.table-title": "字典列表",
+  "admin.ui.pages.dic.label-name": '名称',
+  "admin.ui.pages.dic.label-type": '编码',
+  "admin.ui.pages.dic.label-memo": '说明',
+  "admin.ui.pages.dic.button-items": '字典项',
+  "admin.ui.pages.dic.rule-require-name": '字典名称不可为空',
+  "admin.ui.pages.dic.rule-require-type": '字典编码不可为空',
+  "admin.ui.pages.dic.rule-pattern-type": '字典编码包含非法字符',
+  "admin.ui.pages.dic.delete-confirm-desc": '您确定要删除此字典么？',
+  "admin.ui.pages.dic.enable-confirm-desc": '您确定要启用此租户么？',
+
+
   'pages.layouts.userLayout.title': 'Ant Design 是西湖区最具影响力的 Web 设计规范',
   'pages.login.accountLogin.tab': '账户密码登录',
   'pages.login.accountLogin.errorMessage': '错误的用户名和密码(admin/ant.design)',

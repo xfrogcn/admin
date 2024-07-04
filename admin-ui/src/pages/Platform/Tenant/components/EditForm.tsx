@@ -123,7 +123,7 @@ const EditTenantDialog: React.FC<EditTenantDialogProps> = (props: EditTenantDial
   })
 
   return (
-    <FormDraggableModal<API.PermissionItemDTO>
+    <FormDraggableModal<API.TenantDTO>
       {...props}
       onInit={(form) => {
         if (props.tenant) {

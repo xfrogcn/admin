@@ -32,7 +32,7 @@ const queryTenants = async (
     enabled: stringToBoolean(params.enabled as any),
     createdTime: convertDateRange(params.createdTime as any),
     ...convertCommonQueryParams(params, sorter),
-  });
+  } as any);
 
   return {
     data: response.data ?? [],
@@ -184,7 +184,7 @@ const TenantList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: '10em',
+      width: (operationRender.permissionCodes.length * 4 + 1) + 'em',
       fixed: 'right',
       align: 'center',
       render: (dom, record) => (

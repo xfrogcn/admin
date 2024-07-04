@@ -19,8 +19,6 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
 
   const keepalive = useKeepaliveRef();
 
-  console.log(keepalive)
-
   useEffect(() => {
     if (location.pathname === '/') {
       return;

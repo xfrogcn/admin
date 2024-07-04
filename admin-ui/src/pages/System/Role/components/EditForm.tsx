@@ -77,7 +77,7 @@ const EditRoleDialog: React.FC<EditRoleDialogProps> = (
   }
 
   return (
-    <FormDraggableModal<API.PermissionItemDTO>
+    <FormDraggableModal<API.RoleDTO>
       {...props}
       onInit={(form) => {
         if (props.role) {

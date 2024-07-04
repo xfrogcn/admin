@@ -3,6 +3,40 @@ declare namespace API {
     arg0: string;
   };
 
+  type createDicItemParams = {
+    dicId: number;
+  };
+
+  type CreateDicItemRequestDTO = {
+    /** 关联的字典 ID */
+    dicId: number;
+    /** 是否启用 */
+    enabled: boolean;
+    /** 显示名称 */
+    displayText?: string;
+    /** 多语言语料编码 */
+    langCode?: string;
+    /** 显示顺序 */
+    displayOrder: number;
+    /** 对应值 */
+    value?: string;
+    /** 扩展值 1 */
+    extValue1?: string;
+    /** 扩展值 2 */
+    extValue2?: string;
+    /** 说明 */
+    memo?: string;
+  };
+
+  type CreateDicRequestDTO = {
+    /** 字典类型 */
+    type: string;
+    /** 字典名称 */
+    name: string;
+    /** 字典说明 */
+    memo?: string;
+  };
+
   type CreateOrganizationRequestDTO = {
     /** 组织名称 */
     name: string;
@@ -134,6 +168,10 @@ declare namespace API {
     end?: string;
   };
 
+  type deleteDicParams = {
+    dicId: number;
+  };
+
   type deleteOrganizationParams = {
     organizationId: number;
   };
@@ -144,6 +182,19 @@ declare namespace API {
 
   type deleteRoleParams = {
     roleId: number;
+  };
+
+  type DicDTO = {
+    /** 字典ID */
+    id?: number;
+    /** 字典类型 */
+    type?: string;
+    /** 字典名称 */
+    name?: string;
+    /** 字典说明 */
+    memo?: string;
+    /** 创建时间 */
+    createdTime?: string;
   };
 
   type disableUserParams = {
@@ -175,6 +226,10 @@ declare namespace API {
   type getDataScopesParams = {
     targetType: 'USER' | 'ROLE';
     targetId: number;
+  };
+
+  type getDicParams = {
+    dicId: number;
   };
 
   type getOrganizationParams = {
@@ -241,6 +296,14 @@ declare namespace API {
     createdTime?: string;
   };
 
+  type PageDTODicDTO = {
+    pageNum?: number;
+    pageSize?: number;
+    total?: number;
+    pages?: number;
+    data?: DicDTO[];
+  };
+
   type PageDTOTenantDTO = {
     pageNum?: number;
     pageSize?: number;
@@ -272,6 +335,14 @@ declare namespace API {
     platform?: boolean;
   };
 
+  type QueryDicRequestDTO = {
+    pageNum: number;
+    pageSize: number;
+    sortItems?: SortItem[];
+    /** 关键字 */
+    keyword?: string;
+  };
+
   type QueryOrganizationRequestDTO = {
     /** 关键字 */
     keyword?: string;
@@ -282,8 +353,8 @@ declare namespace API {
   };
 
   type QueryTenantRequestDTO = {
-    pageNum?: number;
-    pageSize?: number;
+    pageNum: number;
+    pageSize: number;
     sortItems?: SortItem[];
     /** 关键字 */
     keyword?: string;
@@ -293,8 +364,8 @@ declare namespace API {
   };
 
   type QueryUserRequestDTO = {
-    pageNum?: number;
-    pageSize?: number;
+    pageNum: number;
+    pageSize: number;
     sortItems?: SortItem[];
     /** 关键字 */
     keyword?: string;
@@ -324,8 +395,8 @@ declare namespace API {
   };
 
   type SortItem = {
-    field?: string;
-    order?: 'ASC' | 'DESC';
+    field: string;
+    order: 'ASC' | 'DESC';
   };
 
   type TenantDTO = {
@@ -345,6 +416,43 @@ declare namespace API {
     adminUserId?: number;
     /** 租户管理员登录账号 */
     adminUserName?: string;
+  };
+
+  type updateDicItemParams = {
+    dicId: number;
+    itemId: number;
+  };
+
+  type UpdateDicItemRequestDTO = {
+    /** 是否启用 */
+    enabled: boolean;
+    /** 显示名称 */
+    displayText?: string;
+    /** 多语言语料编码 */
+    langCode?: string;
+    /** 显示顺序 */
+    displayOrder: number;
+    /** 对应值 */
+    value?: string;
+    /** 扩展值 1 */
+    extValue1?: string;
+    /** 扩展值 2 */
+    extValue2?: string;
+    /** 说明 */
+    memo?: string;
+  };
+
+  type updateDicParams = {
+    dicId: number;
+  };
+
+  type UpdateDicRequestDTO = {
+    /** 字典类型 */
+    type: string;
+    /** 字典名称 */
+    name: string;
+    /** 字典说明 */
+    memo?: string;
   };
 
   type updateOrganizationParams = {

@@ -59,6 +59,13 @@ export default [
     permissionCode: 'admin:platform',
     routes: [
       {
+        name: 'dic',
+        path: '/platform/dic',
+        component: './Platform/Dic',
+        access: 'canRoute',
+        permissionCode: 'admin:platform:dic',
+      },
+      {
         name: 'tenant',
         path: '/platform/tenant',
         component: './Platform/Tenant',

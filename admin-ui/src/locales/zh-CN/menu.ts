@@ -5,6 +5,7 @@ export default {
   'menu.system.role': '角色管理',
 
   'menu.platform': '平台管理',
+  'menu.platform.dic': '字典管理',
   'menu.platform.tenant': '租户管理',
   'menu.platform.permissionItem': '权限项管理',
   
