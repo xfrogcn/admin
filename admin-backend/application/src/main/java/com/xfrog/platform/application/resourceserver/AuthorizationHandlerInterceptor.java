@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
     private final ConcurrentHashMap<Method, HashSet<OrStringList>> methodAuthorizationMap = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Method, Boolean> ignoreDataPermissionMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Method, IgnoreDataPermission> ignoreDataPermissionMap = new ConcurrentHashMap<>();
     private final UserService userService;
 
      static final class OrStringList {
@@ -72,15 +72,20 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
         // 数据权限处理 -- 检查是否忽略数据权限
-        Boolean isIgnoreDataPermission = ignoreDataPermissionMap.computeIfAbsent(handlerMethod.getMethod(), (key) -> {
+        IgnoreDataPermission ignoreDataPermission = ignoreDataPermissionMap.computeIfAbsent(handlerMethod.getMethod(), (key) -> {
             if (handlerMethod.getMethod().getAnnotation(IgnoreDataPermission.class) != null) {
-                return true;
+                return handlerMethod.getMethodAnnotation(IgnoreDataPermission.class);
             }
-            return false;
+            return null;
         });
-        if (isIgnoreDataPermission) {
+        if (ignoreDataPermission != null) {
             // 设置线程的忽略数据权限标记
-            RequestThreadMarkContext.threadMark().setIgnoreDataScope(true);
+            if (ignoreDataPermission.ignoreDataScope()) {
+                RequestThreadMarkContext.threadMark().setIgnoreDataScope(true);
+            }
+            if (ignoreDataPermission.ignoreTenant()) {
+                RequestThreadMarkContext.threadMark().setIgnoreTenant(true);
+            }
         }
 
         // 操作权限处理

@@ -15,5 +15,6 @@ import java.lang.annotation.Target;
 @Inherited
 @Documented
 public @interface IgnoreDataPermission {
-
+    boolean ignoreDataScope() default true;
+    boolean ignoreTenant() default true;
 }
