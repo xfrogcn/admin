@@ -3,7 +3,9 @@ import { ExProFormColumnsType } from '@/components/ValueTypes';
 import { BetaSchemaForm, ProFormInstance, ProFormProps } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import { Col, Divider, Row, Space } from 'antd';
+import { FieldData } from 'rc-field-form/es/interface';
 import { useRef } from 'react';
+import './index.less';
 
 interface FormDraggableModalProps<T> extends DraggableModalProps {
   mode?: 'edit' | 'create';
@@ -32,7 +34,7 @@ function FormDraggableModal<T>(props: FormDraggableModalProps<T>): JSX.Element {
       }}
     >
       <Divider />
- 
+
       <BetaSchemaForm<T>
         formRef={formRef}
         layout="horizontal"
@@ -40,9 +42,21 @@ function FormDraggableModal<T>(props: FormDraggableModalProps<T>): JSX.Element {
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 18 }}
         layoutType="Form"
-        
+        className="draggable-modal-form"
+        onReset={(e) => {
+          const resetValues: FieldData[] = [];
+          props.columns
+            .filter((c) => c.resetValue !== undefined)
+            .forEach((c) => {
+              resetValues.push({
+                name: c.dataIndex,
+                value: c.resetValue,
+              });
+            });
+          formRef.current?.setFields(resetValues);
+        }}
         submitter={{
-          resetButtonProps: props.mode==='create' ? undefined: false,
+          resetButtonProps: props.mode === 'create' ? undefined : false,
           render: (_, doms) => {
             return (
               <>
@@ -56,7 +70,7 @@ function FormDraggableModal<T>(props: FormDraggableModalProps<T>): JSX.Element {
             );
           },
         }}
-        {...formProps as any}
+        {...(formProps as any)}
       />
     </DraggableModal>
   );
