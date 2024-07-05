@@ -3,10 +3,31 @@ import { RouteContext } from '@ant-design/pro-components';
 import { history, useAppData } from '@umijs/max';
 import { Flex, Tabs } from 'antd';
 import KeepAlive, { useKeepaliveRef } from 'keepalive-for-react';
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useLocation, useOutlet } from 'react-router';
 
 export interface PageTabsProps {}
+export interface PageTabContextObject {
+  setTabLabel: (label: string | any) => void;
+  tab: { defaultLabel: string };
+  key?: string;
+}
+
+const nilfunction = () => void {};
+export const PageTabContext = React.createContext<PageTabContextObject>({
+  setTabLabel: nilfunction,
+  tab: { defaultLabel: '' },
+});
+
+export const usePageTabContext = () => {
+  return useContext(PageTabContext);
+};
+
+const ALL_TAB_KEY = 'ALL_TAB';
+
+function getCacheKey(location: { pathname: string; search: string }) {
+  return location.pathname + location.search;
+}
 
 export const PageTabs = (props: PageTabsProps): JSX.Element => {
   const [tabs, setTabs] = useState<any[]>([]);
@@ -19,28 +40,48 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
 
   const keepalive = useKeepaliveRef();
 
-  useEffect(() => {
+  const pageTabContext = useMemo(() => {
     if (location.pathname === '/') {
-      return;
+      return { setTabLabel: nilfunction, tab: { defaultLabel: '' } };
     }
-    const key = location.pathname + location.search;
+
+    const key = getCacheKey(location);
     let tabItem = map.current[key];
     if (!tabItem) {
       tabItem = {
         key: key,
         closable: tabs.length === 0 ? false : true,
         label: routes.currentMenu?.name,
+        defaultLabel: routes.currentMenu?.name,
       };
       map.current[key] = { ...location };
       if (tabs.length === 1) {
         tabs[0].closable = true;
       }
-      setTabs([...tabs, tabItem]);
+      const newTabs = [...tabs, tabItem];
+      map.current[ALL_TAB_KEY] = newTabs;
+      setTabs(newTabs);
     }
+
+    return {
+      key: key,
+      tab: tabItem,
+      setTabLabel: (label: string | any) => {
+        const tabs = map.current[ALL_TAB_KEY] || [];
+        const index = tabs.findIndex((item: any) => item.key === key);
+        if (index !== -1) {
+          tabs[index].label = label;
+
+          const newTabs = [...tabs];
+          map.current[ALL_TAB_KEY] = newTabs;
+          setTabs(newTabs);
+        }
+      },
+    };
   }, [routes.currentMenu, location]);
 
   const cacheKey = useMemo(() => {
-    return location.pathname + location.search;
+    return getCacheKey(location);
   }, [location]);
 
   const isCache = useMemo(() => {
@@ -64,18 +105,21 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         if (newTabs.length === 1) {
           newTabs[0].closable = false;
         }
+        map.current[ALL_TAB_KEY] = newTabs;
         setTabs(newTabs);
         delete map.current[targetKey as string];
         const switchTabIndex = itemIndex === 0 ? 0 : itemIndex - 1;
         const switchLocation =
-          switchTabIndex >= newTabs.length ? { pathname: '/' } : map.current[newTabs[switchTabIndex].key];
+          switchTabIndex >= newTabs.length
+            ? { pathname: '/' }
+            : map.current[newTabs[switchTabIndex].key];
         history.push(switchLocation);
       }
     },
     [tabs, setTabs, keepalive],
   );
 
-  const removeIcon = tabs.length == 1 ? false : <CloseOutlined />
+  const removeIcon = tabs.length == 1 ? false : <CloseOutlined />;
 
   return (
     <Flex vertical style={{ height: '100%', position: 'relative' }}>
@@ -86,20 +130,22 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         type="editable-card"
         items={tabs}
         animated
-        removeIcon = {removeIcon}
+        removeIcon={removeIcon}
         onTabClick={(key) => {
           history.push(map.current[key]);
         }}
         onEdit={onEdit}
       />
+
       <KeepAlive
-        children={outlet}
         activeName={cacheKey}
         cache={isCache}
         max={50}
         strategy={'LRU'}
         aliveRef={keepalive}
-      />
+      >
+        <PageTabContext.Provider value={pageTabContext}>{outlet}</PageTabContext.Provider>
+      </KeepAlive>
     </Flex>
   );
 };
