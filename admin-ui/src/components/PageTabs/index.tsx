@@ -46,8 +46,8 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
     }
 
     const key = getCacheKey(location);
-    let tabItem = map.current[key];
-    if (!tabItem) {
+    let tabItem = null;
+    if (!map.current[key]) {
       tabItem = {
         key: key,
         closable: tabs.length === 0 ? false : true,
@@ -61,6 +61,8 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
       const newTabs = [...tabs, tabItem];
       map.current[ALL_TAB_KEY] = newTabs;
       setTabs(newTabs);
+    } else {
+      tabItem = tabs.findLast((item) => item.key === key);
     }
 
     return {
