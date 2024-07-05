@@ -6,6 +6,7 @@ export default {
 
   'menu.platform': '平台管理',
   'menu.platform.dic': '字典管理',
+  'menu.platform.dic-item': '字典项',
   'menu.platform.tenant': '租户管理',
   'menu.platform.permissionItem': '权限项管理',
   

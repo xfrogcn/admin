@@ -110,3 +110,15 @@ export async function listDics(body: API.QueryDicRequestDTO, options?: { [key: s
     ...(options || {}),
   });
 }
+
+/** 根据类型查询字典 POST /api/dics/list/by-types */
+export async function getDicByTypes(body: string[], options?: { [key: string]: any }) {
+  return request<API.DicDTO[]>('/api/dics/list/by-types', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

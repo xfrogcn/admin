@@ -1,15 +1,16 @@
 import { withAccessRender } from '@/access';
 import ProTablePage from '@/components/ProTablePage';
-import { createDic, deleteDic, listDics, updateDic } from '@/services/swagger/dicApi';
+import { createDic, deleteDic, listDics, updateDic, getDic } from '@/services/swagger/dicApi';
 import { convertCommonQueryParams } from '@/utils/bizUtils';
 import { useMessageBox } from '@/utils/messageUtils';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
-import { Access, FormattedMessage, useAccess, useIntl, useNavigate } from '@umijs/max';
+import { Access, FormattedMessage, useAccess, useIntl, useParams } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import EditForm from './components/EditForm';
+import { usePageTabContext } from '@/components/PageTabs';
 
 const handleAdd = useMessageBox<API.CreateDicRequestDTO, number>(createDic);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateDicRequestDTO }, void>((args) =>
@@ -36,102 +37,95 @@ const queryDics = async (
   };
 };
 
-const DicList: React.FC = () => {
+const DicItemList: React.FC = () => {
   const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-  const [newDic, setNewDic] = useState<API.DicDTO>({
-    name: '',
-    type: '',
-    memo: '',
-  } as API.DicDTO);
+  const [newDicItem, setNewDicItem] = useState<API.DicItemDTO>({} as API.DicItemDTO);
 
   const [editModalOpen, handleEditModalOpen] = useState<boolean>(false);
-  const [editDic, setEditDic] = useState<API.DicDTO | undefined>();
+  const [editDicItem, setEditDicItem] = useState<API.DicItemDTO | undefined>();
+
+  const [dic, setDic] = useState<API.DicDTO | undefined>();
 
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const access = useAccess();
-  const navigation = useNavigate();
+
+  const tabContext = usePageTabContext();
+
+  const params = useParams();
+  const queryDic = useCallback(async () => {
+    const id = params.id;
+    const result = await getDic({dicId: id as any});
+
+    setDic(result)
+    tabContext.setTabLabel(tabContext.tab.defaultLabel + ' - ' + result.name)
+
+    return {
+      data: result.dicItems ?? [],
+      success: true,
+      total: result.dicItems?.length
+    };
+
+  }, [params])
 
   const operationRender = useMemo(() => {
     return withAccessRender<API.DicDTO>(
       {
-        'admin:platform:dic:items': (_, record) => (
-          <a key="items" onClick={() => {
-            navigation(`/platform/dic/${record.id}`, { replace: false});
-          }}>
-            <FormattedMessage id="admin.ui.pages.dic.button-items" />
-          </a>
-        ),
-        'admin:platform:dic:edit': (_, record) => (
+        'admin:platform:dic:edititem': (_, record) => (
           <a
             key="edit"
             onClick={async () => {
-              setEditDic({ ...record } as any);
+              setEditDicItem({ ...record } as any);
               handleEditModalOpen(true);
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
           </a>
         ),
-        'admin:platform:dic:delete': (_, record) => (
-          <Popconfirm
-            title={<FormattedMessage id="admin.ui.public.confirm-ok-button" />}
-            description={<FormattedMessage id="admin.ui.pages.dic.delete-confirm-desc" />}
-            onConfirm={async () => {
-              const result = await handleDelete({ id: record.id || 0 });
-              if (result.success) {
-                actionRef.current?.reload();
-              }
-            }}
-          >
-            <a key="delete">
-              <FormattedMessage id="admin.ui.public.delete-button" />
-            </a>
-          </Popconfirm>
-        ),
       },
       access,
     );
   }, [access]);
 
-  const columns: ProColumns<API.DicDTO>[] = [
+  const columns: ProColumns<API.DicItemDTO>[] = [
     {
-      title: <FormattedMessage id="admin.ui.pages.dic.label-name" />,
-      dataIndex: 'name',
+      title: <FormattedMessage id="admin.ui.pages.dicitem.label-display-text" />,
+      dataIndex: 'displayText',
       valueType: 'text',
-      sorter: true,
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="admin.ui.pages.dic.label-type" />,
-      dataIndex: 'type',
-      valueType: 'text',
-      sorter: true,
-      copyable: true,
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="admin.ui.public.keyword" />,
-      dataIndex: 'keyword',
       sorter: false,
-      valueType: 'text',
-      hideInTable: true,
-      hideInSearch: false,
     },
     {
-      title: <FormattedMessage id="admin.ui.pages.dic.label-memo" />,
+      title: <FormattedMessage id="admin.ui.pages.dicitem.label-lang-code" />,
+      dataIndex: 'langCode',
+      valueType: 'text',
+      sorter: false,
+      copyable: true,
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.dicitem.label-value" />,
+      dataIndex: 'value',
+      valueType: 'text',
+      sorter: false,
+      copyable: true,
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.dicitem.label-display-order" />,
+      dataIndex: 'displayOrder',
+      valueType: 'text',
+      width: '4em',
+      align: 'center',
+      sorter: false,
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.dicitem.label-memo" />,
       dataIndex: 'memo',
       valueType: 'text',
       sorter: false,
-      hideInSearch: true,
-      copyable: true,
     },
     {
       title: <FormattedMessage id="admin.ui.public.created-time" />,
       dataIndex: 'createdTime',
-      sorter: true,
-      hideInForm: true,
-      hideInSearch: true,
+      sorter: false,
       width: '14em',
       align: 'center',
       valueType: 'dateTime',
@@ -154,10 +148,10 @@ const DicList: React.FC = () => {
 
   return (
     <PageContainer pageHeaderRender={false}>
-      <ProTablePage<API.DicDTO, API.QueryDicRequestDTO>
-        headerTitle={intl.formatMessage({
+      <ProTablePage<API.DicItemDTO, API.getDicParams>
+        headerTitle={`${intl.formatMessage({
           id: 'admin.ui.pages.dic.table-title',
-        })}
+        })} - [${dic?.name}(${dic?.type})]`}
         actionRef={actionRef}
         rowKey="id"
         toolBarRender={() => [
@@ -166,11 +160,11 @@ const DicList: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                setNewDic({
-                  type: '',
-                  name: '',
-                  memo: '',
-                } as any);
+                // setNewDic({
+                //   type: '',
+                //   name: '',
+                //   memo: '',
+                // } as any);
                 handleCreateModalOpen(true);
               }}
             >
@@ -178,11 +172,13 @@ const DicList: React.FC = () => {
             </Button>
           </Access>,
         ]}
-        request={queryDics}
+        request={queryDic as any}
         columns={columns as any}
         rowSelection={false}
+        pagination={false}
+        search={false}
       />
-      {
+      {/* {
         <EditForm
           mode="create"
           dic={newDic}
@@ -218,9 +214,9 @@ const DicList: React.FC = () => {
           width="600px"
           open={editModalOpen}
         ></EditForm>
-      }
+      } */}
     </PageContainer>
   );
 };
 
-export default DicList;
+export default DicItemList;

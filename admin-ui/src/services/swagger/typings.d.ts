@@ -8,8 +8,6 @@ declare namespace API {
   };
 
   type CreateDicItemRequestDTO = {
-    /** 关联的字典 ID */
-    dicId: number;
     /** 是否启用 */
     enabled: boolean;
     /** 显示名称 */
@@ -192,6 +190,33 @@ declare namespace API {
     /** 字典名称 */
     name?: string;
     /** 字典说明 */
+    memo?: string;
+    /** 创建时间 */
+    createdTime?: string;
+    /** 字典项列表 */
+    dicItems?: DicItemDTO[];
+  };
+
+  type DicItemDTO = {
+    /** 字典项ID */
+    id?: number;
+    /** 关联的字典 ID */
+    dicId?: number;
+    /** 是否启用 */
+    enabled?: boolean;
+    /** 显示名称 */
+    displayText?: string;
+    /** 多语言语料编码 */
+    langCode?: string;
+    /** 显示顺序 */
+    displayOrder?: number;
+    /** 对应值 */
+    value?: string;
+    /** 扩展值 1 */
+    extValue1?: string;
+    /** 扩展值 2 */
+    extValue2?: string;
+    /** 说明 */
     memo?: string;
     /** 创建时间 */
     createdTime?: string;

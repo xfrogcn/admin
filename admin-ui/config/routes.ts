@@ -66,6 +66,14 @@ export default [
         permissionCode: 'admin:platform:dic',
       },
       {
+        path: '/platform/dic/:id',
+        name: 'dic-item',
+        hideInMenu: true,
+        component: './Platform/DicItem',
+        access: 'canRoute',
+        permissionCode: 'admin:platform:dic:items',
+      },
+      {
         name: 'tenant',
         path: '/platform/tenant',
         component: './Platform/Tenant',
