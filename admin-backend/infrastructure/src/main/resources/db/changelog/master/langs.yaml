@@ -1,0 +1,288 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-07-05-0001
+      author: hb
+      context: prod
+      labels: langs-table
+      changes:
+        - createTable:
+            tableName: langs
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    comment: '语言ID'
+              - column:
+                  name: code
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+                    comment: '国际标准语言代码'
+              - column:
+                  name: name
+                  type: VARCHAR(128)
+                  constraints:
+                    nullable: false
+                    comment: '名称'
+              - column:
+                  name: local_name
+                  type: VARCHAR(128)
+                  constraints:
+                    nullable: true
+                    comment: '本地语言的名称'
+              - column:
+                  name: enabled
+                  type: TINYINT
+                  constraints:
+                    nullable: false
+                    defaultValue: 1
+                    comment: '是否启用'
+              - column:
+                  name: created_by
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    comment: '创建人'
+              - column:
+                  name: created_time
+                  type: TIMESTAMP(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '创建时间'
+              - column:
+                  name: updated_by
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    comment: '更新人'
+              - column:
+                  name: updated_time
+                  type: TIMESTAMP(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '更新时间'
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+                    comment: '是否删除标志'
+              - column:
+                  name: deleted_by
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    comment: '删除人'
+              - column:
+                  name: deleted_time
+                  type: TIMESTAMP(0)
+                  constraints:
+                    nullable: true
+                    comment: '删除时间'
+            remarks: '多语言'
+  - changeSet:
+      id: 2024-07-05-0002
+      author: hb
+      context: prod
+      labels: lang_corpus-table
+      changes:
+        - createTable:
+            tableName: lang_corpus
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    comment: '语料ID'
+              - column:
+                  name: corpus_type
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+                    comment: '语料类别'
+              - column:
+                  name: corpus_group
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+                    comment: '语料分组'
+              - column:
+                  name: corpus_code
+                  type: VARCHAR(128)
+                  constraints:
+                    nullable: false
+                    comment: '语料编码'
+              - column:
+                  name: memo
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+                    comment: '语料说明'
+              - column:
+                  name: enabled
+                  type: TINYINT
+                  constraints:
+                    nullable: false
+                    defaultValue: 1
+                    comment: '是否启用'
+              - column:
+                  name: created_by
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    comment: '创建人'
+              - column:
+                  name: created_time
+                  type: TIMESTAMP(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '创建时间'
+              - column:
+                  name: updated_by
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    comment: '更新人'
+              - column:
+                  name: updated_time
+                  type: TIMESTAMP(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '更新时间'
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+                    comment: '是否删除标志'
+              - column:
+                  name: deleted_by
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    comment: '删除人'
+              - column:
+                  name: deleted_time
+                  type: TIMESTAMP(0)
+                  constraints:
+                    nullable: true
+                    comment: '删除时间'
+            remarks: '语料'
+  - changeSet:
+      id: 2024-07-05-0003
+      author: hb
+      context: prod
+      labels: lang_locales-table
+      changes:
+        - createTable:
+            tableName: lang_locales
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    comment: '本地化ID'
+              - column:
+                  name: lang_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    comment: '语言ID'
+              - column:
+                  name: lang_code
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+                    comment: '语言标准编码'
+              - column:
+                  name: lang_corpus_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    comment: '语料ID'
+              - column:
+                  name: lang_corpus_code
+                  type: VARCHAR(128)
+                  constraints:
+                    nullable: false
+                    comment: '语料编码'
+              - column:
+                  name: local_value
+                  type: VARCHAR(512)
+                  constraints:
+                    nullable: false
+                    comment: '本地语言'
+              - column:
+                  name: configured
+                  type: TINYINT
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+                    comment: '是否已配置'
+              - column:
+                  name: created_by
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    comment: '创建人'
+              - column:
+                  name: created_time
+                  type: TIMESTAMP(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '创建时间'
+              - column:
+                  name: updated_by
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    comment: '更新人'
+              - column:
+                  name: updated_time
+                  type: TIMESTAMP(0)
+                  constraints:
+                    nullable: true
+                    defaultValueComputed: CURRENT_TIMESTAMP(0)
+                    comment: '更新时间'
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+                    comment: '是否删除标志'
+              - column:
+                  name: deleted_by
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    comment: '删除人'
+              - column:
+                  name: deleted_time
+                  type: TIMESTAMP(0)
+                  constraints:
+                    nullable: true
+                    comment: '删除时间'
+            remarks: '语料本地化'
+        - createIndex:
+            tableName: lang_locales
+            indexName: idx_lang_locales_lang_code_corpus_code
+            columns:
+              - column:
+                  name: lang_code
+              - column:
+                  name: lang_corpus_code
