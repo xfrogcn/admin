@@ -1,9 +1,7 @@
-import { ProConfigProvider } from '@ant-design/pro-components';
 import { Modal, ModalProps } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import type { DraggableData, DraggableEvent } from 'react-draggable';
 import Draggable from 'react-draggable';
-import { valueTypeMap } from '../ValueTypes/index';
 
 export interface DraggableModalProps extends ModalProps {
   onOpen?: () => void;

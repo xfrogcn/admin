@@ -20,6 +20,7 @@ export default {
   "admin.ui.public.label-yes": '是',
   "admin.ui.public.label-no": '否',
   "admin.ui.public.pattern-tootip-userName": '只能包含字母、数字或下划线',
+  "admin.ui.public.pattern-tooltip-code": '只能包含字母、数字、-、:',
 
   "admin.ui.components.treeselector.placeholder": '输入过滤关键字',
   "admin.ui.components.valuetypes.os-placeholder": '请选择',
@@ -103,7 +104,6 @@ export default {
   "admin.ui.pages.permissionitem.rule-require-name": '权限项名称不可为空',
   "admin.ui.pages.permissionitem.rule-require-code": '权限项名编码不可为空',
   "admin.ui.pages.permissionitem.rule-pattern-code": '权限项编码包含非法字符',
-  "admin.ui.pages.permissionitem.tooltip-code": '只能包含字母、数字、-、:',
   "admin.ui.pages.permissionitem.delete-confirm-desc": '您确定要删除此权限项么？',
   
   "admin.ui.pages.role.create-new-title": "新建角色",
@@ -156,11 +156,13 @@ export default {
   "admin.ui.pages.dicitem.label-display-text": '显示名称',
   "admin.ui.pages.dicitem.label-lang-code": '语料编码',
   "admin.ui.pages.dicitem.label-value": '字典项值',
+  "admin.ui.pages.dicitem.label-ext-value1": '扩展值1',
+  "admin.ui.pages.dicitem.label-ext-value2": '扩展值2',
   "admin.ui.pages.dicitem.label-display-order": '排序',
   "admin.ui.pages.dicitem.label-memo": '说明',
   "admin.ui.pages.dicitem.button-items": '字典项',
-  "admin.ui.pages.dicitem.rule-require-name": '字典名称不可为空',
-  "admin.ui.pages.dicitem.rule-require-type": '字典编码不可为空',
+  "admin.ui.pages.dicitem.rule-require-name": '显示名称不可为空',
+  "admin.ui.pages.dicitem.rule-display-order": '显示顺序不可为空，且必须大于0',
   "admin.ui.pages.dicitem.rule-pattern-type": '字典编码包含非法字符',
   "admin.ui.pages.dicitem.delete-confirm-desc": '您确定要删除此字典么？',
 

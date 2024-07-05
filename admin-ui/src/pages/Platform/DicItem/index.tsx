@@ -1,45 +1,30 @@
 import { withAccessRender } from '@/access';
 import ProTablePage from '@/components/ProTablePage';
-import { createDic, deleteDic, listDics, updateDic, getDic } from '@/services/swagger/dicApi';
-import { convertCommonQueryParams } from '@/utils/bizUtils';
+import { createDicItem, updateDicItem, getDic } from '@/services/swagger/dicApi';
 import { useMessageBox } from '@/utils/messageUtils';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { Access, FormattedMessage, useAccess, useIntl, useParams } from '@umijs/max';
-import { Button, Flex, Popconfirm } from 'antd';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Flex } from 'antd';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import EditForm from './components/EditForm';
 import { usePageTabContext } from '@/components/PageTabs';
 
-const handleAdd = useMessageBox<API.CreateDicRequestDTO, number>(createDic);
-const handleUpdate = useMessageBox<{ id: number; body: API.UpdateDicRequestDTO }, void>((args) =>
-  updateDic({ dicId: args.id }, args.body),
+const handleAdd = useMessageBox<{dicId: number, body: API.CreateDicItemRequestDTO}, number>((args) => 
+  createDicItem({dicId: args.dicId}, args.body));
+const handleUpdate = useMessageBox<{ dicId: number; itemId: number, body: API.UpdateDicItemRequestDTO }, void>((args) =>
+  updateDicItem({ dicId: args.dicId, itemId: args.itemId }, args.body),
 );
-const handleDelete = useMessageBox<{ id: number }, void>((args) => deleteDic({ dicId: args.id }));
 
-const queryDics = async (
-  params: API.QueryDicRequestDTO & {
-    pageSize?: number | undefined;
-    current?: number | undefined;
-  },
-  sorter: any,
-): Promise<{ data: API.DicDTO[]; success: boolean; total: number }> => {
-  const response = await listDics({
-    keyword: params.keyword,
-    ...convertCommonQueryParams(params, sorter),
-  } as API.QueryDicRequestDTO);
-
-  return {
-    data: response.data ?? [],
-    success: true,
-    total: response.total ?? 0,
-  };
-};
+const defaultDicItem: API.DicItemDTO = {
+  enabled: true,
+  displayOrder: 100
+}
 
 const DicItemList: React.FC = () => {
   const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-  const [newDicItem, setNewDicItem] = useState<API.DicItemDTO>({} as API.DicItemDTO);
+  const [newDicItem, setNewDicItem] = useState<API.DicItemDTO>({...defaultDicItem});
 
   const [editModalOpen, handleEditModalOpen] = useState<boolean>(false);
   const [editDicItem, setEditDicItem] = useState<API.DicItemDTO | undefined>();
@@ -160,11 +145,7 @@ const DicItemList: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                // setNewDic({
-                //   type: '',
-                //   name: '',
-                //   memo: '',
-                // } as any);
+                setNewDicItem({...defaultDicItem, dicId: dic?.id})
                 handleCreateModalOpen(true);
               }}
             >
@@ -178,14 +159,14 @@ const DicItemList: React.FC = () => {
         pagination={false}
         search={false}
       />
-      {/* {
+      {
         <EditForm
           mode="create"
-          dic={newDic}
+          dicItem={newDicItem}
           onCancel={() => handleCreateModalOpen(false)}
-          title={intl.formatMessage({ id: 'admin.ui.pages.dic.create-new-title' })}
+          title={intl.formatMessage({ id: 'admin.ui.pages.dicitem.create-new-title' })}
           onFinish={async (values) => {
-            const result = await handleAdd(values as API.CreateDicRequestDTO);
+            const result = await handleAdd({dicId: dic?.id || 0, body: values as API.CreateDicItemRequestDTO});
             if (result.success) {
               handleCreateModalOpen(false);
               actionRef.current?.reload();
@@ -198,13 +179,14 @@ const DicItemList: React.FC = () => {
       {
         <EditForm
           mode="edit"
-          dic={editDic}
+          dicItem={editDicItem}
           onCancel={() => handleEditModalOpen(false)}
-          title={intl.formatMessage({ id: 'admin.ui.pages.dic.edit-title' })}
+          title={intl.formatMessage({ id: 'admin.ui.pages.dicitem.edit-title' })}
           onFinish={async (values) => {
             const result = await handleUpdate({
-              id: editDic?.id ?? 0,
-              body: values as API.UpdateDicRequestDTO,
+              dicId: editDicItem?.dicId ?? 0,
+              itemId: editDicItem?.id ?? 0,
+              body: values as API.UpdateDicItemRequestDTO,
             });
             if (result.success) {
               handleEditModalOpen(false);
@@ -212,9 +194,10 @@ const DicItemList: React.FC = () => {
             }
           }}
           width="600px"
+          height="600px"
           open={editModalOpen}
         ></EditForm>
-      } */}
+      }
     </PageContainer>
   );
 };

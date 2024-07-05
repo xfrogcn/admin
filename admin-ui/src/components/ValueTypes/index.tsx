@@ -28,6 +28,7 @@ export type ExValueType = ProFormColumnsType["valueType"] | 'organizationSelecto
 
 export type ExProFormColumnsType<T> = Omit<ProFormColumnsType<T>, 'valueType'> & {
     valueType?:   ExValueType,
+    resetValue?: any
 };
 
 export type ExProColumnsType<T> = Omit<ProColumnType<T>, 'valueType'> & {

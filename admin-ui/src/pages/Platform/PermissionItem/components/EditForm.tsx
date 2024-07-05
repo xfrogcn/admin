@@ -7,7 +7,7 @@ import { useIntl } from '@umijs/max';
 
 interface EditPermissionItemDialogProps extends DraggableModalProps {
   mode: 'edit' | 'create';
-  permissionItem?: API.PermissionItemDTO;
+  permissionItem?: API.PermissionItemDTO & {parentName?: string};
   onFinish?: ProFormProps['onFinish'];
 }
 
@@ -22,11 +22,13 @@ const EditPermissionItemDialog: React.FC<EditPermissionItemDialogProps> = (
       dataIndex: 'parentName',
       valueType: 'text',
       readonly: true,
+      resetValue: props.permissionItem?.parentName,
     },
     {
       dataIndex: 'parentId',
       valueType: 'text',
       readonly: true,
+      resetValue: props.permissionItem?.parentId,
       formItemProps: {
         hidden: true,
       },
@@ -35,6 +37,7 @@ const EditPermissionItemDialog: React.FC<EditPermissionItemDialogProps> = (
       title: intl.formatMessage({ id: 'admin.ui.pages.permissionitem.label-type' }),
       dataIndex: 'type',
       valueType: 'radio',
+      resetValue: props.permissionItem?.type,
       valueEnum: {
         F: {
           text: intl.formatMessage({ id: 'admin.ui.pages.permissionitem.label-type-folder' }),
@@ -75,7 +78,8 @@ const EditPermissionItemDialog: React.FC<EditPermissionItemDialogProps> = (
         title: intl.formatMessage({ id: 'admin.ui.pages.permissionitem.label-code' }),
         dataIndex: 'code',
         valueType: 'text',
-        tooltip: intl.formatMessage({ id: 'admin.ui.pages.permissionitem.tooltip-code' }),
+        tooltip: intl.formatMessage({ id: 'admin.ui.public.pattern-tooltip-code' }),
+        resetValue: props.permissionItem?.code,
         fieldProps: {
           maxLength: 128,
         },
@@ -91,7 +95,7 @@ const EditPermissionItemDialog: React.FC<EditPermissionItemDialogProps> = (
             {
               pattern: patterns.permissionCode,
               type: 'string',
-              message: intl.formatMessage({ id: 'admin.ui.pages.permissionitem.tooltip-code' }),
+              message: intl.formatMessage({ id: 'admin.ui.public.pattern-tooltip-code' }),
             },
           ],
         },
@@ -100,6 +104,7 @@ const EditPermissionItemDialog: React.FC<EditPermissionItemDialogProps> = (
         title: intl.formatMessage({ id: 'admin.ui.pages.permissionitem.label-platform' }),
         dataIndex: 'platform',
         valueType: 'radio',
+        resetValue: props.permissionItem?.platform + '',
         valueEnum: {
           true: {
             text: intl.formatMessage({ id: 'admin.ui.public.label-yes' }),

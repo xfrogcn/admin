@@ -20,6 +20,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (props: EditUserDialogProp
       title: intl.formatMessage({ id: 'admin.ui.pages.user.label-organizationName' }),
       dataIndex: 'organizationId',
       valueType: 'organizationSelector',
+      resetValue: props.rootOrganizationId,
       fieldProps: {
         rootOrganizationId: props.rootOrganizationId,
       },
@@ -86,6 +87,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (props: EditUserDialogProp
       title: intl.formatMessage({ id: 'admin.ui.pages.user.label-password' }),
       dataIndex: 'password',
       valueType: 'password',
+      resetValue: '123456',
       tooltip: intl.formatMessage({ id: 'admin.ui.pages.user.tooltip-password' }),
       formItemProps: {
         rules: [
@@ -160,6 +162,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = (props: EditUserDialogProp
       title: intl.formatMessage({ id: 'admin.ui.public.abel-enabled' }),
       dataIndex: 'enabled',
       valueType: 'radio',
+      resetValue: 'true',
       valueEnum: {
         true: {
           text: intl.formatMessage({ id: 'admin.ui.public.label-enabled-true' }),

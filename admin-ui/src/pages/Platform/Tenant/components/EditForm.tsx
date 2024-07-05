@@ -72,6 +72,7 @@ const EditTenantDialog: React.FC<EditTenantDialogProps> = (props: EditTenantDial
       title: intl.formatMessage({ id: 'admin.ui.public.abel-enabled' }),
       dataIndex: 'enabled',
       valueType: 'radio',
+      resetValue: 'true',
       valueEnum: {
         true: {
           text: intl.formatMessage({ id: 'admin.ui.public.label-enabled-true' }),

@@ -57,6 +57,7 @@ const EditOrganizationDialog: React.FC<EditOrganizationDialogProps> = (
       title: intl.formatMessage({ id: 'admin.ui.pages.organization.label-display-order' }),
       dataIndex: 'displayOrder',
       valueType: 'digit',
+      resetValue: 1,
       formItemProps: {
         rules: [
           {
@@ -104,6 +105,7 @@ const EditOrganizationDialog: React.FC<EditOrganizationDialogProps> = (
       title: intl.formatMessage({ id: 'admin.ui.pages.organization.label-status' }),
       dataIndex: 'status',
       valueType: 'radio',
+      resetValue: 'NORMAL',
       valueEnum: {
         NORMAL: {
           text: intl.formatMessage({ id: 'admin.ui.pages.organization.label-status-normal' }),
