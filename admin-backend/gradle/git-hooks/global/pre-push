@@ -1,14 +1,10 @@
 #!/bin/sh
 set -x
 
-current_dir=$(pwd)
-echo "${current_dir}"
-
-backend="admin-backend"
-
-if [ "${current_dir%"${backend}"*}" != "${current_dir}" ]; then
+if [ "${ADMIN_BACKEND:-false}" = "true" ]; then
     # 执行backend hooks
     echo "执行admin-backend git hooks"
+    cd admin-backend
     . .git/hooks/pre-push
 else
     # 忽略
