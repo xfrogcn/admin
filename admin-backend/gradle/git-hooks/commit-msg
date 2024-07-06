@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const COMMIT_MSG_MAX_LENGTH = 140
-const COMMIT_FORMAT_REGEX = /\[[A-z0-9_\-&@]+\](?: #((d+)|(N\/A)))? (chore|docs|feat|fix|refactor|style|test): .*$/
+const COMMIT_FORMAT_REGEX = /(#((d+)|(N\/A)))? (chore|docs|feat|fix|refactor|style|test): .*$/
 
 const ERROR_BANNER = "==============================================================================================="
 
@@ -32,7 +32,7 @@ if (message.length > COMMIT_MSG_MAX_LENGTH) {
 if (!message.match(COMMIT_FORMAT_REGEX)) {
     console.error(ERROR_BANNER)
     console.warn(`Commit message format invalid. Please follow the format as follows:`)
-    console.info(`[Contributor name] #issue_code chore|docs|feat|fix|refactor|style|test: your_commit_message.`)
+    console.info(`#issue_code chore|docs|feat|fix|refactor|style|test: your_commit_message.`)
     console.error(ERROR_BANNER)
     process.exit(1)
 }

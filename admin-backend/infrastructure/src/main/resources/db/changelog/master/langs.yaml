@@ -16,6 +16,12 @@ databaseChangeLog:
                     nullable: false
                     comment: '语言ID'
               - column:
+                  name: application
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+                    comment: '所属应用'
+              - column:
                   name: code
                   type: VARCHAR(16)
                   constraints:
@@ -102,6 +108,12 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
                     comment: '语料ID'
+              - column:
+                  name: application
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+                    comment: '所属应用'
               - column:
                   name: corpus_type
                   type: VARCHAR(64)
@@ -196,6 +208,12 @@ databaseChangeLog:
                     nullable: false
                     comment: '本地化ID'
               - column:
+                  name: application
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+                    comment: '所属应用'
+              - column:
                   name: lang_id
                   type: BIGINT
                   constraints:
@@ -280,9 +298,17 @@ databaseChangeLog:
             remarks: '语料本地化'
         - createIndex:
             tableName: lang_locales
-            indexName: idx_lang_locales_lang_code_corpus_code
+            indexName: idx_lang_locales_application_lang_code_corpus_code
             columns:
+              - column:
+                  name: application
               - column:
                   name: lang_code
               - column:
                   name: lang_corpus_code
+        - createIndex:
+            tableName: lang_locales
+            indexName: idx_lang_locales_corpus_id
+            columns:
+              - column:
+                  name: lang_corpus_id
