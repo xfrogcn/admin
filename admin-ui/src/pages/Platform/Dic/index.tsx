@@ -106,6 +106,7 @@ const DicList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.pages.dic.label-type" />,
       dataIndex: 'type',
       valueType: 'text',
+      ellipsis: true,
       sorter: true,
       copyable: true,
       hideInSearch: true,
@@ -122,9 +123,9 @@ const DicList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.pages.dic.label-memo" />,
       dataIndex: 'memo',
       valueType: 'text',
+      ellipsis: {showTitle: true},
       sorter: false,
       hideInSearch: true,
-      copyable: true,
     },
     {
       title: <FormattedMessage id="admin.ui.public.created-time" />,

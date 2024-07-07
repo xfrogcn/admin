@@ -1,4 +1,6 @@
+import { ProSchemaValueEnumMap, ProSchemaValueEnumObj } from "@ant-design/pro-components";
 import moment from "moment";
+import { IntlShape } from 'react-intl';
 
 export const patterns = {
     telphone: /^(\+\d{1,3}[-\s]?)?(\(\d{1,4}\)|\d{1,4}[-\s]?)[\d\s-]{5,15}$/,
@@ -8,6 +10,19 @@ export const patterns = {
     permissionCode: /^[a-zA-Z0-9_\-:\.]+$/,
     noneWhiteSpace: /^\S+$/,
     url: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i,
+}
+
+export const enabledStatusEnum = (intl: IntlShape): ProSchemaValueEnumObj  => {
+  return {
+    true: {
+      text: intl.formatMessage({id: "admin.ui.public.label-enabled-true"}),
+      status: 'Success',
+    },
+    false: {
+      text: intl.formatMessage({id: "admin.ui.public.label-enabled-false"}),
+      status: 'Error',
+    },
+  }
 }
 
 export function getOrganizaitonPathName(organization: API.OrganizationDTO | undefined, maxLevel: number = 0): string {

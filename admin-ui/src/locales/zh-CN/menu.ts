@@ -9,7 +9,8 @@ export default {
   'menu.platform.dic-item': '字典项',
   'menu.platform.tenant': '租户管理',
   'menu.platform.permissionItem': '权限项管理',
-  
+  'menu.platform.lang': '多语言管理',
+
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',

@@ -59,6 +59,20 @@ export default [
     permissionCode: 'admin:platform',
     routes: [
       {
+        name: 'tenant',
+        path: '/platform/tenant',
+        component: './Platform/Tenant',
+        access: 'canRoute',
+        permissionCode: 'admin:platform:tenant',
+      },
+      {
+        name: 'permissionItem',
+        path: '/platform/permissionitem',
+        component: './Platform/PermissionItem',
+        access: 'canRoute',
+        permissionCode: 'admin:platform:permissionitem',
+      },
+      {
         name: 'dic',
         path: '/platform/dic',
         component: './Platform/Dic',
@@ -74,18 +88,11 @@ export default [
         permissionCode: 'admin:platform:dic:items',
       },
       {
-        name: 'tenant',
-        path: '/platform/tenant',
-        component: './Platform/Tenant',
+        name: 'lang',
+        path: '/platform/lang',
+        component: './Platform/Lang',
         access: 'canRoute',
-        permissionCode: 'admin:platform:tenant',
-      },
-      {
-        name: 'permissionItem',
-        path: '/platform/permissionitem',
-        component: './Platform/PermissionItem',
-        access: 'canRoute',
-        permissionCode: 'admin:platform:permissionitem',
+        permissionCode: 'admin:platform:lang',
       },
     ],
   },

@@ -1,38 +1,51 @@
 import { withAccessRender } from '@/access';
 import ProTablePage from '@/components/ProTablePage';
-import { createTenant, enableTenant, listTenants, updateTenant } from '@/services/swagger/tenantApi';
-import { convertCommonQueryParams, convertDateRange, enabledStatusEnum, stringToBoolean } from '@/utils/bizUtils';
+import {
+  createLanguage,
+  deleteLanguage,
+  enableLanguage,
+  listLanguages,
+  updateLanguage,
+} from '@/services/swagger/langApi';
+import { convertCommonQueryParams, enabledStatusEnum } from '@/utils/bizUtils';
+import { stopEvent } from '@/utils/commonUtils';
 import { useMessageBox } from '@/utils/messageUtils';
-import { withChildrenType } from '@/utils/treeItemUtils';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
-import EditForm from './components/EditForm';
 
-const handleAdd = useMessageBox<API.CreateTenantRequestDTO, number>(createTenant);
-const handleUpdate = useMessageBox<{ id: number; body: API.UpdateTenantRequestDTO }, void>((args) =>
-  updateTenant({ tenantId: args.id }, args.body),
+const handleAdd = useMessageBox<API.CreateLangRequestDTO, number>(createLanguage);
+const handleUpdate = useMessageBox<{ id: number; body: API.UpdateLangRequestDTO }, void>((args) =>
+  updateLanguage({ langId: args.id }, args.body),
 );
-const handleEnable = useMessageBox<{ id: number; enabled: boolean }, void>((args) =>
-  enableTenant({ tenantId: args.id, enabled: args.enabled }),
+const handleEnable = useMessageBox<
+  { id: number; enabled: boolean; referenceLangId?: number },
+  void
+>((args) =>
+  enableLanguage({
+    langId: args.id,
+    enabled: args.enabled,
+    referenceLangId: args.referenceLangId || 0,
+  }),
+);
+const handleDelete = useMessageBox<{ id: number }, void>((args) =>
+  deleteLanguage({ langId: args.id }),
 );
 
-const queryTenants = async (
-  params: API.QueryTenantRequestDTO & {
+const queryLangs = async (
+  params: API.QueryLangRequestDTO & {
     pageSize?: number | undefined;
     current?: number | undefined;
   },
   sorter: any,
-): Promise<{ data: API.TenantDTO[]; success: boolean; total: number }> => {
-  const response = await listTenants({
-    keyword: params.keyword,
-    enabled: stringToBoolean(params.enabled as any),
-    createdTime: convertDateRange(params.createdTime as any),
+): Promise<{ data: API.LangDTO[]; success: boolean; total: number }> => {
+  const response = await listLanguages({
+    application: params.application,
     ...convertCommonQueryParams(params, sorter),
-  } as any);
+  } as API.QueryLangRequestDTO);
 
   return {
     data: response.data ?? [],
@@ -41,39 +54,38 @@ const queryTenants = async (
   };
 };
 
-const TenantList: React.FC = () => {
+const LangList: React.FC = () => {
   const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-  const [newTenant, setNewTenant] = useState<API.TenantDTO>({
-    name: '',
-    enabled: true,
-  } as API.TenantDTO);
+  const [newLang, setNewLang] = useState<API.LangDTO>({} as API.LangDTO);
 
   const [editModalOpen, handleEditModalOpen] = useState<boolean>(false);
-  const [editTenant, setEditTenant] = useState<API.TenantDTO | undefined>();
+  const [editLanG, setEditLang] = useState<API.LangDTO | undefined>();
 
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const access = useAccess();
 
   const operationRender = useMemo(() => {
-    return withAccessRender<withChildrenType<API.TenantDTO>>(
+    return withAccessRender<API.LangDTO>(
       {
-        'admin:platform:tenant:edit': (_, record) => (
+        'admin:platform:lang:edit': (_, record) => (
           <a
             key="edit"
             onClick={async () => {
-              setEditTenant({ ...record } as any);
+              setEditLang({ ...record } as any);
               handleEditModalOpen(true);
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
           </a>
         ),
-        'admin:platform:tenant:disable': (_, record) =>
+        'admin:platform:lang:enable': (_, record) =>
           record.enabled ? (
             <Popconfirm
-              title={<FormattedMessage id="admin.ui.public.label-enabled-false" />}
-              description={<FormattedMessage id="admin.ui.pages.tenant.disable-confirm-desc" />}
+              key="disable"
+              onPopupClick={stopEvent}
+              title={<FormattedMessage id="admin.ui.public.label-enabled-true" />}
+              description={<FormattedMessage id="admin.ui.pages.lang.disable-confirm-desc" />}
               onConfirm={async () => {
                 const result = await handleEnable({ id: record.id || 0, enabled: false });
                 if (result.success) {
@@ -81,14 +93,16 @@ const TenantList: React.FC = () => {
                 }
               }}
             >
-              <a key="disabled">
+              <a onClick={stopEvent}>
                 <FormattedMessage id="admin.ui.public.label-enabled-false" />
               </a>
             </Popconfirm>
           ) : (
             <Popconfirm
+              key="enable"
+              onPopupClick={stopEvent}
               title={<FormattedMessage id="admin.ui.public.label-enabled-true" />}
-              description={<FormattedMessage id="admin.ui.pages.tenant.enable-confirm-desc" />}
+              description={<FormattedMessage id="admin.ui.pages.lang.enable-confirm-desc" />}
               onConfirm={async () => {
                 const result = await handleEnable({ id: record.id || 0, enabled: true });
                 if (result.success) {
@@ -96,29 +110,48 @@ const TenantList: React.FC = () => {
                 }
               }}
             >
-              <a key="enabled">
+              <a onClick={stopEvent}>
                 <FormattedMessage id="admin.ui.public.label-enabled-true" />
               </a>
             </Popconfirm>
           ),
+        'admin:platform:lang:delete': (_, record) => (
+          <Popconfirm
+            title={<FormattedMessage id="admin.ui.public.confirm-ok-button" />}
+            description={<FormattedMessage id="admin.ui.pages.lang.delete-confirm-desc" />}
+            onConfirm={async () => {
+              const result = await handleDelete({ id: record.id || 0 });
+              if (result.success) {
+                actionRef.current?.reload();
+              }
+            }}
+          >
+            <a key="delete">
+              <FormattedMessage id="admin.ui.public.delete-button" />
+            </a>
+          </Popconfirm>
+        ),
       },
       access,
     );
   }, [access]);
 
-  const columns: ProColumns<withChildrenType<API.TenantDTO>>[] = [
+  const columns: ProColumns<API.DicDTO>[] = [
     {
-      title: <FormattedMessage id="admin.ui.pages.tenant.label-code" />,
-      dataIndex: 'code',
+      title: <FormattedMessage id="admin.ui.pages.lang.label-application" />,
+      dataIndex: 'application',
       valueType: 'text',
-      sorter: false,
+      sorter: true,
       hideInSearch: true,
     },
     {
-      title: <FormattedMessage id="admin.ui.pages.tenant.label-name" />,
-      dataIndex: 'name',
+      title: <FormattedMessage id="admin.ui.pages.lang.label-lang-code" />,
+      dataIndex: 'code',
       valueType: 'text',
+      width: '7em',
+      align: 'center',
       sorter: true,
+      copyable: true,
       hideInSearch: true,
     },
     {
@@ -130,24 +163,30 @@ const TenantList: React.FC = () => {
       hideInSearch: false,
     },
     {
-      title: <FormattedMessage id="admin.ui.public.abel-enabled" />,
-      dataIndex: 'enabled',
+      title: <FormattedMessage id="admin.ui.pages.lang.label-name" />,
+      dataIndex: 'name',
       valueType: 'text',
-      sorter: false,
-      hideInSearch: false,
-      width: '8em',
-      align: 'center',
-      valueEnum: enabledStatusEnum(intl),
-    },
-    {
-      title: <FormattedMessage id="admin.ui.pages.tenant.label-admin-username" />,
-      dataIndex: 'adminUserName',
-      valueType: 'text',
+      ellipsis: { showTitle: true },
       sorter: false,
       hideInSearch: true,
-      copyable: true,
     },
-
+    {
+      title: <FormattedMessage id="admin.ui.pages.lang.label-local-name" />,
+      dataIndex: 'localName',
+      valueType: 'text',
+      ellipsis: { showTitle: true },
+      sorter: false,
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.lang.label-enabled" />,
+      dataIndex: 'enabled',
+      valueType: 'text',
+      valueEnum: enabledStatusEnum(intl),
+      width: '7em',
+      sorter: false,
+      hideInSearch: true,
+    },
     {
       title: <FormattedMessage id="admin.ui.public.created-time" />,
       dataIndex: 'createdTime',
@@ -158,16 +197,6 @@ const TenantList: React.FC = () => {
       align: 'center',
       valueType: 'dateTime',
     },
-    {
-      title: <FormattedMessage id="admin.ui.public.created-time" />,
-      dataIndex: 'createdTime',
-      sorter: false,
-      hideInTable: true,
-      hideInSearch: false,
-      width: '14em',
-      align: 'center',
-      valueType: 'dateRange',
-    },
   ];
 
   if (operationRender.hasPermisions) {
@@ -175,7 +204,7 @@ const TenantList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: (operationRender.permissionCodes.length * 4 + 1) + 'em',
+      width: operationRender.permissionCodes.length * 4 + 1 + 'em',
       fixed: 'right',
       align: 'center',
       render: (dom, record) => (
@@ -186,21 +215,19 @@ const TenantList: React.FC = () => {
 
   return (
     <PageContainer pageHeaderRender={false}>
-      <ProTablePage<API.TenantDTO, API.QueryTenantRequestDTO>
+      <ProTablePage<API.LangDTO, API.QueryLangRequestDTO>
         headerTitle={intl.formatMessage({
-          id: 'admin.ui.pages.tenant.table-title',
+          id: 'admin.ui.pages.lang.table-title',
         })}
         actionRef={actionRef}
         rowKey="id"
         toolBarRender={() => [
-          <Access accessible={access.hasPermission('admin:platform:tenant:create')}>
+          <Access accessible={access.hasPermission('admin:platform:lang:create')}>
             <Button
               type="primary"
               key="primary"
               onClick={() => {
-                setNewTenant({
-                  enabled: true,
-                } as any);
+                setNewLang({} as any);
                 handleCreateModalOpen(true);
               }}
             >
@@ -208,18 +235,18 @@ const TenantList: React.FC = () => {
             </Button>
           </Access>,
         ]}
-        request={queryTenants}
+        request={queryLangs}
         columns={columns as any}
         rowSelection={false}
       />
-      {
+      {/* {
         <EditForm
           mode="create"
-          tenant={newTenant}
+          dic={newDic}
           onCancel={() => handleCreateModalOpen(false)}
-          title={intl.formatMessage({ id: 'admin.ui.pages.tenant.create-new-title' })}
+          title={intl.formatMessage({ id: 'admin.ui.pages.dic.create-new-title' })}
           onFinish={async (values) => {
-            const result = await handleAdd(values as API.CreateTenantRequestDTO);
+            const result = await handleAdd(values as API.CreateDicRequestDTO);
             if (result.success) {
               handleCreateModalOpen(false);
               actionRef.current?.reload();
@@ -232,13 +259,13 @@ const TenantList: React.FC = () => {
       {
         <EditForm
           mode="edit"
-          tenant={editTenant}
+          dic={editDic}
           onCancel={() => handleEditModalOpen(false)}
-          title={intl.formatMessage({ id: 'admin.ui.pages.tenant.edit-title' })}
+          title={intl.formatMessage({ id: 'admin.ui.pages.dic.edit-title' })}
           onFinish={async (values) => {
             const result = await handleUpdate({
-              id: editTenant?.id ?? 0,
-              body: values as API.UpdateTenantRequestDTO,
+              id: editDic?.id ?? 0,
+              body: values as API.UpdateDicRequestDTO,
             });
             if (result.success) {
               handleEditModalOpen(false);
@@ -248,9 +275,9 @@ const TenantList: React.FC = () => {
           width="600px"
           open={editModalOpen}
         ></EditForm>
-      }
+      } */}
     </PageContainer>
   );
 };
 
-export default TenantList;
+export default LangList;

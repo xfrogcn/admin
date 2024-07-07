@@ -1,7 +1,7 @@
 import { DraggableModalProps } from '@/components/DraggableModal';
 import FormDraggableModal from '@/components/DraggableModal/FormDraggableModal';
 import { ExProFormColumnsType } from '@/components/ValueTypes';
-import { patterns } from '@/utils/bizUtils';
+import { enabledStatusEnum, patterns } from '@/utils/bizUtils';
 import { ProFormProps } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 
@@ -73,14 +73,7 @@ const EditTenantDialog: React.FC<EditTenantDialogProps> = (props: EditTenantDial
       dataIndex: 'enabled',
       valueType: 'radio',
       resetValue: 'true',
-      valueEnum: {
-        true: {
-          text: intl.formatMessage({ id: 'admin.ui.public.label-enabled-true' }),
-        },
-        false: {
-          text: intl.formatMessage({ id: 'admin.ui.public.label-enabled-false' }),
-        },
-      },
+      valueEnum: enabledStatusEnum(intl),
       formItemProps: {
         rules: [],
       },
