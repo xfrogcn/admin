@@ -17,6 +17,7 @@ import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import EditForm from './components/EditForm'
+import { ExProColumnsType } from '@/components/ValueTypes';
 
 const handleAdd = useMessageBox<API.CreateLangRequestDTO, number>(createLanguage);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateLangRequestDTO }, void>((args) =>
@@ -137,7 +138,7 @@ const LangList: React.FC = () => {
     );
   }, [access]);
 
-  const columns: ProColumns<API.DicDTO>[] = [
+  const columns: ExProColumnsType<API.DicDTO>[] = [
     {
       title: <FormattedMessage id="admin.ui.pages.lang.label-application" />,
       dataIndex: 'application',
@@ -156,12 +157,16 @@ const LangList: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: <FormattedMessage id="admin.ui.public.keyword" />,
-      dataIndex: 'keyword',
+      title: <FormattedMessage id="admin.ui.pages.lang.label-application" />,
+      dataIndex: 'application',
       sorter: false,
-      valueType: 'text',
+      valueType: 'dic',
       hideInTable: true,
       hideInSearch: false,
+      fieldProps: {
+        dictype: 'application',
+        allowClear: true,
+      },
     },
     {
       title: <FormattedMessage id="admin.ui.pages.lang.label-name" />,
