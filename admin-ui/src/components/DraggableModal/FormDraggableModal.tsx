@@ -4,7 +4,7 @@ import { BetaSchemaForm, ProFormInstance, ProFormProps } from '@ant-design/pro-c
 import { useIntl } from '@umijs/max';
 import { Col, Divider, Row, Space } from 'antd';
 import { FieldData } from 'rc-field-form/es/interface';
-import { useRef } from 'react';
+import { MutableRefObject, useRef } from 'react';
 import './index.less';
 
 interface FormDraggableModalProps<T> extends DraggableModalProps {
@@ -15,11 +15,12 @@ interface FormDraggableModalProps<T> extends DraggableModalProps {
   onInit?: (ref: ProFormInstance) => void;
   request?: ProFormProps['request'];
   onFinish?: ProFormProps['onFinish'];
+  formRef?: MutableRefObject<ProFormInstance | undefined>;
 }
 
 function FormDraggableModal<T>(props: FormDraggableModalProps<T>): JSX.Element {
   const intl = useIntl();
-  const formRef = useRef<ProFormInstance>();
+  const formRef = props.formRef || useRef<ProFormInstance>();
   const { mode, onInit, ...formProps } = props;
 
   return (
