@@ -186,7 +186,7 @@ export default {
   "admin.ui.pages.lang.label-name": '语言名称',
   "admin.ui.pages.lang.label-local-name": '本地化名称',
   "admin.ui.pages.lang.label-enabled": '是否启用',
-  "admin.ui.pages.lang.label-display-order": '排序',
+  "admin.ui.pages.lang.label-reference-lang": '参考语种',
   "admin.ui.pages.lang.label-memo": '说明',
   "admin.ui.pages.lang.button-items": '字典项',
   "admin.ui.pages.lang.rule-require-application": '所属应用不可为空',
@@ -194,6 +194,7 @@ export default {
   "admin.ui.pages.lang.delete-confirm-desc": '您确定要删除此语种么？',
   "admin.ui.pages.lang.disable-confirm-desc": '您确定要禁用此语种么？',
   "admin.ui.pages.lang.enable-confirm-desc": '您确定要启用此语种么？',
+  "admin.ui.pages.lang.tooltip-reference-lang": '选择参考语种后，将复制此语种的所有语料到新语种',
 
   'pages.layouts.userLayout.title': 'Ant Design 是西湖区最具影响力的 Web 设计规范',
   'pages.login.accountLogin.tab': '账户密码登录',

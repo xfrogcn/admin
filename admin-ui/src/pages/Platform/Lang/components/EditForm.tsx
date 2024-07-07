@@ -5,6 +5,7 @@ import { enabledStatusEnum } from '@/utils/bizUtils';
 import { ProFormInstance, ProFormProps } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import { useRef } from 'react';
+import { listLanguages } from '@/services/swagger/langApi';
 
 interface EditLangDialogProps extends DraggableModalProps {
   mode: 'edit' | 'create';
@@ -53,7 +54,7 @@ const EditDicDialog: React.FC<EditLangDialogProps> = (props: EditLangDialogProps
         autoSelectFirst: true,
         readonly: props.mode === 'edit',
         labelGetter: (item: API.DicItemDTO) => {
-          return `${item.displayText} - (${item.value})`
+          return `${item.displayText} - (${item.value})`;
         },
         onSelect: (item: API.DicItemDTO) => {
           if (!item) {
@@ -63,14 +64,13 @@ const EditDicDialog: React.FC<EditLangDialogProps> = (props: EditLangDialogProps
             name: item.extValue1,
             localName: item.extValue2,
           });
-
-        }
+        },
       },
       formItemProps: {
         rules: [
           {
             required: true,
-            // type: 'string',
+            type: 'string',
             message: intl.formatMessage({ id: 'admin.ui.pages.lang.rule-require-lang' }),
           },
         ],
@@ -95,16 +95,40 @@ const EditDicDialog: React.FC<EditLangDialogProps> = (props: EditLangDialogProps
   ];
 
   if (props.mode === 'create') {
-    columns.push({
-      title: intl.formatMessage({ id: 'admin.ui.public.abel-enabled' }),
-      dataIndex: 'enabled',
-      valueType: 'radio',
-      resetValue: 'true',
-      valueEnum: enabledStatusEnum(intl),
-      formItemProps: {
-        rules: [],
+    columns.push(
+      {
+        title: intl.formatMessage({ id: 'admin.ui.pages.lang.label-reference-lang' }),
+        dataIndex: 'referenceLangId',
+        valueType: 'select',
+        tooltip: intl.formatMessage({id: 'admin.ui.pages.lang.tooltip-reference-lang'}),
+        request: (async () => {
+          const result = await listLanguages({pageNum: 1, pageSize: 300});
+          if (result.data) {
+              return result.data.map((item: API.LangDTO) => {
+                return {
+                  label: item.name,
+                  value: item.id,
+                }
+              });
+          }
+
+          return [];
+        }),
+        formItemProps: {
+          rules: [],
+        },
       },
-    });
+      {
+        title: intl.formatMessage({ id: 'admin.ui.public.abel-enabled' }),
+        dataIndex: 'enabled',
+        valueType: 'radio',
+        resetValue: 'true',
+        valueEnum: enabledStatusEnum(intl),
+        formItemProps: {
+          rules: [],
+        },
+      },
+    );
   }
 
   return (
@@ -116,7 +140,7 @@ const EditDicDialog: React.FC<EditLangDialogProps> = (props: EditLangDialogProps
           form.resetFields();
           form.setFieldsValue({
             ...props.lang,
-            enabled: props.lang.enabled + ''
+            enabled: props.lang.enabled + '',
           });
         }
       }}
