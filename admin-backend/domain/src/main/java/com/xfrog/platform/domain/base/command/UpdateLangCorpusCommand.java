@@ -16,6 +16,4 @@ public class UpdateLangCorpusCommand {
     private String corpusGroup;
     // 语料说明
     private String memo;
-    // 是否启用
-    private Boolean enabled;
 }

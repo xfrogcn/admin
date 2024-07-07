@@ -23,7 +23,8 @@ public class LangCorpusDomainRepositoryImpl extends BaseDomainRepository<LangCor
     public List<LangCorpus> findAllByApplication(String application) {
         LambdaQueryWrapper<LangCorpusPO> queryWrapper = new LambdaQueryWrapper<LangCorpusPO>()
                 .eq(LangCorpusPO::getApplication, application)
-                .eq(LangCorpusPO::getDeleted, false);
+                .eq(LangCorpusPO::getDeleted, false)
+                .eq(LangCorpusPO::getEnabled, true);
         return converter.toDomainList(mapper.selectList(queryWrapper));
     }
 }
