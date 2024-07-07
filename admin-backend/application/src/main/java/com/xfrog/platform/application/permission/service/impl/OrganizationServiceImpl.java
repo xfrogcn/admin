@@ -47,7 +47,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         int seq = getMaxSeq(parent) + 1;
 
-        CreateOrganizationCommand command = OrganizationDTOToCommandConverter.INSTANCE.requestToCreateCommand(organizationRequestDTO);
+        CreateOrganizationCommand command = OrganizationDTOToCommandConverter.INSTANCE.toCreateCommand(organizationRequestDTO);
         command.setCode(generateCode(parent, seq));
         command.setLevel(parent.getLevel() + 1);
         command.setParentIds(parent.getAllLevelIds());
@@ -80,7 +80,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new BusinessException("organization name exists");
         }
 
-        UpdateOrganizationCommand command = OrganizationDTOToCommandConverter.INSTANCE.requestToUpdateCommand(updateOrganizationRequestDTO);
+        UpdateOrganizationCommand command = OrganizationDTOToCommandConverter.INSTANCE.toUpdateCommand(updateOrganizationRequestDTO);
         organization.update(command);
 
         organizationDomainRepository.save(organization);

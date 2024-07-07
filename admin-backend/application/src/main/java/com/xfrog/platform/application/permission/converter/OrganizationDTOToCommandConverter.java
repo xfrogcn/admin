@@ -1,6 +1,9 @@
 package com.xfrog.platform.application.permission.converter;
 
 
+import com.xfrog.framework.converter.DTOToCreateCommandConverter;
+import com.xfrog.framework.converter.DTOToUpdateCommandConverter;
+import com.xfrog.framework.converter.DomainToDTOConverter;
 import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateOrganizationRequestDTO;
@@ -12,13 +15,11 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface OrganizationDTOToCommandConverter {
+public interface OrganizationDTOToCommandConverter
+        extends DTOToCreateCommandConverter<CreateOrganizationRequestDTO, CreateOrganizationCommand>,
+        DTOToUpdateCommandConverter<UpdateOrganizationRequestDTO, UpdateOrganizationCommand>,
+        DomainToDTOConverter<Organization, OrganizationDTO> {
 
     OrganizationDTOToCommandConverter INSTANCE = Mappers.getMapper(OrganizationDTOToCommandConverter.class);
 
-    CreateOrganizationCommand requestToCreateCommand(CreateOrganizationRequestDTO requestDTO);
-
-    UpdateOrganizationCommand requestToUpdateCommand(UpdateOrganizationRequestDTO requestDTO);
-
-    OrganizationDTO toDTO(Organization organization);
 }

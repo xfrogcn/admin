@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface DomainToDTOConverter<DTO, DOMAIN> {
+public interface DomainToDTOConverter<DOMAIN, DTO> {
     DTO toDTO(DOMAIN domain);
     default List<DTO> toDTOList(List<DOMAIN> domains) {
         if (CollectionUtils.isEmpty(domains)) {

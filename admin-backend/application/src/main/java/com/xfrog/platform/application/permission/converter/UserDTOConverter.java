@@ -9,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface UserDTOConverter extends DomainToDTOConverter<UserDTO, User> {
+public interface UserDTOConverter extends DomainToDTOConverter<User, UserDTO> {
     UserDTOConverter INSTANCE = Mappers.getMapper(UserDTOConverter.class);
 
     CurrentUserInfoDTO toCurrentUser(User user);

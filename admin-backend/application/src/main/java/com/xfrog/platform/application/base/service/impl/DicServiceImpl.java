@@ -46,7 +46,7 @@ public class DicServiceImpl implements DicService {
             throw new FailedPreconditionException("dic name or type exists");
         }
 
-        CreateDicCommand createDicCommand = converter.requestToCreateCommand(createDicRequestDTO);
+        CreateDicCommand createDicCommand = converter.toCreateCommand(createDicRequestDTO);
         Dic dic = Dic.create(createDicCommand);
 
         return dicDomainRepository.save(dic).getId();
@@ -62,7 +62,7 @@ public class DicServiceImpl implements DicService {
         if (dicDomainRepository.existsByTypeOrName(updateDicRequestDTO.getType(), updateDicRequestDTO.getName(), List.of(dicId))) {
             throw new FailedPreconditionException("dic name or type exists");
         }
-        UpdateDicCommand updateDicCommand = converter.requestToUpdateCommand(updateDicRequestDTO);
+        UpdateDicCommand updateDicCommand = converter.toUpdateCommand(updateDicRequestDTO);
         oldDic.update(updateDicCommand);
 
         dicDomainRepository.save(oldDic);
@@ -124,7 +124,7 @@ public class DicServiceImpl implements DicService {
             throw new FailedPreconditionException("dic item display text exists");
         }
 
-        CreateDicItemCommand createDicItemCommand = DicItemDTOToCommandConverter.INSTANCE.requestToCreateCommand(requestDTO);
+        CreateDicItemCommand createDicItemCommand = DicItemDTOToCommandConverter.INSTANCE.toCreateCommand(requestDTO);
         createDicItemCommand.setDicId(dicId);
 
         DicItem dicItem = DicItem.create(createDicItemCommand);
@@ -149,7 +149,7 @@ public class DicServiceImpl implements DicService {
             throw new NotFoundException("dic item not found");
         }
 
-        UpdateDicItemCommand updateDicItemCommand = DicItemDTOToCommandConverter.INSTANCE.requestToUpdateCommand(requestDTO);
+        UpdateDicItemCommand updateDicItemCommand = DicItemDTOToCommandConverter.INSTANCE.toUpdateCommand(requestDTO);
         dicItem.update(updateDicItemCommand);
 
         dicItemDomainRepository.save(dicItem);

@@ -66,7 +66,7 @@ public class TenantServiceImpl implements TenantService {
             throw new FailedPreconditionException("admin user name already exists");
         }
 
-        CreateTenantCommand createTenantCommand = TenantDTOConverter.INSTANCE.toCommand(tenantDTO);
+        CreateTenantCommand createTenantCommand = TenantDTOConverter.INSTANCE.toCreateCommand(tenantDTO);
         // 创建组织
         CreateOrganizationRequestDTO createOrganizationRequestDTO = CreateOrganizationRequestDTO.builder()
                 .displayOrder(1)

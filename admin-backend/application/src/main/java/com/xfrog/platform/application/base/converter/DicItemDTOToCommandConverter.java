@@ -1,5 +1,7 @@
 package com.xfrog.platform.application.base.converter;
 
+import com.xfrog.framework.converter.DTOToCreateCommandConverter;
+import com.xfrog.framework.converter.DTOToUpdateCommandConverter;
 import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateDicItemRequestDTO;
 import com.xfrog.platform.domain.base.command.CreateDicItemCommand;
@@ -9,11 +11,10 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface DicItemDTOToCommandConverter {
+public interface DicItemDTOToCommandConverter
+        extends DTOToCreateCommandConverter<CreateDicItemRequestDTO, CreateDicItemCommand>,
+        DTOToUpdateCommandConverter<UpdateDicItemRequestDTO, UpdateDicItemCommand> {
 
     DicItemDTOToCommandConverter INSTANCE = Mappers.getMapper(DicItemDTOToCommandConverter.class);
 
-    CreateDicItemCommand requestToCreateCommand(CreateDicItemRequestDTO requestDTO);
-
-    UpdateDicItemCommand requestToUpdateCommand(UpdateDicItemRequestDTO requestDTO);
 }
