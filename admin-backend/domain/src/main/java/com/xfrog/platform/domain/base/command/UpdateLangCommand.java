@@ -14,6 +14,4 @@ public class UpdateLangCommand {
     private String name;
     // 本地语言的名称
     private String localName;
-    // 是否启用
-    private Boolean enabled;
 }

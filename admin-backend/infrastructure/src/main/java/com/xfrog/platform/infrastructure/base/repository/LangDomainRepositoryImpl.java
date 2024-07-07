@@ -1,5 +1,6 @@
 package com.xfrog.platform.infrastructure.base.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xfrog.platform.domain.base.aggregate.Lang;
 import com.xfrog.platform.domain.base.repository.LangDomainRepository;
 import com.xfrog.platform.infrastructure.base.converter.LangPOConverter;
@@ -14,5 +15,14 @@ public class LangDomainRepositoryImpl extends BaseDomainRepository<Lang, LangPO,
     public LangDomainRepositoryImpl(LangMapper langMapper) {
         mapper = langMapper;
         converter = LangPOConverter.INSTANCE;
+    }
+
+    @Override
+    public boolean existsByCode(String application, String code) {
+        LambdaQueryWrapper<LangPO> queryWrapper = new LambdaQueryWrapper<LangPO>()
+                .eq(LangPO::getDeleted, false)
+                .eq(LangPO::getApplication, application)
+                .eq(LangPO::getCode, code);
+        return mapper.exists(queryWrapper);
     }
 }

@@ -28,4 +28,40 @@ public class LangLocal extends AuditEntity {
     private String localValue;
     // 是否已配置
     private Boolean configured;
+
+    /**
+     * 从其他参考语言创建对应语种的本地化语言
+     * @param referenceLangLocal 参考本地化语言
+     * @param lang 目标语种
+     * @return 本地化语言
+     */
+    public static LangLocal createFromReference(LangLocal referenceLangLocal, Lang lang) {
+        return LangLocal.builder()
+                .application(lang.getApplication())
+                .langId(lang.getId())
+                .langCode(lang.getCode())
+                .langCorpusId(referenceLangLocal.getLangCorpusId())
+                .langCorpusCode(referenceLangLocal.getLangCorpusCode())
+                .localValue(referenceLangLocal.getLocalValue())
+                .configured(false)
+                .build();
+    }
+
+    /**
+     * 从语料创建对应语种的本地化语言
+     * @param langCorpus 语料
+     * @param lang 目标语种
+     * @return 本地化语言
+     */
+    public static LangLocal createFromCorpus(LangCorpus langCorpus, Lang lang) {
+        return LangLocal.builder()
+                .application(lang.getApplication())
+                .langId(lang.getId())
+                .langCode(lang.getCode())
+                .langCorpusId(langCorpus.getId())
+                .langCorpusCode(langCorpus.getCorpusCode())
+                .localValue(null)
+                .configured(false)
+                .build();
+    }
 }

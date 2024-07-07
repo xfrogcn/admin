@@ -16,37 +16,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class LangController implements LangApi {
     private final LangService languageService;
 
-    @Authorization("admin:platform:language:create")
+    @Authorization("admin:platform:lang:create")
     @Override
     public Long createLanguage(CreateLangRequestDTO language) {
         return languageService.createLanguage(language);
     }
 
-    @Authorization(value = "admin:platform:language", demoDisabled = false)
+    @Authorization(value = "admin:platform:lang", demoDisabled = false)
     @Override
     public PageDTO<LangDTO> listLanguages(QueryLangRequestDTO queryDTO) {
         return languageService.listLanguages(queryDTO);
     }
 
-    @Authorization(value = "admin:platform:language", demoDisabled = false)
+    @Authorization(value = "admin:platform:lang", demoDisabled = false)
     @Override
     public LangDTO getLanguage(Long languageId) {
         return languageService.getLanguage(languageId);
     }
 
-    @Authorization("admin:platform:language:edit")
+    @Authorization("admin:platform:lang:edit")
     @Override
     public void updateLanguage(Long languageId, UpdateLangRequestDTO language) {
         languageService.updateLanguage(languageId, language);
     }
 
     @Override
-    @Authorization("admin:platform:language:enable")
+    @Authorization("admin:platform:lang:enable")
     public void enableLanguage(Long langId, Boolean enabled, Long referenceLangId) {
         languageService.enableLanguage(langId, enabled, referenceLangId);
     }
 
-    @Authorization("admin:platform:language:delete")
+    @Authorization("admin:platform:lang:delete")
     @Override
     public void deleteLanguage(Long languageId) {
         languageService.deleteLanguage(languageId);
