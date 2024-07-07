@@ -16,6 +16,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
+import EditForm from './components/EditForm'
 
 const handleAdd = useMessageBox<API.CreateLangRequestDTO, number>(createLanguage);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateLangRequestDTO }, void>((args) =>
@@ -56,10 +57,10 @@ const queryLangs = async (
 
 const LangList: React.FC = () => {
   const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-  const [newLang, setNewLang] = useState<API.LangDTO>({} as API.LangDTO);
+  const [newLang, setNewLang] = useState<API.LangDTO>({enabled: true});
 
   const [editModalOpen, handleEditModalOpen] = useState<boolean>(false);
-  const [editLanG, setEditLang] = useState<API.LangDTO | undefined>();
+  const [editLang, setEditLang] = useState<API.LangDTO | undefined>();
 
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
@@ -227,7 +228,7 @@ const LangList: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                setNewLang({} as any);
+                setNewLang({enabled: true} as any);
                 handleCreateModalOpen(true);
               }}
             >
@@ -239,14 +240,14 @@ const LangList: React.FC = () => {
         columns={columns as any}
         rowSelection={false}
       />
-      {/* {
+      {
         <EditForm
           mode="create"
-          dic={newDic}
+          lang={newLang}
           onCancel={() => handleCreateModalOpen(false)}
-          title={intl.formatMessage({ id: 'admin.ui.pages.dic.create-new-title' })}
+          title={intl.formatMessage({ id: 'admin.ui.pages.lang.create-new-title' })}
           onFinish={async (values) => {
-            const result = await handleAdd(values as API.CreateDicRequestDTO);
+            const result = await handleAdd(values as API.CreateLangRequestDTO);
             if (result.success) {
               handleCreateModalOpen(false);
               actionRef.current?.reload();
@@ -259,13 +260,13 @@ const LangList: React.FC = () => {
       {
         <EditForm
           mode="edit"
-          dic={editDic}
+          lang={editLang}
           onCancel={() => handleEditModalOpen(false)}
-          title={intl.formatMessage({ id: 'admin.ui.pages.dic.edit-title' })}
+          title={intl.formatMessage({ id: 'admin.ui.pages.lang.edit-title' })}
           onFinish={async (values) => {
             const result = await handleUpdate({
-              id: editDic?.id ?? 0,
-              body: values as API.UpdateDicRequestDTO,
+              id: editLang?.id ?? 0,
+              body: values as API.UpdateLangRequestDTO,
             });
             if (result.success) {
               handleEditModalOpen(false);
@@ -275,7 +276,7 @@ const LangList: React.FC = () => {
           width="600px"
           open={editModalOpen}
         ></EditForm>
-      } */}
+      }
     </PageContainer>
   );
 };
