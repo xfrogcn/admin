@@ -23,6 +23,12 @@ public class DicDTO {
     private String type;
     @Schema(description = "字典名称")
     private String name;
+    @Schema(description = "字典值标签语料编码")
+    private String labelLangCodeValue;
+    @Schema(description = "字典扩展值1标签语料编码")
+    private String labelLangCodeExtValue1;
+    @Schema(description = "字典扩展值2标签语料编码")
+    private String labelLangCodeExtValue2;
     @Schema(description = "字典说明")
     private String memo;
     @Schema(description = "创建时间")

@@ -15,4 +15,7 @@ public class UpdateDicCommand {
     private String type;
     private String name;
     private String memo;
+    private String labelLangCodeValue;
+    private String labelLangCodeExtValue1;
+    private String labelLangCodeExtValue2;
 }

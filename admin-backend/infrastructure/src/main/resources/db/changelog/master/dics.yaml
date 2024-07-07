@@ -28,6 +28,24 @@ databaseChangeLog:
                     nullable: false
                     comment: '字典名称'
               - column:
+                  name: label_lang_code_value
+                  type: varchar(128)
+                  constraints:
+                    nullable: true
+                    comment: '字典值标签语料编码'
+              - column:
+                  name: label_lang_code_ext_value1
+                  type: varchar(128)
+                  constraints:
+                    nullable: true
+                    comment: '扩展值1标签语料编码'
+              - column:
+                  name: label_lang_code_ext_value2
+                  type: varchar(128)
+                  constraints:
+                    nullable: true
+                    comment: '扩展值2标签语料编码'
+              - column:
                   name: memo
                   type: varchar(255)
                   constraints:

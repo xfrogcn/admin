@@ -19,12 +19,18 @@ public class Dic extends AuditEntity {
     private String type;
     private String name;
     private String memo;
+    private String labelLangCodeValue;
+    private String labelLangCodeExtValue1;
+    private String labelLangCodeExtValue2;
 
     public static Dic create(CreateDicCommand command) {
         return Dic.builder()
                 .type(command.getType())
                 .name(command.getName())
                 .memo(command.getMemo())
+                .labelLangCodeValue(command.getLabelLangCodeValue())
+                .labelLangCodeExtValue1(command.getLabelLangCodeExtValue1())
+                .labelLangCodeExtValue2(command.getLabelLangCodeExtValue2())
                 .build();
     }
 
@@ -32,5 +38,8 @@ public class Dic extends AuditEntity {
         this.type = command.getType();
         this.name = command.getName();
         this.memo = command.getMemo();
+        this.labelLangCodeValue = command.getLabelLangCodeValue();
+        this.labelLangCodeExtValue1 = command.getLabelLangCodeExtValue1();
+        this.labelLangCodeExtValue2 = command.getLabelLangCodeExtValue2();
     }
 }

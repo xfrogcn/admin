@@ -25,6 +25,14 @@ public class UpdateDicRequestDTO {
     @NotEmpty
     @Size(min = 1, max = 128)
     private String name;
+    @Size(max = 128)
+    private String labelLangCodeValue;
+    @Schema(description = "字典扩展值1标签语料编码")
+    @Size(max = 128)
+    private String labelLangCodeExtValue1;
+    @Schema(description = "字典扩展值2标签语料编码")
+    @Size(max = 128)
+    private String labelLangCodeExtValue2;
     @Schema(description = "字典说明")
     @Size(max = 255)
     private String memo;
