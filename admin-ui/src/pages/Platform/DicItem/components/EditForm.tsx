@@ -8,7 +8,13 @@ import { useIntl } from '@umijs/max';
 interface EditDicItemDialogProps extends DraggableModalProps {
   mode: 'edit' | 'create';
   dicItem?: API.DicItemDTO;
+  dic: API.DicDTO;
   onFinish?: ProFormProps['onFinish'];
+}
+
+function getLangCode(dic: API.DicDTO, key: 'labelLangCodeValue' | 'labelLangCodeExtValue1' | 'labelLangCodeExtValue2', defaultLangCode: string) {
+  let langCode = dic[key];
+  return langCode ? langCode : defaultLangCode;
 }
 
 const EditDicItemDialog: React.FC<EditDicItemDialogProps> = (props: EditDicItemDialogProps) => {
@@ -76,7 +82,7 @@ const EditDicItemDialog: React.FC<EditDicItemDialogProps> = (props: EditDicItemD
       },
     },
     {
-      title: intl.formatMessage({ id: 'admin.ui.pages.dicitem.label-value' }),
+      title: intl.formatMessage({ id: getLangCode(props.dic, 'labelLangCodeValue', 'admin.ui.pages.dicitem.label-value') }),
       dataIndex: 'value',
       valueType: 'text',
       fieldProps: {
@@ -84,7 +90,7 @@ const EditDicItemDialog: React.FC<EditDicItemDialogProps> = (props: EditDicItemD
       },
     },
     {
-      title: intl.formatMessage({ id: 'admin.ui.pages.dicitem.label-ext-value1' }),
+      title: intl.formatMessage({ id: getLangCode(props.dic, 'labelLangCodeExtValue1', 'admin.ui.pages.dicitem.label-ext-value1') }),
       dataIndex: 'extValue1',
       valueType: 'text',
       fieldProps: {
@@ -92,7 +98,7 @@ const EditDicItemDialog: React.FC<EditDicItemDialogProps> = (props: EditDicItemD
       },
     },
     {
-      title: intl.formatMessage({ id: 'admin.ui.pages.dicitem.label-ext-value2' }),
+      title: intl.formatMessage({ id: getLangCode(props.dic, 'labelLangCodeExtValue2', 'admin.ui.pages.dicitem.label-ext-value2') }),
       dataIndex: 'extValue2',
       valueType: 'text',
       fieldProps: {

@@ -31,8 +31,29 @@ declare namespace API {
     type: string;
     /** 字典名称 */
     name: string;
+    /** 字典值标签语料编码 */
+    labelLangCodeValue?: string;
+    /** 字典扩展值1标签语料编码 */
+    labelLangCodeExtValue1?: string;
+    /** 字典扩展值2标签语料编码 */
+    labelLangCodeExtValue2?: string;
     /** 字典说明 */
     memo?: string;
+  };
+
+  type CreateLangRequestDTO = {
+    /** 所属应用 */
+    application: string;
+    /** 语言代码 */
+    code: string;
+    /** 语言名称 */
+    name: string;
+    /** 本地语言的名称 */
+    localName: string;
+    /** 是否启用 */
+    enabled: boolean;
+    /** 参考语种 */
+    referenceLangId?: number;
   };
 
   type CreateOrganizationRequestDTO = {
@@ -170,6 +191,10 @@ declare namespace API {
     dicId: number;
   };
 
+  type deleteLanguageParams = {
+    langId: number;
+  };
+
   type deleteOrganizationParams = {
     organizationId: number;
   };
@@ -189,6 +214,12 @@ declare namespace API {
     type?: string;
     /** 字典名称 */
     name?: string;
+    /** 字典值标签语料编码 */
+    labelLangCodeValue?: string;
+    /** 字典扩展值1标签语料编码 */
+    labelLangCodeExtValue1?: string;
+    /** 字典扩展值2标签语料编码 */
+    labelLangCodeExtValue2?: string;
     /** 字典说明 */
     memo?: string;
     /** 创建时间 */
@@ -226,6 +257,12 @@ declare namespace API {
     userId: number;
   };
 
+  type enableLanguageParams = {
+    langId: number;
+    enabled: boolean;
+    referenceLangId: number;
+  };
+
   type enableRoleParams = {
     roleId: number;
     enabled: boolean;
@@ -255,6 +292,10 @@ declare namespace API {
 
   type getDicParams = {
     dicId: number;
+  };
+
+  type getLanguageParams = {
+    langId: number;
   };
 
   type getOrganizationParams = {
@@ -288,6 +329,23 @@ declare namespace API {
 
   type grantRolesParams = {
     userId: number;
+  };
+
+  type LangDTO = {
+    /** 语言 ID */
+    id?: number;
+    /** 所属应用 */
+    application?: string;
+    /** 语言代码 */
+    code?: string;
+    /** 语言名称 */
+    name?: string;
+    /** 本地语言的名称 */
+    localName?: string;
+    /** 是否启用 */
+    enabled?: boolean;
+    /** 创建时间 */
+    createdTime?: string;
   };
 
   type listOrganizationsParams = {
@@ -329,6 +387,14 @@ declare namespace API {
     data?: DicDTO[];
   };
 
+  type PageDTOLangDTO = {
+    pageNum?: number;
+    pageSize?: number;
+    total?: number;
+    pages?: number;
+    data?: LangDTO[];
+  };
+
   type PageDTOTenantDTO = {
     pageNum?: number;
     pageSize?: number;
@@ -366,6 +432,14 @@ declare namespace API {
     sortItems?: SortItem[];
     /** 关键字 */
     keyword?: string;
+  };
+
+  type QueryLangRequestDTO = {
+    pageNum: number;
+    pageSize: number;
+    sortItems?: SortItem[];
+    /** 应用 */
+    application?: string;
   };
 
   type QueryOrganizationRequestDTO = {
@@ -476,8 +550,24 @@ declare namespace API {
     type: string;
     /** 字典名称 */
     name: string;
+    labelLangCodeValue?: string;
+    /** 字典扩展值1标签语料编码 */
+    labelLangCodeExtValue1?: string;
+    /** 字典扩展值2标签语料编码 */
+    labelLangCodeExtValue2?: string;
     /** 字典说明 */
     memo?: string;
+  };
+
+  type UpdateLangRequestDTO = {
+    /** 语言名称 */
+    name: string;
+    /** 本地语言的名称 */
+    localName: string;
+  };
+
+  type updateLanguageParams = {
+    langId: number;
   };
 
   type updateOrganizationParams = {

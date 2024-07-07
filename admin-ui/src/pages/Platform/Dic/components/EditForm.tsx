@@ -65,6 +65,60 @@ const EditDicDialog: React.FC<EditDicDialogProps> = (props: EditDicDialogProps) 
       },
     },
     {
+      title: intl.formatMessage({ id: 'admin.ui.pages.dic.label-lang-code-value' }),
+      dataIndex: 'labelLangCodeValue',
+      valueType: 'text',
+      tooltip: `${intl.formatMessage({ id: 'admin.ui.pages.dic.tooptip-lang-code-value' })},${intl.formatMessage({ id: 'admin.ui.public.pattern-tooltip-code' })}`,
+      fieldProps: {
+        maxLength: 128,
+      },
+      formItemProps: {
+        rules: [
+          {
+            pattern: patterns.permissionCode,
+            type: 'string',
+            message: intl.formatMessage({ id: 'admin.ui.public.pattern-tooltip-code' }),
+          },
+        ],
+      },
+    },
+    {
+      title: intl.formatMessage({ id: 'admin.ui.pages.dic.label-lang-code-ext-value1' }),
+      dataIndex: 'labelLangCodeExtValue1',
+      valueType: 'text',
+      tooltip: `${intl.formatMessage({ id: 'admin.ui.pages.dic.tooptip-lang-code-ext-value1' })},${intl.formatMessage({ id: 'admin.ui.public.pattern-tooltip-code' })}`,
+      fieldProps: {
+        maxLength: 128,
+      },
+      formItemProps: {
+        rules: [
+          {
+            pattern: patterns.permissionCode,
+            type: 'string',
+            message: intl.formatMessage({ id: 'admin.ui.public.pattern-tooltip-code' }),
+          },
+        ],
+      },
+    },
+    {
+      title: intl.formatMessage({ id: 'admin.ui.pages.dic.label-lang-code-ext-value2' }),
+      dataIndex: 'labelLangCodeExtValue2',
+      valueType: 'text',
+      tooltip: `${intl.formatMessage({ id: 'admin.ui.pages.dic.tooptip-lang-code-ext-value2' })},${intl.formatMessage({ id: 'admin.ui.public.pattern-tooltip-code' })}`,
+      fieldProps: {
+        maxLength: 128,
+      },
+      formItemProps: {
+        rules: [
+          {
+            pattern: patterns.permissionCode,
+            type: 'string',
+            message: intl.formatMessage({ id: 'admin.ui.public.pattern-tooltip-code' }),
+          },
+        ],
+      },
+    },
+    {
       title: intl.formatMessage({ id: 'admin.ui.pages.dic.label-memo' }),
       dataIndex: 'memo',
       valueType: 'textarea',
@@ -79,6 +133,8 @@ const EditDicDialog: React.FC<EditDicDialogProps> = (props: EditDicDialogProps) 
   return (
     <FormDraggableModal<API.DicDTO>
       {...props}
+      labelCol={{span: 6}}
+      wrapperCol={{span: 17}}
       onInit={(form) => {
         if (props.dic) {
           form.resetFields();

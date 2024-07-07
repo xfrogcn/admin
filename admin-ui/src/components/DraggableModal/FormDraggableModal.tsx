@@ -10,6 +10,8 @@ import './index.less';
 interface FormDraggableModalProps<T> extends DraggableModalProps {
   mode?: 'edit' | 'create';
   columns: ExProFormColumnsType<T>[];
+  labelCol?: ProFormProps['labelCol'];
+  wrapperCol?: ProFormProps['wrapperCol'];
   onInit?: (ref: ProFormInstance) => void;
   request?: ProFormProps['request'];
   onFinish?: ProFormProps['onFinish'];
@@ -39,8 +41,8 @@ function FormDraggableModal<T>(props: FormDraggableModalProps<T>): JSX.Element {
         formRef={formRef}
         layout="horizontal"
         grid={true}
-        labelCol={{ span: 5 }}
-        wrapperCol={{ span: 18 }}
+        labelCol={props.labelCol ?? { span: 5 }}
+        wrapperCol={props.wrapperCol ?? { span: 18 }}
         layoutType="Form"
         className="draggable-modal-form"
         onReset={(e) => {

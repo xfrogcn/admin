@@ -5,7 +5,7 @@ export const patterns = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     userName: /^[a-zA-Z0-9_]+$/,
     password: /^.{6,}$/,
-    permissionCode: /^[a-zA-Z0-9_\-:]+$/,
+    permissionCode: /^[a-zA-Z0-9_\-:\.]+$/,
     noneWhiteSpace: /^\S+$/,
     url: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i,
 }

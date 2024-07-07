@@ -163,6 +163,7 @@ const DicItemList: React.FC = () => {
         <EditForm
           mode="create"
           dicItem={newDicItem}
+          dic ={dic || {}}
           onCancel={() => handleCreateModalOpen(false)}
           title={intl.formatMessage({ id: 'admin.ui.pages.dicitem.create-new-title' })}
           onFinish={async (values) => {
@@ -180,6 +181,7 @@ const DicItemList: React.FC = () => {
         <EditForm
           mode="edit"
           dicItem={editDicItem}
+          dic={dic || {}}
           onCancel={() => handleEditModalOpen(false)}
           title={intl.formatMessage({ id: 'admin.ui.pages.dicitem.edit-title' })}
           onFinish={async (values) => {

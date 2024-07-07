@@ -4,6 +4,7 @@
 // API 唯一标识：
 import * as dataScopeApi from './dataScopeApi';
 import * as dicApi from './dicApi';
+import * as langApi from './langApi';
 import * as organizationApi from './organizationApi';
 import * as permissionItemApi from './permissionItemApi';
 import * as roleApi from './roleApi';
@@ -17,4 +18,5 @@ export default {
   dataScopeApi,
   permissionItemApi,
   organizationApi,
+  langApi,
 };
