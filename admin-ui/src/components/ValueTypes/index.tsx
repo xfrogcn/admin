@@ -1,6 +1,7 @@
 import { ProColumnType, ProFormColumnsType, ProRenderFieldPropsType, ValueTypeWithFieldProps } from "@ant-design/pro-components";
 import { ProOrganizationSelector } from "./OrganizationSelector";
 import { Tag } from "antd";
+import { DicSelect } from './DicSelect'
 
 
 
@@ -20,10 +21,19 @@ export const valueTypeMap: Record<string, ProRenderFieldPropsType> = {
                 {text.map((item) => <Tag key={item[props.fieldProps.key]}>{item[props.fieldProps.title]}</Tag>)}
             </>
         }
+    },
+    dic: {
+        renderFormItem: (text, props) => {
+            return <DicSelect {...props}/>
+        },
+        render: (text, props, dom) => {
+            console.log(text, props)
+            return <div>HELLO WORLD</div>
+        },
     }
 }
 
-export type ExValueType = ProFormColumnsType["valueType"] | 'organizationSelector' | 'tags'
+export type ExValueType = ProFormColumnsType["valueType"] | 'organizationSelector' | 'tags' | 'dic'
 
 
 export type ExProFormColumnsType<T> = Omit<ProFormColumnsType<T>, 'valueType'> & {
