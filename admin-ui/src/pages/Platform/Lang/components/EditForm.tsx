@@ -2,8 +2,9 @@ import { DraggableModalProps } from '@/components/DraggableModal';
 import FormDraggableModal from '@/components/DraggableModal/FormDraggableModal';
 import { ExProFormColumnsType } from '@/components/ValueTypes';
 import { enabledStatusEnum } from '@/utils/bizUtils';
-import { ProFormProps } from '@ant-design/pro-components';
+import { ProFormInstance, ProFormProps } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
+import { useRef } from 'react';
 
 interface EditLangDialogProps extends DraggableModalProps {
   mode: 'edit' | 'create';
@@ -13,13 +14,18 @@ interface EditLangDialogProps extends DraggableModalProps {
 
 const EditDicDialog: React.FC<EditLangDialogProps> = (props: EditLangDialogProps) => {
   const intl = useIntl();
+  const formRef = useRef<ProFormInstance>();
 
   const columns: ExProFormColumnsType<API.LangDTO>[] = [
     {
       title: intl.formatMessage({ id: 'admin.ui.pages.lang.label-application' }),
       dataIndex: 'application',
-      valueType: 'text',
-      readonly: props.mode === 'edit',
+      valueType: 'dic',
+      fieldProps: {
+        dictype: 'application',
+        autoSelectFirst: true,
+        readonly: props.mode === 'edit',
+      },
       formItemProps: {
         rules: [
           {
@@ -41,13 +47,30 @@ const EditDicDialog: React.FC<EditLangDialogProps> = (props: EditLangDialogProps
     {
       title: intl.formatMessage({ id: 'admin.ui.pages.lang.label-lang' }),
       dataIndex: 'code',
-      valueType: 'text',
-      readonly: props.mode === 'edit',
+      valueType: 'dic',
+      fieldProps: {
+        dictype: 'lang',
+        autoSelectFirst: true,
+        readonly: props.mode === 'edit',
+        labelGetter: (item: API.DicItemDTO) => {
+          return `${item.displayText} - (${item.value})`
+        },
+        onSelect: (item: API.DicItemDTO) => {
+          if (!item) {
+            return;
+          }
+          formRef.current?.setFieldsValue({
+            name: item.extValue1,
+            localName: item.extValue2,
+          });
+
+        }
+      },
       formItemProps: {
         rules: [
           {
             required: true,
-            type: 'string',
+            // type: 'string',
             message: intl.formatMessage({ id: 'admin.ui.pages.lang.rule-require-lang' }),
           },
         ],
@@ -87,6 +110,7 @@ const EditDicDialog: React.FC<EditLangDialogProps> = (props: EditLangDialogProps
   return (
     <FormDraggableModal<API.DicDTO>
       {...props}
+      formRef={formRef}
       onInit={(form) => {
         if (props.lang) {
           form.resetFields();
