@@ -143,7 +143,9 @@ public class LangCorpusServiceImpl implements LangCorpusService {
                 if (existsLangLocal == null) {
                     // 不存在，新建默认本地化配置
                     existsLangLocal = LangLocal.createFromCorpus(corpus, lang);
-                    existsLangLocal.updateLocalValue(local);
+                    if (local != null) {
+                        existsLangLocal.updateLocalValue(local);
+                    }
                     newLangLocals.add(existsLangLocal);
                 } else {
                     // 存在, 如果传入有初始化设置，则更新
