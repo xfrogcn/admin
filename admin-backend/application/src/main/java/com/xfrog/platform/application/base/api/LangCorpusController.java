@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,5 +53,10 @@ public class LangCorpusController implements LangCorpusApi {
     @Override
     public void deleteLangCorpus(Long langCorpusId) {
         langCorpusService.deleteLangCorpus(langCorpusId);
+    }
+
+    @Override
+    public void configLangLocal(Long langCorpusId, Map<String, String> langLocal) {
+        langCorpusService.configLangLocal(langCorpusId, langLocal);
     }
 }

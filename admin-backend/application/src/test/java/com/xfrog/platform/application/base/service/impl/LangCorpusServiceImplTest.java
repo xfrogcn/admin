@@ -197,6 +197,43 @@ class LangCorpusServiceImplTest {
                 .save(argThat(langCorpus -> !langCorpus.getEnabled()));
     }
 
+    @Test
+    void configLangLocal_withInvalidId_shouldThrowNotFoundException() {
+        // Arrange
+        doReturn(null)
+                .when(langCorpusDomainRepository)
+                .findById(1L);
+
+        // Act & Assert
+        assertThrows(NotFoundException.class, () -> langCorpusService.configLangLocal(1L, new HashMap<>()));
+    }
+
+    @Test
+    void configLangLocal_withEmptyLangLocalMap_shouldStillConfigure() {
+        // Arrange
+        doReturn(LangFixtures.createDefaultCorpus().id(1L).build())
+                .when(langCorpusDomainRepository)
+                .findById(1L);
+
+        Lang lang = LangFixtures.createDefaultLang().build();
+        LangCorpus langCorpus = LangFixtures.createDefaultCorpus().build();
+
+        doReturn(List.of(lang))
+                .when(langDomainRepository)
+                .findByApplication(anyString(), anyBoolean());
+        doReturn(List.of())
+                .when(langLocalDomainRepository)
+                .findAllByApplicationAndCorpusIds(anyString(), anyList());
+
+        langCorpusService.configLangLocal(1L, Map.of("zh-CN", "TEST"));
+
+        verify(langLocalDomainRepository, times(1))
+                .saveAll(argThat(langLocals -> langLocals.size() == 1
+                        && langLocals.get(0).getLocalValue().equals("TEST")
+                        && langLocals.get(0).getConfigured()));
+
+    }
+
     @Nested
     class FillLanguageCorpusLocal {
         @Test

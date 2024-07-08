@@ -118,6 +118,17 @@ public class LangCorpusServiceImpl implements LangCorpusService {
         return langCorpusRepository.findById(langCorpusId);
     }
 
+    @Override
+    @Transactional
+    public void configLangLocal(Long langCorpusId, Map<String, String> langLocal) {
+        LangCorpus langCorpus = langCorpusDomainRepository.findById(langCorpusId);
+        if (langCorpus == null) {
+            throw new NotFoundException("corpus not found");
+        }
+
+        fillLanguageCorpusLocal(langCorpus.getApplication(), List.of(langCorpus), Map.of(langCorpus.getCorpusCode(), langLocal));
+    }
+
     protected void fillLanguageCorpusLocal(String application, List<LangCorpus> langCorpus, Map<String, Map<String, String>> localMap) {
         if (CollectionUtils.isEmpty(langCorpus)) {
             return;

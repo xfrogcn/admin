@@ -7,6 +7,7 @@ import com.xfrog.platform.application.base.dto.QueryLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateLangCorpusRequestDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface LangCorpusService {
     List<Long> createLangCorpus(CreateLangCorpusRequestDTO langCorpus);
@@ -21,4 +22,6 @@ public interface LangCorpusService {
 
 
     LangCorpusDTO getLangCorpus(Long langCorpusId);
+
+    void configLangLocal(Long langCorpusId, Map<String, String> langLocal);
 }
