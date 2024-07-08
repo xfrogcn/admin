@@ -25,8 +25,13 @@ public abstract class BaseDomainRepository<D, P extends AuditPO, M extends BaseM
         return converter.toDomain(po);
     }
 
-    public void saveAll(List<D> domains) {
-        mapper.saveAll(converter.toPOList(domains));
+    public List<D> saveAll(List<D> domains) {
+        if (CollectionUtils.isEmpty(domains)) {
+            return new LinkedList<>();
+        }
+        List<P> pos = converter.toPOList(domains);
+        mapper.saveAll(pos);
+        return converter.toDomainList(pos);
     }
 
     public D findById(Long id) {

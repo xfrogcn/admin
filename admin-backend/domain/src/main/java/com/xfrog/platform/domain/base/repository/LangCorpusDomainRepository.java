@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface LangCorpusDomainRepository extends DomainRepository<LangCorpus> {
     List<LangCorpus> findAllByApplication(String application);
+
+    boolean existsByApplicationAndCodes(String application, List<String> codes);
 }

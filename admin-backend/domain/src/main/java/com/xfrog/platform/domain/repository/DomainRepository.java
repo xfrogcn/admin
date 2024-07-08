@@ -5,7 +5,7 @@ import java.util.List;
 public interface DomainRepository<D> {
     D save(D domain);
 
-    void saveAll(List<D> domains);
+    List<D> saveAll(List<D> domains);
 
     D findById(Long id);
 

@@ -105,7 +105,7 @@ public class LangServiceImpl implements LangService {
         }
     }
 
-    private void fillLanguageCorpusLocal(String application, Long targetLanguageId, Long referenceLanguageId) {
+    protected void fillLanguageCorpusLocal(String application, Long targetLanguageId, Long referenceLanguageId) {
         // 所有的语料
         List<LangCorpus> langCorpuses = langCorpusDomainRepository.findAllByApplication(application);
         // 所有的本地化语言

@@ -32,4 +32,17 @@ public class LangLocalDomainRepositoryImpl extends BaseDomainRepository<LangLoca
                 .in(LangLocalPO::getLangId, langIds);
         return converter.toDomainList(mapper.selectList(queryWrapper));
     }
+
+    @Override
+    public List<LangLocal> findAllByApplicationAndCorpusIds(String application, List<Long> corpusIds) {
+        if (CollectionUtils.isEmpty(corpusIds)) {
+            return new LinkedList<>();
+        }
+        LambdaQueryWrapper<LangLocalPO> queryWrapper = new LambdaQueryWrapper<LangLocalPO>()
+                .eq(LangLocalPO::getDeleted, false)
+                .eq(LangLocalPO::getApplication, application)
+                .in(LangLocalPO::getLangCorpusId, corpusIds);
+
+        return converter.toDomainList(mapper.selectList(queryWrapper));
+    }
 }

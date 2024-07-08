@@ -6,8 +6,10 @@ import com.xfrog.platform.application.base.dto.LangCorpusDTO;
 import com.xfrog.platform.application.base.dto.QueryLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateLangCorpusRequestDTO;
 
+import java.util.List;
+
 public interface LangCorpusService {
-    Long createLangCorpus(CreateLangCorpusRequestDTO langCorpus);
+    List<Long> createLangCorpus(CreateLangCorpusRequestDTO langCorpus);
 
     void updateLangCorpus(Long langCorpusId, UpdateLangCorpusRequestDTO langCorpus);
 

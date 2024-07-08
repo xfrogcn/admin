@@ -11,6 +11,8 @@ import com.xfrog.platform.application.resourceserver.Authorization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class LangCorpusController implements LangCorpusApi {
@@ -18,7 +20,7 @@ public class LangCorpusController implements LangCorpusApi {
 
     @Authorization("admin:system:langcorpus:create")
     @Override
-    public Long createLangCorpus(CreateLangCorpusRequestDTO langCorpus) {
+    public List<Long> createLangCorpus(CreateLangCorpusRequestDTO langCorpus) {
         return langCorpusService.createLangCorpus(langCorpus);
     }
 

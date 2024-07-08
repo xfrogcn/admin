@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Tag(name = "LangCorpusApi", description = "语料库管理接口")
 @RequestMapping("/api/langcorpus")
 public interface LangCorpusApi {
     @PostMapping
     @Operation(summary = "创建语料库")
-    Long createLangCorpus(@Valid @RequestBody CreateLangCorpusRequestDTO langCorpus);
+    List<Long> createLangCorpus(@Valid @RequestBody CreateLangCorpusRequestDTO langCorpus);
 
     @GetMapping("/list")
     @Operation(summary = "查询语料库列表")

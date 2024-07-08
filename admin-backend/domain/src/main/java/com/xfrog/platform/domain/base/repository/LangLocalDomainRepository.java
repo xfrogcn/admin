@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface LangLocalDomainRepository extends DomainRepository<LangLocal> {
     List<LangLocal> findAllByApplicationAndLangId(String application, List<Long> langIds);
+
+    List<LangLocal> findAllByApplicationAndCorpusIds(String application, List<Long> corpusIds);
 }

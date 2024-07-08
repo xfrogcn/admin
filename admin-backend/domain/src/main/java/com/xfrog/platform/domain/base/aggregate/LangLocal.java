@@ -64,4 +64,8 @@ public class LangLocal extends AuditEntity {
                 .configured(false)
                 .build();
     }
+
+    public void updateLocalValue(String local) {
+        this.localValue = local;
+    }
 }
