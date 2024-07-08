@@ -29,7 +29,7 @@ public interface LangCorpusApi {
 
     @PostMapping("/list")
     @Operation(summary = "查询语料库列表")
-    PageDTO<LangCorpusDTO> listLangCorpus(QueryLangCorpusRequestDTO queryDTO);
+    PageDTO<LangCorpusDTO> listLangCorpus(@Valid @RequestBody QueryLangCorpusRequestDTO queryDTO);
 
     @GetMapping("/{langCorpusId}")
     @Operation(summary = "查询语料库")

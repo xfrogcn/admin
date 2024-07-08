@@ -16,6 +16,11 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.mariadb.jdbc:mariadb-java-client')
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation('com.baomidou:mybatis-plus-boot-starter')
+    testImplementation('org.mybatis.spring.boot:mybatis-spring-boot-starter')
+
+    testImplementation project(':application').sourceSets.test.output
+    testImplementation project(':domain').sourceSets.test.output
 }
 
 springBoot {

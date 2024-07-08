@@ -5,13 +5,23 @@ ext {
     jacocoBranchMin = 0.0
     jacocoExcludes = [
         "**/StartApplication*",
+        "**/GlobalExceptionHandler*",
         "**/exception/**",
         "**/dto/**",
+        "**/po/**",
+        "**/infrastructure/**",
+        "**/converter/**",
+        "**/common/**",
+        "**/config/**",
+        "**/authserver/**",
+        "**/resourceserver/**",
+        "**/principal/**",
+        "**/*Entity.class",
         "**/command/**",
         "**/*Converter**",
         "**/*Mapper*",
         "**/*DTO.class",
-        "**/*DO.class"
+        "**/*PO.class"
     ]
 }
 
