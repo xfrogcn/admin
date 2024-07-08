@@ -3,12 +3,15 @@ package com.xfrog.platform.application.resourceserver;
 
 import com.xfrog.framework.exception.business.PermissionDeniedException;
 import com.xfrog.framework.exception.business.UnauthenticatedException;
+import com.xfrog.platform.application.authserver.dto.UserDetailsDTO;
 import com.xfrog.platform.application.common.RequestThreadMarkContext;
 import com.xfrog.platform.application.permission.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -34,6 +37,9 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
     private final ConcurrentHashMap<Method, HashSet<OrStringList>> methodAuthorizationMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Method, IgnoreDataPermission> ignoreDataPermissionMap = new ConcurrentHashMap<>();
     private final UserService userService;
+
+    @Value("${admin.api-server.validOperatePermission: true}")
+    boolean validOperatePermission;
 
      static final class OrStringList {
         private final Set<String> orStringList;
@@ -88,6 +94,10 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
             }
         }
 
+        if (!validOperatePermission) {
+            return true;
+        }
+
         // 操作权限处理
         Set<OrStringList> permissionCodes = methodAuthorizationMap.computeIfAbsent(handlerMethod.getMethod(), (key) -> {
             Authorization authorization = handlerMethod.getMethod().getAnnotation(Authorization.class);
@@ -131,6 +141,11 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
                     userId = Long.valueOf(jwt.getClaim("uid"));
                 }
                 return userId;
+            }
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken usernameToken) {
+            UserDetailsDTO userDetailsDTO = (UserDetailsDTO) usernameToken.getPrincipal();
+            if (userDetailsDTO != null) {
+                return userDetailsDTO.getUserId();
             }
         }
         return  null;

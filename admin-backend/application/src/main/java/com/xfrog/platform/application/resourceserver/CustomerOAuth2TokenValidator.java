@@ -4,6 +4,7 @@ import com.xfrog.platform.application.authserver.service.impl.JDBCSessionRegistr
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -14,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 // 自定义的令牌校验器，令牌强制失效等功能可在此处实现
 @Component
+@ConditionalOnProperty(name = "admin.api-server.validExpiredToken", havingValue = "true")
 @RequiredArgsConstructor
 @Slf4j
 public class CustomerOAuth2TokenValidator implements OAuth2TokenValidator<Jwt> {

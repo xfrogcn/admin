@@ -27,7 +27,7 @@ public interface LangCorpusApi {
     @Operation(summary = "创建语料库")
     List<Long> createLangCorpus(@Valid @RequestBody CreateLangCorpusRequestDTO langCorpus);
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @Operation(summary = "查询语料库列表")
     PageDTO<LangCorpusDTO> listLangCorpus(QueryLangCorpusRequestDTO queryDTO);
 

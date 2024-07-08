@@ -4,6 +4,7 @@ package com.xfrog.platform.application.resourceserver;
 import com.xfrog.framework.principal.CurrentPrincipalContext;
 import com.xfrog.framework.principal.DataPermissionItem;
 import com.xfrog.framework.principal.PrincipalInfo;
+import com.xfrog.platform.application.authserver.dto.UserDetailsDTO;
 import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
 import com.xfrog.platform.application.permission.service.DataScopeService;
 import jakarta.servlet.FilterChain;
@@ -11,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -32,6 +34,14 @@ public class CurrentPrincipalInfoFilter extends OncePerRequestFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
             setCurrentPrincipalInfo(jwtAuthenticationToken);
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken usernameToken) {
+            UserDetailsDTO principal = (UserDetailsDTO) usernameToken.getPrincipal();
+            if (principal != null) {
+                PrincipalInfo principalInfo = PrincipalInfo.create(principal.getUserId(), principal.getUsername(), principal.getOrganizationId(), null, principal.getTenantId());
+                List<DataScopeDTO> dataScopes = dataScopeService.getUserDataScopes(principalInfo.getUserId());
+                principalInfo.setDataPermission(dataScopes.stream().map(it -> DataPermissionItem.of(it.getScopeType().name(), it.getScopeId())).toList());
+                CurrentPrincipalContext.setCurrentPrincipal(principalInfo);
+            }
         }
 
         filterChain.doFilter(request, response);

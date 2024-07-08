@@ -32,6 +32,7 @@ import java.util.List;
 
 @Configuration
 public class AuthorizationClientConfig {
+
     @Bean
     @Order(100)
     public SecurityFilterChain authorizationClientSecurityFilterChain(HttpSecurity http,
@@ -57,6 +58,8 @@ public class AuthorizationClientConfig {
                             .permitAll()
                             .anyRequest().authenticated();
                 });
+
+        http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.ignoringRequestMatchers("/api/**"));
 
         http.addFilterAfter(principalInfoFilter, BearerTokenAuthenticationFilter.class);
 
