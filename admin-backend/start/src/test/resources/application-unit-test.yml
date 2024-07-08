@@ -1,0 +1,12 @@
+mariaDB4j:
+  enabled: true
+  port: 3319
+  db-name: admin-platform
+logging:
+  level:
+    org.springframework.jdbc.core: TRACE
+    com.xfrog: DEBUG
+mybatis-plus:
+  mapper-locations: classpath*:mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
