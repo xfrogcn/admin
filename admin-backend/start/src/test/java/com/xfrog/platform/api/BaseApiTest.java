@@ -32,11 +32,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
         "admin.api-server.validExpiredToken=false"
 })
 public class BaseApiTest {
+
     @Autowired
     protected MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
+
     }
 
     @SneakyThrows

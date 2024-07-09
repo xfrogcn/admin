@@ -37,7 +37,7 @@ public interface LangApi {
 
     @PostMapping("/{langId}/{enabled}")
     @Operation(summary = "启用或禁用语种")
-    void enableLanguage(@PathVariable("langId") Long langId, @PathVariable("enabled") Boolean enabled, @RequestParam("referenceLangId") Long referenceLangId);
+    void enableLanguage(@PathVariable("langId") Long langId, @PathVariable("enabled") Boolean enabled, @RequestParam(name = "referenceLangId", required = false) Long referenceLangId);
 
     @DeleteMapping("/{langId}")
     @Operation(summary = "删除语言")

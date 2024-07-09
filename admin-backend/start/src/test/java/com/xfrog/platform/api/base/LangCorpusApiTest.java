@@ -37,6 +37,7 @@ public class LangCorpusApiTest extends BaseApiTest {
 
     @Test
     @SneakyThrows
+    @Sql(statements = {LangApiFixtures.SQL_TRUNCATE_LANG_CORPUS, LangApiFixtures.SQL_TRUNCATE_LANG})
     void createLangCorpus_should_success() {
         CreateLangCorpusRequestDTO requestDTO = LangDTOFixtures.defaultCreateLangCorpusRequestDTO().build();
         request(post("/api/langcorpus", requestDTO))
@@ -77,7 +78,7 @@ public class LangCorpusApiTest extends BaseApiTest {
 
     @Test
     @SneakyThrows
-    @Sql(statements = LangApiFixtures.SQL_TRUNCATE_LANG_CORPUS)
+    @Sql(statements = {LangApiFixtures.SQL_TRUNCATE_LANG_CORPUS, LangApiFixtures.SQL_TRUNCATE_LANG})
     void enableLangCorpus_should_success() {
         LangCorpus langCorpus = langApiFixtures.createAndSaveLangCorpus();
 
