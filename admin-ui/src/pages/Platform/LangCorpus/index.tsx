@@ -1,53 +1,52 @@
 import { withAccessRender } from '@/access';
 import ProTablePage from '@/components/ProTablePage';
+import { ExProColumnsType } from '@/components/ValueTypes';
 import {
-  createLanguage,
-  deleteLanguage,
-  enableLanguage,
-  listLanguages,
-  updateLanguage,
-} from '@/services/swagger/langApi';
+  createLangCorpus,
+  deleteLangCorpus,
+  enableLangCorpus,
+  listLangCorpus,
+  updateLangCorpus,
+} from '@/services/swagger/langCorpusApi';
 import { convertCommonQueryParams, enabledStatusEnum } from '@/utils/bizUtils';
 import { stopEvent } from '@/utils/commonUtils';
 import { useMessageBox } from '@/utils/messageUtils';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
-import React, { useMemo, useRef, useState } from 'react';
-import EditForm from './components/EditForm'
-import { ExProColumnsType } from '@/components/ValueTypes';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
-const handleAdd = useMessageBox<API.CreateLangRequestDTO, number>(createLanguage);
-const handleUpdate = useMessageBox<{ id: number; body: API.UpdateLangRequestDTO }, void>((args) =>
-  updateLanguage({ langId: args.id }, args.body),
+const handleAdd = useMessageBox<API.CreateLangCorpusRequestDTO, number[]>(createLangCorpus);
+const handleUpdate = useMessageBox<{ id: number; body: API.UpdateLangCorpusRequestDTO }, void>(
+  (args) => updateLangCorpus({ langCorpusId: args.id }, args.body),
 );
-const handleEnable = useMessageBox<
-  { id: number; enabled: boolean; referenceLangId?: number },
-  void
->((args) =>
-  enableLanguage({
-    langId: args.id,
+const handleEnable = useMessageBox<{ id: number; enabled: boolean }, void>((args) =>
+  enableLangCorpus({
+    langCorpusId: args.id,
     enabled: args.enabled,
-    referenceLangId: args.referenceLangId || 0,
   }),
 );
 const handleDelete = useMessageBox<{ id: number }, void>((args) =>
-  deleteLanguage({ langId: args.id }),
+  deleteLangCorpus({ langCorpusId: args.id }),
 );
 
-const queryLangs = async (
-  params: API.QueryLangRequestDTO & {
+const queryLangCorpus = async (
+  params: API.QueryLangCorpusRequestDTO & {
     pageSize?: number | undefined;
     current?: number | undefined;
   },
   sorter: any,
-): Promise<{ data: API.LangDTO[]; success: boolean; total: number }> => {
-  const response = await listLanguages({
+): Promise<{ data: API.LangCorpusDTO[]; success: boolean; total: number }> => {
+  const response = await listLangCorpus({
     application: params.application,
+    corpusType: params.corpusType,
+    corpusGroup: params.corpusGroup,
+    keyword: params.keyword,
+    configured: params.configured,
     ...convertCommonQueryParams(params, sorter),
-  } as API.QueryLangRequestDTO);
+  } as API.QueryLangCorpusRequestDTO);
 
   return {
     data: response.data ?? [],
@@ -56,32 +55,56 @@ const queryLangs = async (
   };
 };
 
-const LangList: React.FC = () => {
+const LangCorpusList: React.FC = () => {
   const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-  const [newLang, setNewLang] = useState<API.LangDTO>({enabled: true});
+  const [newLangCorpus, setNewLangCorpus] = useState<API.LangCorpusDTO>({ enabled: true });
 
   const [editModalOpen, handleEditModalOpen] = useState<boolean>(false);
-  const [editLang, setEditLang] = useState<API.LangDTO | undefined>();
+  const [editLangCorpus, setEditLangCorpus] = useState<API.LangCorpusDTO | undefined>();
+  const [groupCondition, setGroupCondition] = useState<API.LangCorpusDTO>({});
 
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const access = useAccess();
 
+  const corpusGroupFilter = useCallback(
+    (items: API.DicItemDTO[]) => {
+      return items.filter((item) => {
+        return (
+          (!item.extValue1 || item.extValue1 === groupCondition.corpusType) &&
+          (!item.extValue2 || item.extValue2 === groupCondition.application)
+        );
+      });
+    },
+    [groupCondition],
+  );
+
   const operationRender = useMemo(() => {
-    return withAccessRender<API.LangDTO>(
+    return withAccessRender<API.LangCorpusDTO>(
       {
-        'admin:platform:lang:edit': (_, record) => (
+        'admin:platform:langcorpus:edit': (_, record) => (
           <a
             key="edit"
             onClick={async () => {
-              setEditLang({ ...record } as any);
+              setEditLangCorpus({ ...record } as any);
               handleEditModalOpen(true);
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
           </a>
         ),
-        'admin:platform:lang:enable': (_, record) =>
+        'admin:platform:langcorpus:local': (_, record) => (
+          <a
+            key="local"
+            onClick={async () => {
+              // setEditLangCorpus({ ...record } as any);
+              // handleEditModalOpen(true);
+            }}
+          >
+            <FormattedMessage id="admin.ui.pages.langcorpus.label-local" />
+          </a>
+        ),
+        'admin:platform:langcorpus:enable': (_, record) =>
           record.enabled ? (
             <Popconfirm
               key="disable"
@@ -117,7 +140,7 @@ const LangList: React.FC = () => {
               </a>
             </Popconfirm>
           ),
-        'admin:platform:lang:delete': (_, record) => (
+        'admin:platform:langcorpus:delete': (_, record) => (
           <Popconfirm
             title={<FormattedMessage id="admin.ui.public.confirm-ok-button" />}
             description={<FormattedMessage id="admin.ui.pages.lang.delete-confirm-desc" />}
@@ -138,62 +161,106 @@ const LangList: React.FC = () => {
     );
   }, [access]);
 
-  const columns: ExProColumnsType<API.LangDTO>[] = [
+  const columns: ExProColumnsType<API.LangCorpusDTO>[] = [
     {
-      title: <FormattedMessage id="admin.ui.pages.lang.label-application" />,
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-application" />,
       dataIndex: 'application',
       valueType: 'dic',
       sorter: true,
-      hideInSearch: true,
+      hideInSearch: false,
+      width: '14em',
       fieldProps: {
-        dictype: 'application'
-      }
+        dictype: 'application',
+        allowClear: true,
+        onChange: (value: string) => {
+          setGroupCondition({ ...groupCondition, application: value });
+        },
+      },
     },
     {
-      title: <FormattedMessage id="admin.ui.pages.lang.label-lang-code" />,
-      dataIndex: 'code',
-      valueType: 'text',
-      width: '7em',
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-type" />,
+      dataIndex: 'corpusType',
+      valueType: 'dic',
+      width: '10em',
       align: 'center',
       sorter: true,
+      hideInSearch: false,
+      fieldProps: {
+        dictype: 'langcorpus-type',
+        allowClear: true,
+        onChange: (value: string) => {
+          setGroupCondition({ ...groupCondition, corpusType: value });
+        },
+      },
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-group" />,
+      dataIndex: 'corpusGroup',
+      valueType: 'dic',
+      width: '10em',
+      align: 'center',
+      sorter: true,
+      hideInSearch: false,
+      fieldProps: {
+        dictype: 'langcorpus-group',
+        allowClear: true,
+        filter: corpusGroupFilter,
+      },
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-search-local" />,
+      dataIndex: 'configured',
+      valueType: 'select',
+      colSize: 1,
+      sorter: false,
+      hideInSearch: false,
+      hideInTable: true,
+      valueEnum: {
+        true: {
+          text: intl.formatMessage({ id: 'admin.ui.pages.langcorpus.label-search-local-true' }),
+          status: 'Success',
+        },
+        false: {
+          text: intl.formatMessage({ id: 'admin.ui.pages.langcorpus.label-search-local-false' }),
+          status: 'Error',
+        },
+      },
+    },
+    {
+      title: <FormattedMessage id="admin.ui.public.keyword" />,
+      dataIndex: 'keyword',
+      valueType: 'text',
+      colSize: 1,
+      sorter: false,
+      hideInSearch: false,
+      hideInTable: true,
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-code" />,
+      dataIndex: 'corpusCode',
+      valueType: 'text',
+      sorter: true,
+      ellipsis: { showTitle: true },
       copyable: true,
       hideInSearch: true,
     },
     {
-      title: <FormattedMessage id="admin.ui.pages.lang.label-application" />,
-      dataIndex: 'application',
-      sorter: false,
-      valueType: 'dic',
-      hideInTable: true,
-      hideInSearch: false,
-      fieldProps: {
-        dictype: 'application',
-        allowClear: true,
-      },
-    },
-    {
-      title: <FormattedMessage id="admin.ui.pages.lang.label-name" />,
-      dataIndex: 'name',
-      valueType: 'text',
-      ellipsis: { showTitle: true },
-      sorter: false,
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="admin.ui.pages.lang.label-local-name" />,
-      dataIndex: 'localName',
-      valueType: 'text',
-      ellipsis: { showTitle: true },
-      sorter: false,
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="admin.ui.pages.lang.label-enabled" />,
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-enabled" />,
       dataIndex: 'enabled',
       valueType: 'text',
       valueEnum: enabledStatusEnum(intl),
       width: '7em',
+      align: 'center',
       sorter: false,
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-memo" />,
+      dataIndex: 'memo',
+      valueType: 'text',
+      width: '14em',
+      sorter: false,
+      ellipsis: { showTitle: true },
       hideInSearch: true,
     },
     {
@@ -224,19 +291,25 @@ const LangList: React.FC = () => {
 
   return (
     <PageContainer pageHeaderRender={false}>
-      <ProTablePage<API.LangDTO, API.QueryLangRequestDTO>
+      <ProTablePage<API.LangCorpusDTO, API.QueryLangCorpusRequestDTO>
         headerTitle={intl.formatMessage({
-          id: 'admin.ui.pages.lang.table-title',
+          id: 'admin.ui.pages.langcorpus.table-title',
         })}
         actionRef={actionRef}
         rowKey="id"
+        width="110em"
+        search={{
+          defaultColsNumber: 8,
+          span: 8,
+          collapsed: false,
+        }}
         toolBarRender={() => [
           <Access accessible={access.hasPermission('admin:platform:lang:create')}>
             <Button
               type="primary"
               key="primary"
               onClick={() => {
-                setNewLang({enabled: true} as any);
+                setNewLangCorpus({ enabled: true } as any);
                 handleCreateModalOpen(true);
               }}
             >
@@ -244,11 +317,11 @@ const LangList: React.FC = () => {
             </Button>
           </Access>,
         ]}
-        request={queryLangs}
+        request={queryLangCorpus}
         columns={columns as any}
         rowSelection={false}
       />
-      {
+      {/* {
         <EditForm
           mode="create"
           lang={newLang}
@@ -284,9 +357,9 @@ const LangList: React.FC = () => {
           width="600px"
           open={editModalOpen}
         ></EditForm>
-      }
+      } */}
     </PageContainer>
   );
 };
 
-export default LangList;
+export default LangCorpusList;

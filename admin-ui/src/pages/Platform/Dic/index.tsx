@@ -117,6 +117,7 @@ const DicList: React.FC = () => {
       dataIndex: 'keyword',
       sorter: false,
       valueType: 'text',
+      colSize: 2,
       hideInTable: true,
       hideInSearch: false,
     },

@@ -45,7 +45,7 @@ const EditDicDialog: React.FC<EditDicDialogProps> = (props: EditDicDialogProps) 
       title: intl.formatMessage({ id: 'admin.ui.pages.dic.label-type' }),
       dataIndex: 'type',
       valueType: 'text',
-      tooltip: intl.formatMessage({id: 'admin.ui.public.pattern-tootip-userName'}),
+      tooltip: intl.formatMessage({id: 'admin.ui.public.pattern-tooltip-code'}),
       fieldProps: {
         maxLength: 128
       },
@@ -57,7 +57,7 @@ const EditDicDialog: React.FC<EditDicDialogProps> = (props: EditDicDialogProps) 
             message: intl.formatMessage({ id: 'admin.ui.pages.dic.rule-require-type' }),
           },
           {
-            pattern: patterns.userName,
+            pattern: patterns.permissionCode,
             type: 'string',
             message: intl.formatMessage({ id: 'admin.ui.pages.dic.rule-pattern-type' }),
           },

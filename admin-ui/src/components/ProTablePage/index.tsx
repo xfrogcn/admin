@@ -15,7 +15,7 @@ const useSize = (target: React.MutableRefObject<any>): {width: number, height: n
 }
 
 export default function ProTablePage<DataType extends Record<string, any>, Params extends ParamsType = ParamsType, ValueType = "text">
-    (props: ProTableProps<DataType, Params, ValueType>) : JSX.Element {
+    (props: ProTableProps<DataType, Params, ValueType> & {width?: string | number | boolean}) : JSX.Element {
 
   const [scrollY, setScrollY] = useState<number>(0);
   const wrapperRef = useRef<HTMLDivElement>();
@@ -59,7 +59,7 @@ export default function ProTablePage<DataType extends Record<string, any>, Param
         <div className='table-page-wrapper' ref={wrapperRef as any}>
           <ProTable<DataType, ParamsType>
             {...props as any}
-            scroll = {{y: scrollY}}
+            scroll = {{y: scrollY, x: props.width}}
           />
         </div>
   );

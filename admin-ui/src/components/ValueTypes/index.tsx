@@ -1,7 +1,7 @@
 import { ProColumnType, ProFormColumnsType, ProRenderFieldPropsType, ValueTypeWithFieldProps } from "@ant-design/pro-components";
 import { ProOrganizationSelector } from "./OrganizationSelector";
 import { Tag } from "antd";
-import { DicSelect } from './DicSelect'
+import { DicSelect, DicText } from './DicSelect'
 
 
 
@@ -27,8 +27,8 @@ export const valueTypeMap: Record<string, ProRenderFieldPropsType> = {
             return <DicSelect {...props}/>
         },
         render: (text, props, dom) => {
-            console.log(text, props)
-            return <div>HELLO WORLD</div>
+            
+            return <DicText {...props}/>
         },
     }
 }

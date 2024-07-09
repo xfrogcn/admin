@@ -508,6 +508,12 @@ declare namespace API {
     sortItems?: SortItem[];
     /** 所属应用 */
     application?: string;
+    /** 关键字 */
+    keyword?: string;
+    /** 语料类型 */
+    corpusType?: string;
+    /** 语料分组 */
+    corpusGroup?: string;
     /** 本地化是否已全部配置 */
     configured?: boolean;
   };

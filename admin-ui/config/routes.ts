@@ -94,6 +94,13 @@ export default [
         access: 'canRoute',
         permissionCode: 'admin:platform:lang',
       },
+      {
+        name: 'lang-corpus',
+        path: '/platform/corpus',
+        component: './Platform/LangCorpus',
+        access: 'canRoute',
+        permissionCode: 'admin:platform:langcorpus',
+      },
     ],
   },
   {

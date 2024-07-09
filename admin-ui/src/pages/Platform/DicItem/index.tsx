@@ -79,6 +79,8 @@ const DicItemList: React.FC = () => {
       dataIndex: 'displayText',
       valueType: 'text',
       sorter: false,
+      width: '10em',
+      ellipsis: true,
     },
     {
       title: <FormattedMessage id="admin.ui.pages.dicitem.label-lang-code" />,
@@ -86,6 +88,8 @@ const DicItemList: React.FC = () => {
       valueType: 'text',
       sorter: false,
       copyable: true,
+      ellipsis: true,
+      width: '15rm',
     },
     {
       title: <FormattedMessage id="admin.ui.pages.dicitem.label-value" />,
@@ -93,6 +97,8 @@ const DicItemList: React.FC = () => {
       valueType: 'text',
       sorter: false,
       copyable: true,
+      width: '15em',
+      ellipsis: true,
     },
     {
       title: <FormattedMessage id="admin.ui.pages.dicitem.label-display-order" />,
@@ -140,6 +146,7 @@ const DicItemList: React.FC = () => {
         })} - [${dic?.name}(${dic?.type})]`}
         actionRef={actionRef}
         rowKey="id"
+        width="80em"
         toolBarRender={() => [
           <Access accessible={access.hasPermission('admin:platform:dic:create')}>
             <Button
