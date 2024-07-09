@@ -5,6 +5,7 @@
 import * as dataScopeApi from './dataScopeApi';
 import * as dicApi from './dicApi';
 import * as langApi from './langApi';
+import * as langCorpusApi from './langCorpusApi';
 import * as organizationApi from './organizationApi';
 import * as permissionItemApi from './permissionItemApi';
 import * as roleApi from './roleApi';
@@ -14,6 +15,7 @@ export default {
   userApi,
   tenantApi,
   roleApi,
+  langCorpusApi,
   dicApi,
   dataScopeApi,
   permissionItemApi,

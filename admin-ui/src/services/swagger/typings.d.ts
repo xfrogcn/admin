@@ -3,6 +3,10 @@ declare namespace API {
     arg0: string;
   };
 
+  type configLangLocalParams = {
+    langCorpusId: number;
+  };
+
   type createDicItemParams = {
     dicId: number;
   };
@@ -39,6 +43,17 @@ declare namespace API {
     labelLangCodeExtValue2?: string;
     /** 字典说明 */
     memo?: string;
+  };
+
+  type CreateLangCorpusRequestDTO = {
+    /** 所属应用 */
+    application: string;
+    /** 语料类别 */
+    corpusType: string;
+    /** 语料分组 */
+    corpusGroup: string;
+    /** 语料列表 */
+    corpusItems: LangCorpusItemDTO[];
   };
 
   type CreateLangRequestDTO = {
@@ -191,6 +206,10 @@ declare namespace API {
     dicId: number;
   };
 
+  type deleteLangCorpusParams = {
+    langCorpusId: number;
+  };
+
   type deleteLanguageParams = {
     langId: number;
   };
@@ -257,10 +276,15 @@ declare namespace API {
     userId: number;
   };
 
+  type enableLangCorpusParams = {
+    langCorpusId: number;
+    enabled: boolean;
+  };
+
   type enableLanguageParams = {
     langId: number;
     enabled: boolean;
-    referenceLangId: number;
+    referenceLangId?: number;
   };
 
   type enableRoleParams = {
@@ -292,6 +316,10 @@ declare namespace API {
 
   type getDicParams = {
     dicId: number;
+  };
+
+  type getLangCorpusParams = {
+    langCorpusId: number;
   };
 
   type getLanguageParams = {
@@ -329,6 +357,38 @@ declare namespace API {
 
   type grantRolesParams = {
     userId: number;
+  };
+
+  type LangCorpusDTO = {
+    /** 语料库 ID */
+    id?: number;
+    /** 所属应用 */
+    application?: string;
+    /** 语料类别 */
+    corpusType?: string;
+    /** 语料分组 */
+    corpusGroup?: string;
+    /** 语料编码 */
+    corpusCode?: string;
+    /** 语料说明 */
+    memo?: string;
+    /** 是否启用 */
+    enabled?: boolean;
+    /** 是否配置本地化 */
+    configured?: boolean;
+    /** 创建时间 */
+    createdTime?: string;
+  };
+
+  type LangCorpusItemDTO = {
+    /** 语料编码 */
+    corpusCode: string;
+    /** 语料说明 */
+    memo?: string;
+    /** 是否启用 */
+    enabled: boolean;
+    /** 本地化语言配置 */
+    langLocales?: Record<string, any>;
   };
 
   type LangDTO = {
@@ -387,6 +447,14 @@ declare namespace API {
     data?: DicDTO[];
   };
 
+  type PageDTOLangCorpusDTO = {
+    pageNum?: number;
+    pageSize?: number;
+    total?: number;
+    pages?: number;
+    data?: LangCorpusDTO[];
+  };
+
   type PageDTOLangDTO = {
     pageNum?: number;
     pageSize?: number;
@@ -432,6 +500,16 @@ declare namespace API {
     sortItems?: SortItem[];
     /** 关键字 */
     keyword?: string;
+  };
+
+  type QueryLangCorpusRequestDTO = {
+    pageNum: number;
+    pageSize: number;
+    sortItems?: SortItem[];
+    /** 所属应用 */
+    application?: string;
+    /** 本地化是否已全部配置 */
+    configured?: boolean;
   };
 
   type QueryLangRequestDTO = {
@@ -556,6 +634,19 @@ declare namespace API {
     /** 字典扩展值2标签语料编码 */
     labelLangCodeExtValue2?: string;
     /** 字典说明 */
+    memo?: string;
+  };
+
+  type updateLangCorpusParams = {
+    langCorpusId: number;
+  };
+
+  type UpdateLangCorpusRequestDTO = {
+    /** 语料类别 */
+    corpusType: string;
+    /** 语料分组 */
+    corpusGroup: string;
+    /** 语料说明 */
     memo?: string;
   };
 
