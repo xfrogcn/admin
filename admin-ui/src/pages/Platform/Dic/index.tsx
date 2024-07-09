@@ -10,6 +10,7 @@ import { Access, FormattedMessage, useAccess, useIntl, useNavigate } from '@umij
 import { Button, Flex, Popconfirm } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import EditForm from './components/EditForm';
+import { removeDicCache } from '@/services/DicCache';
 
 const handleAdd = useMessageBox<API.CreateDicRequestDTO, number>(createDic);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateDicRequestDTO }, void>((args) =>
@@ -193,6 +194,7 @@ const DicList: React.FC = () => {
             const result = await handleAdd(values as API.CreateDicRequestDTO);
             if (result.success) {
               handleCreateModalOpen(false);
+              removeDicCache(values?.type || '')
               actionRef.current?.reload();
             }
           }}
@@ -213,6 +215,7 @@ const DicList: React.FC = () => {
             });
             if (result.success) {
               handleEditModalOpen(false);
+              removeDicCache(editDic?.type || '')
               actionRef.current?.reload();
             }
           }}

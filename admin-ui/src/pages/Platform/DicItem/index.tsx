@@ -10,6 +10,7 @@ import { Button, Flex } from 'antd';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import EditForm from './components/EditForm';
 import { usePageTabContext } from '@/components/PageTabs';
+import { removeDicCache } from '@/services/DicCache';
 
 const handleAdd = useMessageBox<{dicId: number, body: API.CreateDicItemRequestDTO}, number>((args) => 
   createDicItem({dicId: args.dicId}, args.body));
@@ -170,6 +171,7 @@ const DicItemList: React.FC = () => {
             const result = await handleAdd({dicId: dic?.id || 0, body: values as API.CreateDicItemRequestDTO});
             if (result.success) {
               handleCreateModalOpen(false);
+              removeDicCache(dic?.type ?? '');
               actionRef.current?.reload();
             }
           }}
@@ -192,6 +194,7 @@ const DicItemList: React.FC = () => {
             });
             if (result.success) {
               handleEditModalOpen(false);
+              removeDicCache(dic?.type ?? '');
               actionRef.current?.reload();
             }
           }}
