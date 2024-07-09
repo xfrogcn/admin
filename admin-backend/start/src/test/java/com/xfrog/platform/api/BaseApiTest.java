@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.util.Assert;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("unit-test")
@@ -76,6 +78,14 @@ public class BaseApiTest {
     @SneakyThrows
     protected ResultActions request(RequestBuilder requestBuilder) {
         return mockMvc.perform(requestBuilder);
+    }
+
+    protected String url(String url, Object...  vars) {
+        Assert.notNull(url, "'url' must not be null");
+        Assert.isTrue(url.isEmpty() || url.startsWith("/") || url.startsWith("http://") || url.startsWith("https://"),
+                () -> "'url' should start with a path or be a complete HTTP URL: " + url);
+        String uriString = (url.isEmpty() ? "/" : url);
+        return UriComponentsBuilder.fromUriString(uriString).buildAndExpand(vars).encode().toUri().toString();
     }
 
     private MockHttpServletRequestBuilder processBody(MockHttpServletRequestBuilder builder, Object body) {

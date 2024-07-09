@@ -8,12 +8,11 @@ import com.xfrog.platform.application.base.dto.QueryLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateLangCorpusRequestDTO;
 import com.xfrog.platform.domain.base.aggregate.Lang;
 import com.xfrog.platform.domain.base.aggregate.LangCorpus;
-import com.xfrog.platform.domain.base.repository.LangCorpusDomainRepository;
-import com.xfrog.platform.domain.base.repository.LangDomainRepository;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Map;
@@ -21,12 +20,9 @@ import java.util.Map;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(LangApiFixtures.class)
 public class LangCorpusApiTest extends BaseApiTest {
 
-    @Autowired
-    private LangCorpusDomainRepository langCorpusDomainRepository;
-    @Autowired
-    private LangDomainRepository langDomainRepository;
     @Autowired
     private LangApiFixtures langApiFixtures;
 
@@ -72,7 +68,7 @@ public class LangCorpusApiTest extends BaseApiTest {
         UpdateLangCorpusRequestDTO updateLangCorpusRequestDTO = LangDTOFixtures.defaultUpdateLangCorpusRequestDTO()
                 .build();
 
-        request(post("/api/langcorpus/" + langCorpus.getId().toString(), updateLangCorpusRequestDTO))
+        request(post(url("/api/langcorpus/{langCorpusId}", langCorpus.getId()), updateLangCorpusRequestDTO))
                 .andExpect(status().isOk());
     }
 
@@ -82,10 +78,10 @@ public class LangCorpusApiTest extends BaseApiTest {
     void enableLangCorpus_should_success() {
         LangCorpus langCorpus = langApiFixtures.createAndSaveLangCorpus();
 
-        request(post("/api/langcorpus/" + langCorpus.getId().toString() + "/true", null))
+        request(post(url("/api/langcorpus/{langCorpusId}/true", langCorpus.getId().toString()), null))
                 .andExpect(status().isOk());
 
-        request(post("/api/langcorpus/" + langCorpus.getId().toString() + "/false", null))
+        request(post(url("/api/langcorpus/{langCorpusId}/false", langCorpus.getId().toString()), null))
                 .andExpect(status().isOk());
     }
 
@@ -95,7 +91,7 @@ public class LangCorpusApiTest extends BaseApiTest {
     void deleteLangCorpus_should_success() {
         LangCorpus langCorpus = langApiFixtures.createAndSaveLangCorpus();
 
-        request(delete("/api/langcorpus/" + langCorpus.getId().toString(), null))
+        request(delete(url("/api/langcorpus/{langCorpusId}", langCorpus.getId()), null))
                 .andExpect(status().isOk());
     }
 
@@ -108,7 +104,7 @@ public class LangCorpusApiTest extends BaseApiTest {
 
         Map<String, String> localMap = Map.of(lang.getCode(), "TEST");
 
-        request(put("/api/langcorpus/" + langCorpus.getId().toString() + "/local", localMap))
+        request(put(url("/api/langcorpus/{langCorpusId}/local", langCorpus.getId()), localMap))
                 .andExpect(status().isOk());
     }
 

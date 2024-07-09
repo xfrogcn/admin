@@ -6,9 +6,7 @@ import com.xfrog.platform.domain.base.aggregate.LangFixtures;
 import com.xfrog.platform.domain.base.repository.LangCorpusDomainRepository;
 import com.xfrog.platform.domain.base.repository.LangDomainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class LangApiFixtures {
     public final static String SQL_TRUNCATE_LANG_CORPUS = "truncate table lang_corpus";
     public final static String SQL_TRUNCATE_LANG = "truncate table langs";
