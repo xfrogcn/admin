@@ -1,12 +1,14 @@
 package com.xfrog.platform.domain.base.aggregate;
 
+import com.xfrog.framework.common.SnowflakeUidGenerator;
+
 public class LangFixtures {
 
     public static final String DEFAULT_APPLICATION = "admin";
 
     public static Lang.LangBuilder createDefaultLang() {
         return Lang.builder()
-                .id(1L)
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
                 .application(DEFAULT_APPLICATION)
                 .code("zh-CN")
                 .localName("中文")
@@ -17,7 +19,7 @@ public class LangFixtures {
 
     public static LangCorpus.LangCorpusBuilder createDefaultCorpus() {
         return LangCorpus.builder()
-                .id(1L)
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
                 .application(DEFAULT_APPLICATION)
                 .corpusCode("create-button-text")
                 .corpusGroup("test")
@@ -28,7 +30,7 @@ public class LangFixtures {
 
     public static LangLocal.LangLocalBuilder createDefaultLocal() {
         return LangLocal.builder()
-                .id(1L)
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
                 .application(DEFAULT_APPLICATION)
                 .langCode("zh-CN")
                 .langCorpusCode("create-button-text")
@@ -40,7 +42,7 @@ public class LangFixtures {
 
     public static LangLocal.LangLocalBuilder createDefaultLocal(LangCorpus langCorpus, Lang lang) {
         return LangLocal.builder()
-                .id(1L)
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
                 .application(langCorpus.getApplication())
                 .langCode(lang.getCode())
                 .langCorpusCode(langCorpus.getCorpusCode())
