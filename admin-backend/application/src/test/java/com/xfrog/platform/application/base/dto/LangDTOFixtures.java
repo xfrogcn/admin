@@ -6,6 +6,22 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class LangDTOFixtures {
+
+    public static CreateLangRequestDTO.CreateLangRequestDTOBuilder defaultCreateLangRequestDTO() {
+        return CreateLangRequestDTO.builder()
+                .application(LangFixtures.DEFAULT_APPLICATION)
+                .code("zh-CN")
+                .enabled(true)
+                .localName("中文")
+                .name("中文");
+    }
+
+    public static UpdateLangRequestDTO.UpdateLangRequestDTOBuilder defaultUpdateLangRequestDTO() {
+        return UpdateLangRequestDTO.builder()
+                .localName("中文")
+                .name("中文");
+    }
+
     public static CreateLangCorpusRequestDTO.CreateLangCorpusRequestDTOBuilder defaultCreateLangCorpusRequestDTO() {
         return CreateLangCorpusRequestDTO.builder()
                 .application(LangFixtures.DEFAULT_APPLICATION)
