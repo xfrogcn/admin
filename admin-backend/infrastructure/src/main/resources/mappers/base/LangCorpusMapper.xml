@@ -11,6 +11,16 @@
             <if test="queryDTO.application != null and queryDTO.application != ''">
                 AND lc.application = #{queryDTO.application}
             </if>
+            <if test="queryDTO.corpusType != null and queryDTO.corpusType != ''">
+                AND lc.corpus_type = #{queryDTO.corpusType}
+            </if>
+            <if test="queryDTO.corpusGroup != null and queryDTO.corpusGroup != ''">
+                AND lc.corpus_group = #{queryDTO.corpusGroup}
+            </if>
+            <if test="queryDTO.keyword != null and queryDTO.keyword != ''">
+                AND (lc.corpus_code LIKE CONCAT('%', #{queryDTO.keyword}, '%')
+                OR lc.memo LIKE CONCAT('%', #{queryDTO.keyword}, '%'))
+            </if>
         </where>
     </select>
 </mapper>

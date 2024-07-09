@@ -17,6 +17,12 @@ import lombok.experimental.SuperBuilder;
 public class QueryLangCorpusRequestDTO extends PageQueryDTO {
     @Schema(description = "所属应用")
     private String application;
+    @Schema(description = "关键字")
+    private String keyword;
+    @Schema(description = "语料类型")
+    private String corpusType;
+    @Schema(description = "语料分组")
+    private String corpusGroup;
     @Schema(description = "本地化是否已全部配置")
     private Boolean configured;
 }

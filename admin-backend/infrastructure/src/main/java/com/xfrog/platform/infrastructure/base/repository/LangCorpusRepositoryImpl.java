@@ -27,6 +27,7 @@ public class LangCorpusRepositoryImpl implements LangCorpusRepository {
                     "createdTime", "lc.created_time",
                     "corpusType", "lc.corpus_type",
                     "corpusGroup", "lc.corpus_group",
+                    "application", "lc.application",
                     "corpusCode", "lc.corpus_code"));
 
     @Override

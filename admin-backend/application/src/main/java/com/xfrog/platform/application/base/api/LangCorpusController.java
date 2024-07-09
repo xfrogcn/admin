@@ -19,42 +19,43 @@ import java.util.Map;
 public class LangCorpusController implements LangCorpusApi {
     private final LangCorpusService langCorpusService;
 
-    @Authorization("admin:system:langcorpus:create")
+    @Authorization("admin:platform:langcorpus:create")
     @Override
     public List<Long> createLangCorpus(CreateLangCorpusRequestDTO langCorpus) {
         return langCorpusService.createLangCorpus(langCorpus);
     }
 
-    @Authorization(value = "admin:system:langcorpus", demoDisabled = false)
+    @Authorization(value = "admin:platform:langcorpus", demoDisabled = false)
     @Override
     public PageDTO<LangCorpusDTO> listLangCorpus(QueryLangCorpusRequestDTO queryDTO) {
         return langCorpusService.listLangCorpus(queryDTO);
     }
 
-    @Authorization(value = "admin:system:langcorpus", demoDisabled = false)
+    @Authorization(value = "admin:platform:langcorpus", demoDisabled = false)
     @Override
     public LangCorpusDTO getLangCorpus(Long langCorpusId) {
         return langCorpusService.getLangCorpus(langCorpusId);
     }
 
-    @Authorization("admin:system:langcorpus:edit")
+    @Authorization("admin:platform:langcorpus:edit")
     @Override
     public void updateLangCorpus(Long langCorpusId, UpdateLangCorpusRequestDTO langCorpus) {
         langCorpusService.updateLangCorpus(langCorpusId, langCorpus);
     }
 
-    @Authorization("admin:system:langcorpus:enable")
+    @Authorization("admin:platform:langcorpus:enable")
     @Override
     public void enableLangCorpus(Long langCorpusId, Boolean enabled) {
         langCorpusService.enableLangCorpus(langCorpusId, enabled);
     }
 
-    @Authorization("admin:system:langcorpus:delete")
+    @Authorization("admin:platform:langcorpus:delete")
     @Override
     public void deleteLangCorpus(Long langCorpusId) {
         langCorpusService.deleteLangCorpus(langCorpusId);
     }
 
+    @Authorization("admin:platform:langcorpus:local")
     @Override
     public void configLangLocal(Long langCorpusId, Map<String, String> langLocal) {
         langCorpusService.configLangLocal(langCorpusId, langLocal);
