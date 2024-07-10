@@ -205,7 +205,6 @@ export const request = {
     async (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
       const userInfo = await userManager.getUser();
-      console.log('in:', userInfo);
       if (userInfo && userInfo.id_token) {
         const header: any = config.headers?.common;
         if (header) {

@@ -14,7 +14,7 @@ import { useMessageBox } from '@/utils/messageUtils';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
-import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
+import { Access, FormattedMessage, useAccess, useIntl, useNavigate } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
@@ -66,6 +66,7 @@ const LangCorpusList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const access = useAccess();
+  const navigate = useNavigate();
 
   const corpusGroupFilter = useCallback(
     (items: API.DicItemDTO[]) => {
@@ -309,8 +310,7 @@ const LangCorpusList: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                setNewLangCorpus({ enabled: true } as any);
-                handleCreateModalOpen(true);
+                navigate('/platform/corpus/new')
               }}
             >
               <PlusOutlined /> <FormattedMessage id="admin.ui.public.new-button" />

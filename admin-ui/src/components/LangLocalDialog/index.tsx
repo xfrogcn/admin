@@ -114,7 +114,7 @@ const LangLocalDialog: React.FC<LangLocalDialogProps> = (props: LangLocalDialogP
       getContainer={document.body}
     >
       <div style={{ height: 400, ...style }}>
-        <Descriptions items={descItems} />
+        <Descriptions items={descItems} column={1} style={{paddingLeft: 24, paddingTop: 12}}/>
         <EditableProTable<LangLocalItem>
           style={{ marginTop: 16 }}
           editableFormRef={tableRef}
@@ -122,7 +122,7 @@ const LangLocalDialog: React.FC<LangLocalDialogProps> = (props: LangLocalDialogP
           rowKey="code"
           search={false}
           pagination={false}
-          scroll={{ y: 240 }}
+          scroll={{ y: 200 }}
           columns={columns as any}
           value={langList}
           onChange={setLangList}

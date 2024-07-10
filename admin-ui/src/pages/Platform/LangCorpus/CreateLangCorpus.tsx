@@ -1,79 +1,35 @@
-import { withAccessRender } from '@/access';
+import EditableProTablePage from '@/components/EditableProTablePage';
 import { ExProColumnsType, ExProFormColumnsType } from '@/components/ValueTypes';
-import {
-  createLangCorpus,
-  deleteLangCorpus,
-  enableLangCorpus,
-  listLangCorpus,
-  updateLangCorpus,
-} from '@/services/swagger/langCorpusApi';
-import { convertCommonQueryParams, patterns } from '@/utils/bizUtils';
-import { stopEvent } from '@/utils/commonUtils';
+import { listLanguages } from '@/services/swagger/langApi';
+import { createLangCorpus } from '@/services/swagger/langCorpusApi';
+import { patterns } from '@/utils/bizUtils';
 import { useMessageBox } from '@/utils/messageUtils';
 import type { ActionType, ProFormInstance } from '@ant-design/pro-components';
 import {
   BetaSchemaForm,
-  EditableProTable,
+  EditableFormInstance,
   FooterToolbar,
   ListToolBar,
   PageContainer,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { Card, Flex, Popconfirm, Space } from 'antd';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import EditableProTablePage from '@/components/EditableProTablePage';
+import { Card, Flex, message, Popconfirm } from 'antd';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const handleAdd = useMessageBox<API.CreateLangCorpusRequestDTO, number[]>(createLangCorpus);
-const handleUpdate = useMessageBox<{ id: number; body: API.UpdateLangCorpusRequestDTO }, void>(
-  (args) => updateLangCorpus({ langCorpusId: args.id }, args.body),
-);
-const handleEnable = useMessageBox<{ id: number; enabled: boolean }, void>((args) =>
-  enableLangCorpus({
-    langCorpusId: args.id,
-    enabled: args.enabled,
-  }),
-);
-const handleDelete = useMessageBox<{ id: number }, void>((args) =>
-  deleteLangCorpus({ langCorpusId: args.id }),
-);
-
-const queryLangCorpus = async (
-  params: API.QueryLangCorpusRequestDTO & {
-    pageSize?: number | undefined;
-    current?: number | undefined;
-  },
-  sorter: any,
-): Promise<{ data: API.LangCorpusDTO[]; success: boolean; total: number }> => {
-  const response = await listLangCorpus({
-    application: params.application,
-    corpusType: params.corpusType,
-    corpusGroup: params.corpusGroup,
-    keyword: params.keyword,
-    configured: params.configured,
-    ...convertCommonQueryParams(params, sorter),
-  } as API.QueryLangCorpusRequestDTO);
-
-  return {
-    data: response.data ?? [],
-    success: true,
-    total: response.total ?? 0,
-  };
-};
 
 let LINE_ID: number = 0;
 
 const CreateLangCorpusPage: React.FC = () => {
-  const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-  const [newLangCorpus, setNewLangCorpus] = useState<API.LangCorpusDTO>({ enabled: true });
-
-  const [editModalOpen, handleEditModalOpen] = useState<boolean>(false);
-  const [editLangCorpus, setEditLangCorpus] = useState<API.LangCorpusDTO | undefined>();
+  const [langs, setLangs] = useState<readonly API.LangDTO[]>([]);
   const [groupCondition, setGroupCondition] = useState<API.LangCorpusDTO>({});
-  const [corpusLines, setCorpusLines] = useState<readonly API.LangCorpusDTO[]>([]);
+  const [corpusLines, setCorpusLines] = useState<
+    readonly (API.LangCorpusItemDTO & { id: number })[]
+  >([]);
+  const currentEditLineId = useRef<number>(0);
 
-  const actionRef = useRef<ActionType>();
+  const tableRef = useRef<EditableFormInstance>();
   const intl = useIntl();
-  const access = useAccess();
   const formRef = useRef<ProFormInstance>();
 
   const corpusGroupFilter = useCallback(
@@ -88,87 +44,18 @@ const CreateLangCorpusPage: React.FC = () => {
     [groupCondition],
   );
 
-  const operationRender = useMemo(() => {
-    return withAccessRender<API.LangCorpusDTO>(
-      {
-        'admin:platform:langcorpus:edit': (_, record) => (
-          <a
-            key="edit"
-            onClick={async () => {
-              setEditLangCorpus({ ...record } as any);
-              handleEditModalOpen(true);
-            }}
-          >
-            <FormattedMessage id="admin.ui.public.edit-button" />
-          </a>
-        ),
-        'admin:platform:langcorpus:local': (_, record) => (
-          <a
-            key="local"
-            onClick={async () => {
-              // setEditLangCorpus({ ...record } as any);
-              // handleEditModalOpen(true);
-            }}
-          >
-            <FormattedMessage id="admin.ui.pages.langcorpus.label-local" />
-          </a>
-        ),
-        'admin:platform:langcorpus:enable': (_, record) =>
-          record.enabled ? (
-            <Popconfirm
-              key="disable"
-              onPopupClick={stopEvent}
-              title={<FormattedMessage id="admin.ui.public.label-enabled-true" />}
-              description={<FormattedMessage id="admin.ui.pages.lang.disable-confirm-desc" />}
-              onConfirm={async () => {
-                const result = await handleEnable({ id: record.id || 0, enabled: false });
-                if (result.success) {
-                  actionRef.current?.reload();
-                }
-              }}
-            >
-              <a onClick={stopEvent}>
-                <FormattedMessage id="admin.ui.public.label-enabled-false" />
-              </a>
-            </Popconfirm>
-          ) : (
-            <Popconfirm
-              key="enable"
-              onPopupClick={stopEvent}
-              title={<FormattedMessage id="admin.ui.public.label-enabled-true" />}
-              description={<FormattedMessage id="admin.ui.pages.lang.enable-confirm-desc" />}
-              onConfirm={async () => {
-                const result = await handleEnable({ id: record.id || 0, enabled: true });
-                if (result.success) {
-                  actionRef.current?.reload();
-                }
-              }}
-            >
-              <a onClick={stopEvent}>
-                <FormattedMessage id="admin.ui.public.label-enabled-true" />
-              </a>
-            </Popconfirm>
-          ),
-        'admin:platform:langcorpus:delete': (_, record) => (
-          <Popconfirm
-            title={<FormattedMessage id="admin.ui.public.confirm-ok-button" />}
-            description={<FormattedMessage id="admin.ui.pages.lang.delete-confirm-desc" />}
-            onConfirm={async () => {
-              const result = await handleDelete({ id: record.id || 0 });
-              if (result.success) {
-                actionRef.current?.reload();
-              }
-            }}
-          >
-            <a key="delete">
-              <FormattedMessage id="admin.ui.public.delete-button" />
-            </a>
-          </Popconfirm>
-        ),
+  useEffect(() => {
+    if (!groupCondition.application) {
+      setLangs([]);
+      return;
+    }
+    listLanguages({ pageSize: 300, pageNum: 1, application: groupCondition.application }).then(
+      (res) => {
+        setLangs(res.data || []);
       },
-      access,
     );
-  }, [access]);
+  }, [groupCondition.application]);
+
 
   const columns: ExProFormColumnsType<API.CreateLangCorpusRequestDTO>[] = [
     {
@@ -262,6 +149,21 @@ const CreateLangCorpusPage: React.FC = () => {
             pattern: patterns.permissionCode,
             message: intl.formatMessage({ id: 'admin.ui.public.pattern-tooltip-code' }),
           },
+          {
+            validator: (rule, value, callback) => {
+              if (
+                corpusLines.filter(
+                  (it) => it.id !== currentEditLineId.current && it.corpusCode === value,
+                ).length >= 1
+              ) {
+                callback(
+                  intl.formatMessage({ id: 'admin.ui.pages.langcorpus.rule-corpus-code-unique' }),
+                );
+                return;
+              }
+              callback();
+            },
+          },
         ],
       },
     },
@@ -274,73 +176,142 @@ const CreateLangCorpusPage: React.FC = () => {
       },
     },
     {
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-search-local" />,
+      dataIndex: 'langLocales',
+      valueType: 'lang-local',
+      fieldProps: {
+        langs: langs,
+        corpus: () => {
+          let row = undefined;
+          if (tableRef.current && tableRef.current.getRowsData) {
+            const rows = tableRef.current?.getRowsData();
+            if (rows?.length === 1) {
+              row = rows[0];
+            }
+          }
+          return row;
+        },
+      },
+    },
+    {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
       width: '8em',
       fixed: 'right',
       align: 'center',
-      render: (text, record, _, action) => (<Flex justify="space-around">
-        <a
-          key="editable"
-          onClick={() => {
-            action?.startEditable?.(record.id || 0);
-          }}
-        >
-          <FormattedMessage id="admin.ui.public.edit-button" />
-        </a>
-        <a
-          key="delete"
-          onClick={() => {
-            setCorpusLines(corpusLines.filter((item) => item.id !== record.id));
-          }}
-        >
-          <FormattedMessage id="admin.ui.public.delete-button" />
-        </a></Flex>)
+      render: (text, record, _, action) => (
+        <Flex justify="space-around">
+          <a
+            key="editable"
+            onClick={() => {
+              currentEditLineId.current = record.id || 0;
+              action?.startEditable?.(record.id || 0);
+            }}
+          >
+            <FormattedMessage id="admin.ui.public.edit-button" />
+          </a>
+          <a
+            key="delete"
+            onClick={() => {
+              setCorpusLines(corpusLines.filter((item) => item.id !== record.id));
+            }}
+          >
+            <FormattedMessage id="admin.ui.public.delete-button" />
+          </a>
+        </Flex>
+      ),
     },
   ];
 
+  const onSubmit = useCallback(
+    async (values: API.CreateLangCorpusRequestDTO) => {
+      if (
+        tableRef.current &&
+        tableRef.current.getRowsData &&
+        // @ts-ignore
+        tableRef.current.getRowsData().length > 0
+      ) {
+        message.error(intl.formatMessage({ id: 'admin.ui.pages.langcorpus.corpus-list-editing' }));
+        return;
+      }
+      if (corpusLines.length === 0) {
+        message.error(intl.formatMessage({ id: 'admin.ui.pages.langcorpus.corpus-list-empty' }));
+        return;
+      }
+
+      const request: API.CreateLangCorpusRequestDTO = {
+        ...values,
+        corpusItems: corpusLines.map((it) => ({
+          enabled: true,
+          corpusCode: it.corpusCode,
+          langLocales: it.langLocales,
+          memo: it.memo,
+        })),
+      };
+      console.log(request);
+      const result = await handleAdd(request);
+      if (result.success) {
+      }
+    },
+    [corpusLines],
+  );
+
   return (
-    <PageContainer pageHeaderRender={false} className='none-ending-space'>
-        <Card>
-          <ListToolBar
-            title={<FormattedMessage id="admin.ui.pages.langcorpus.create-basic-info" />}
-          />
+    <PageContainer pageHeaderRender={false} className="none-ending-space">
+      <Card>
+        <ListToolBar
+          title={<FormattedMessage id="admin.ui.pages.langcorpus.create-basic-info" />}
+        />
 
-          <BetaSchemaForm<API.CreateLangCorpusRequestDTO>
-            formRef={formRef}
-            layout="horizontal"
-            grid={true}
-            rowProps={{
-              gutter: [16, 0],
-            }}
-            colProps={{ lg: 12, md: 12, xl: 8 }}
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
-            layoutType="Form"
-            columns={columns as any}
-            submitter={{
-              render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
-            }}
-          />
-        </Card>
-
-        <EditableProTablePage<API.LangCorpusDTO>
-          style={{marginTop: 16}}
-          headerTitle={<FormattedMessage id="admin.ui.pages.langcorpus.create-corpus-list" />}
-          rowKey="id"
-          search={false}
-          pagination={false}
-          columns={corpusTableColumns as any}
-          value={corpusLines}
-          onChange={setCorpusLines}
-          maxLength={10000}
-          options={{reload: false, setting: false, density: false}}
-          recordCreatorProps={{
-            position: 'top',
-            record: () => ({ id: ++LINE_ID }),
+        <BetaSchemaForm<API.CreateLangCorpusRequestDTO>
+          formRef={formRef}
+          layout="horizontal"
+          grid={true}
+          rowProps={{
+            gutter: [16, 0],
+          }}
+          colProps={{ lg: 12, md: 12, xl: 8 }}
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 18 }}
+          layoutType="Form"
+          columns={columns as any}
+          onFinish={onSubmit}
+          submitter={{
+            render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
           }}
         />
+      </Card>
+
+      <EditableProTablePage<API.LangCorpusItemDTO & { id: number }>
+        style={{ marginTop: 16 }}
+        editableFormRef={tableRef}
+        headerTitle={<FormattedMessage id="admin.ui.pages.langcorpus.create-corpus-list" />}
+        rowKey="id"
+        search={false}
+        pagination={false}
+        columns={corpusTableColumns as any}
+        value={corpusLines}
+        onChange={setCorpusLines}
+        maxLength={10000}
+        options={{ reload: false, setting: false, density: false }}
+        recordCreatorProps={{
+          position: 'top',
+          record: () => {
+            LINE_ID++;
+            currentEditLineId.current = LINE_ID;
+            return { id: LINE_ID, langLocales: {}, enabled: true, corpusCode: '' };
+          },
+        }}
+        editable={{
+          type: 'single',
+          saveText: <FormattedMessage id="admin.ui.public.save-button" />,
+          cancelText: <FormattedMessage id="admin.ui.public.cancel-button" />,
+          actionRender: (row, config, defaultDoms) => {
+            return [defaultDoms.save, defaultDoms.cancel];
+          },
+        }}
+      />
     </PageContainer>
   );
 };

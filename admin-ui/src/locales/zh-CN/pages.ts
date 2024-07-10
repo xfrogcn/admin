@@ -6,6 +6,8 @@ export default {
   "admin.ui.public.default-select-placeholder": '请选择',
   "admin.ui.public.new-button": '新建',
   "admin.ui.public.edit-button": '编辑',
+  "admin.ui.public.save-button": '保存',
+  "admin.ui.public.cancel-button": '取消',
   "admin.ui.public.delete-button": '删除',
   "admin.ui.public.confirm-title": '请确认',
   "admin.ui.public.confirm-ok-button": '确认',
@@ -186,6 +188,8 @@ export default {
   "admin.ui.pages.lang.label_lang_code": "语言代码",
   "admin.ui.pages.lang.label_lang_name": "语言名称",
   "admin.ui.pages.lang.label_lang_local_name": "语言本地名称",
+  "admin.ui.pages.lang.label_lang_local_value": "本地化语言",
+  "admin.ui.pages.lang.lang_local_list": "本地化语言列表",
 
   "admin.ui.pages.lang.create-new-title": "新建语种",
   "admin.ui.pages.lang.edit-title": "修改语种信息",
@@ -217,7 +221,7 @@ export default {
   "admin.ui.pages.langcorpus.label-search-local": '本地化配置',
   "admin.ui.pages.langcorpus.label-search-local-true": '已全部配置',
   "admin.ui.pages.langcorpus.label-search-local-false": '未全部配置',
-  "admin.ui.pages.langcorpus.label-memo": '说明',
+  "admin.ui.pages.langcorpus.label-memo": '语料说明',
   "admin.ui.pages.langcorpus.label-type-code": '类型编码',
   "admin.ui.pages.langcorpus.label-group-code": '分组编码',
   "admin.ui.pages.langcorpus.label-group-rel-type": '关联类型',
@@ -228,11 +232,9 @@ export default {
   "admin.ui.pages.langcorpus.rule-require-corpus-type": '语料类型不可为空',
   "admin.ui.pages.langcorpus.rule-require-corpus-group": '语料分组不可为空',
   "admin.ui.pages.langcorpus.rule-require-corpus-code": '语料编码不可为空',
-  
-  "admin.ui.pages.langcorpus.delete-confirm-desc": '您确定要删除此语种么？',
-  "admin.ui.pages.langcorpus.disable-confirm-desc": '您确定要禁用此语种么？',
-  "admin.ui.pages.langcorpus.enable-confirm-desc": '您确定要启用此语种么？',
-  "admin.ui.pages.langcorpus.tooltip-reference-lang": '选择参考语种后，将复制此语种的所有语料到新语种',
+  "admin.ui.pages.langcorpus.rule-corpus-code-unique": "语料编码不可重复",
+  "admin.ui.pages.langcorpus.corpus-list-editing": "语料列表处于编辑状态，请先保存编辑行!",
+  "admin.ui.pages.langcorpus.corpus-list-empty": "语料列表为空，请先添加!",
 
 
   'pages.layouts.userLayout.title': 'Ant Design 是西湖区最具影响力的 Web 设计规范',
