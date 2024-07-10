@@ -2,6 +2,7 @@ import { ProColumnType, ProFormColumnsType, ProRenderFieldPropsType, ValueTypeWi
 import { ProOrganizationSelector } from "./OrganizationSelector";
 import { Tag } from "antd";
 import { DicSelect, DicText } from './DicSelect'
+import { LangLocalEditor } from "./LangLocalEditor";
 
 
 
@@ -30,10 +31,19 @@ export const valueTypeMap: Record<string, ProRenderFieldPropsType> = {
             
             return <DicText {...props}/>
         },
+    },
+    "lang-local": {
+        renderFormItem: (text, props) => {
+            return <LangLocalEditor {...props} readonly={false}/>
+        },
+        render: (text, props, dom) => {
+            
+            return <LangLocalEditor {...props} readonly={true}/>
+        },
     }
 }
 
-export type ExValueType = ProFormColumnsType["valueType"] | 'organizationSelector' | 'tags' | 'dic'
+export type ExValueType = ProFormColumnsType["valueType"] | 'organizationSelector' | 'tags' | 'dic' | 'lang-local'
 
 
 export type ExProFormColumnsType<T> = Omit<ProFormColumnsType<T>, 'valueType'> & {
