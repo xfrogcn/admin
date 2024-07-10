@@ -101,6 +101,14 @@ export default [
         access: 'canRoute',
         permissionCode: 'admin:platform:langcorpus',
       },
+      {
+        path: '/platform/corpus/new',
+        name: 'create-lang-corpus',
+        hideInMenu: true,
+        component: './Platform/LangCorpus/CreateLangCorpus',
+        access: 'canRoute',
+        permissionCode: 'admin:platform:langcorpus:create',
+      },
     ],
   },
   {

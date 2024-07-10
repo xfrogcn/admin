@@ -223,8 +223,12 @@ export default {
   "admin.ui.pages.langcorpus.label-group-rel-type": '关联类型',
   "admin.ui.pages.langcorpus.label-group-rel-application": '关联应用',
 
-  "admin.ui.pages.langcorpus.rule-require-application": '所属应用不可为空',
-  "admin.ui.pages.langcorpus.rule-require-lang": '语种不可为空',
+  "admin.ui.pages.langcorpus.create-basic-info": '基本信息',
+  "admin.ui.pages.langcorpus.create-corpus-list": '语料列表',
+  "admin.ui.pages.langcorpus.rule-require-corpus-type": '语料类型不可为空',
+  "admin.ui.pages.langcorpus.rule-require-corpus-group": '语料分组不可为空',
+  "admin.ui.pages.langcorpus.rule-require-corpus-code": '语料编码不可为空',
+  
   "admin.ui.pages.langcorpus.delete-confirm-desc": '您确定要删除此语种么？',
   "admin.ui.pages.langcorpus.disable-confirm-desc": '您确定要禁用此语种么？',
   "admin.ui.pages.langcorpus.enable-confirm-desc": '您确定要启用此语种么？',

@@ -11,6 +11,8 @@ export default {
   'menu.platform.permissionItem': '权限项管理',
   'menu.platform.lang': '多语言管理',
   'menu.platform.lang-corpus': '语料管理',
+  'menu.platform.create-lang-corpus': '新建语料',
+  
 
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',
