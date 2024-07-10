@@ -1,5 +1,5 @@
-import type { ParamsType, ProTableProps } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
+import type { EditableProTableProps, ParamsType, ProTableProps } from '@ant-design/pro-components';
+import { EditableProTable, ProTable } from '@ant-design/pro-components';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer'
 
@@ -14,8 +14,8 @@ const useSize = (target: React.MutableRefObject<any>): {width: number, height: n
   return size
 }
 
-export default function ProTablePage<DataType extends Record<string, any>, Params extends ParamsType = ParamsType, ValueType = "text">
-    (props: ProTableProps<DataType, Params, ValueType> & {width?: string | number | boolean, style?: CSSProperties}) : JSX.Element {
+export default function EditableProTablePage<DataType extends Record<string, any>, Params extends ParamsType = ParamsType, ValueType = "text">
+    (props: EditableProTableProps<DataType, Params, ValueType> & {width?: string | number | boolean, style?: CSSProperties}) : JSX.Element {
 
   const [scrollY, setScrollY] = useState<number>(0);
   const wrapperRef = useRef<HTMLDivElement>();
@@ -59,7 +59,7 @@ export default function ProTablePage<DataType extends Record<string, any>, Param
 
   return (
         <div className={`table-page-wrapper ${className}`} style={style} ref={wrapperRef as any}>
-          <ProTable<DataType, ParamsType>
+          <EditableProTable<DataType, ParamsType>
             {...restProps as any}
             options={{fullScreen: true, ...props.options}}
             scroll = {{y: scrollY, x: props.width}}

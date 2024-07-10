@@ -115,7 +115,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
           switchTabIndex >= newTabs.length
             ? { pathname: '/' }
             : map.current[newTabs[switchTabIndex].key];
-        history.push(switchLocation);
+        history.replace(switchLocation);
       }
     },
     [tabs, setTabs, keepalive],
@@ -134,7 +134,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         animated
         removeIcon={removeIcon}
         onTabClick={(key) => {
-          history.push(map.current[key]);
+          history.replace(map.current[key]);
         }}
         onEdit={onEdit}
       />
