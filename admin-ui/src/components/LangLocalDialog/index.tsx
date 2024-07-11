@@ -24,6 +24,9 @@ const LangLocalDialog: React.FC<LangLocalDialogProps> = (props: LangLocalDialogP
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
     const items = [];
     for (const k in props.langLocal) {
       items.push({
@@ -35,7 +38,7 @@ const LangLocalDialog: React.FC<LangLocalDialogProps> = (props: LangLocalDialogP
     if (!props.readonly) {
       setEditableRowKeys(items.map(it => it.code));
     }
-  }, [props.langLocal]);
+  }, [props.langLocal, open]);
 
   const tableRef = useRef<EditableFormInstance>();
   const intl = useIntl();

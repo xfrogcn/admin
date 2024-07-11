@@ -1,25 +1,28 @@
 import { withAccessRender } from '@/access';
-import { usePageTabContext, usePageTabReload } from '@/components/PageTabs';
+import LangLocalDialog from '@/components/LangLocalDialog';
+import { usePageTabReload } from '@/components/PageTabs';
 import ProTablePage from '@/components/ProTablePage';
 import { ExProColumnsType } from '@/components/ValueTypes';
+import { listLanguages } from '@/services/swagger/langApi';
 import {
-  createLangCorpus,
+  configLangLocal,
   deleteLangCorpus,
   enableLangCorpus,
+  getLangCorpus,
   listLangCorpus,
   updateLangCorpus,
 } from '@/services/swagger/langCorpusApi';
 import { convertCommonQueryParams, enabledStatusEnum } from '@/utils/bizUtils';
 import { stopEvent } from '@/utils/commonUtils';
 import { useMessageBox } from '@/utils/messageUtils';
-import { PlusOutlined } from '@ant-design/icons';
+import { EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { Access, FormattedMessage, useAccess, useIntl, useNavigate } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import EditForm from './components/EditForm';
 
-const handleAdd = useMessageBox<API.CreateLangCorpusRequestDTO, number[]>(createLangCorpus);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateLangCorpusRequestDTO }, void>(
   (args) => updateLangCorpus({ langCorpusId: args.id }, args.body),
 );
@@ -31,6 +34,9 @@ const handleEnable = useMessageBox<{ id: number; enabled: boolean }, void>((args
 );
 const handleDelete = useMessageBox<{ id: number }, void>((args) =>
   deleteLangCorpus({ langCorpusId: args.id }),
+);
+const handleConfigLangLocal = useMessageBox<{ id: number; body: Record<string, any> }, void>(
+  (args) => configLangLocal({ langCorpusId: args.id }, args.body),
 );
 
 const queryLangCorpus = async (
@@ -57,21 +63,22 @@ const queryLangCorpus = async (
 };
 
 const LangCorpusList: React.FC = () => {
-  const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-  const [newLangCorpus, setNewLangCorpus] = useState<API.LangCorpusDTO>({ enabled: true });
-
   const [editModalOpen, handleEditModalOpen] = useState<boolean>(false);
   const [editLangCorpus, setEditLangCorpus] = useState<API.LangCorpusDTO | undefined>();
   const [groupCondition, setGroupCondition] = useState<API.LangCorpusDTO>({});
+
+  const [editLocalOpen, handleEditLocalOpen] = useState<boolean>(false);
+  const [langLocal, setLangLocal] = useState<Record<string, string>>({});
+  const [langs, setLangs] = useState<API.LangDTO[]>([]);
+  const [lineLangs, setLineLangs] = useState<API.LangDTO[]>([]);
+  const [readonly, setReadonly] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
   const access = useAccess();
   const navigate = useNavigate();
-  const pageTabContext = usePageTabContext();
 
   usePageTabReload(() => {
-    console.log('auto reload');
     actionRef.current?.reload();
   });
 
@@ -85,6 +92,29 @@ const LangCorpusList: React.FC = () => {
       });
     },
     [groupCondition],
+  );
+
+  const openLangLocalDialog = useCallback(
+    async (record: API.LangCorpusDTO, readonly: boolean) => {
+      const applicationLangs = langs.filter((it) => it.application === record.application);
+      setLineLangs(applicationLangs);
+
+      const corpus = await getLangCorpus({ langCorpusId: record.id || 0 });
+
+      let localMap: Record<string, string> = {};
+      // @ts-ignore
+      applicationLangs.forEach((l) => (localMap[l.code] = null));
+
+      if (corpus && corpus.langLocales) {
+        localMap = { ...localMap, ...corpus.langLocales };
+      }
+
+      setEditLangCorpus(record);
+      setLangLocal(localMap);
+      setReadonly(readonly);
+      handleEditLocalOpen(true);
+    },
+    [langs],
   );
 
   const operationRender = useMemo(() => {
@@ -102,13 +132,7 @@ const LangCorpusList: React.FC = () => {
           </a>
         ),
         'admin:platform:langcorpus:local': (_, record) => (
-          <a
-            key="local"
-            onClick={async () => {
-              // setEditLangCorpus({ ...record } as any);
-              // handleEditModalOpen(true);
-            }}
-          >
+          <a key="local" onClick={() => openLangLocalDialog(record, false)}>
             <FormattedMessage id="admin.ui.pages.langcorpus.label-local" />
           </a>
         ),
@@ -172,12 +196,41 @@ const LangCorpusList: React.FC = () => {
 
   const columns: ExProColumnsType<API.LangCorpusDTO>[] = [
     {
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-code" />,
+      dataIndex: 'corpusCode',
+      valueType: 'text',
+      sorter: true,
+      width: '15em',
+      ellipsis: { showTitle: true },
+      copyable: true,
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-memo" />,
+      dataIndex: 'memo',
+      valueType: 'text',
+      width: '14em',
+      sorter: false,
+      ellipsis: { showTitle: true },
+      hideInSearch: true,
+    },
+    {
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-enabled" />,
+      dataIndex: 'enabled',
+      valueType: 'text',
+      valueEnum: enabledStatusEnum(intl),
+      width: '7em',
+      align: 'center',
+      sorter: false,
+      hideInSearch: true,
+    },
+    {
       title: <FormattedMessage id="admin.ui.pages.langcorpus.label-application" />,
       dataIndex: 'application',
       valueType: 'dic',
       sorter: true,
       hideInSearch: false,
-      width: '14em',
+      width: '8em',
       fieldProps: {
         dictype: 'application',
         allowClear: true,
@@ -190,7 +243,7 @@ const LangCorpusList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.pages.langcorpus.label-type" />,
       dataIndex: 'corpusType',
       valueType: 'dic',
-      width: '10em',
+      width: '8em',
       align: 'center',
       sorter: true,
       hideInSearch: false,
@@ -206,7 +259,7 @@ const LangCorpusList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.pages.langcorpus.label-group" />,
       dataIndex: 'corpusGroup',
       valueType: 'dic',
-      width: '10em',
+      width: '8em',
       align: 'center',
       sorter: true,
       hideInSearch: false,
@@ -245,34 +298,6 @@ const LangCorpusList: React.FC = () => {
       hideInTable: true,
     },
     {
-      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-code" />,
-      dataIndex: 'corpusCode',
-      valueType: 'text',
-      sorter: true,
-      ellipsis: { showTitle: true },
-      copyable: true,
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-enabled" />,
-      dataIndex: 'enabled',
-      valueType: 'text',
-      valueEnum: enabledStatusEnum(intl),
-      width: '7em',
-      align: 'center',
-      sorter: false,
-      hideInSearch: true,
-    },
-    {
-      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-memo" />,
-      dataIndex: 'memo',
-      valueType: 'text',
-      width: '14em',
-      sorter: false,
-      ellipsis: { showTitle: true },
-      hideInSearch: true,
-    },
-    {
       title: <FormattedMessage id="admin.ui.public.created-time" />,
       dataIndex: 'createdTime',
       sorter: true,
@@ -282,6 +307,34 @@ const LangCorpusList: React.FC = () => {
       align: 'center',
       valueType: 'dateTime',
     },
+    {
+      title: <FormattedMessage id="admin.ui.pages.langcorpus.label-search-local" />,
+      dataIndex: 'configured',
+      valueType: 'text',
+      valueEnum: {
+        true: {
+          text: intl.formatMessage({ id: 'admin.ui.pages.langcorpus.label-search-local-true' }),
+          status: 'Success',
+        },
+        false: {
+          text: intl.formatMessage({ id: 'admin.ui.pages.langcorpus.label-search-local-false' }),
+          status: 'Error',
+        },
+      },
+      render: (dom, record) => {
+        return [
+          <Button key="edit" type="link" onClick={() => openLangLocalDialog(record, true)}>
+            <EyeOutlined />
+          </Button>,
+          dom,
+        ];
+      },
+      width: '7em',
+      align: 'center',
+      sorter: false,
+      fixed: 'right',
+      hideInSearch: true,
+    },
   ];
 
   if (operationRender.hasPermisions) {
@@ -289,7 +342,7 @@ const LangCorpusList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: operationRender.permissionCodes.length * 4 + 1 + 'em',
+      width: operationRender.permissionCodes.length * 4 + 'em',
       fixed: 'right',
       align: 'center',
       render: (dom, record) => (
@@ -297,6 +350,12 @@ const LangCorpusList: React.FC = () => {
       ),
     });
   }
+
+  useEffect(() => {
+    listLanguages({ pageSize: 300, pageNum: 1 }).then((res) => {
+      setLangs(res.data || []);
+    });
+  }, []);
 
   return (
     <PageContainer pageHeaderRender={false}>
@@ -306,7 +365,6 @@ const LangCorpusList: React.FC = () => {
         })}
         actionRef={actionRef}
         rowKey="id"
-        width="110em"
         search={{
           defaultColsNumber: 8,
           span: 8,
@@ -329,33 +387,15 @@ const LangCorpusList: React.FC = () => {
         columns={columns as any}
         rowSelection={false}
       />
-      {/* {
-        <EditForm
-          mode="create"
-          lang={newLang}
-          onCancel={() => handleCreateModalOpen(false)}
-          title={intl.formatMessage({ id: 'admin.ui.pages.lang.create-new-title' })}
-          onFinish={async (values) => {
-            const result = await handleAdd(values as API.CreateLangRequestDTO);
-            if (result.success) {
-              handleCreateModalOpen(false);
-              actionRef.current?.reload();
-            }
-          }}
-          width="600px"
-          open={createModalOpen}
-        ></EditForm>
-      }
       {
         <EditForm
-          mode="edit"
-          lang={editLang}
+          langCorpus={editLangCorpus}
           onCancel={() => handleEditModalOpen(false)}
-          title={intl.formatMessage({ id: 'admin.ui.pages.lang.edit-title' })}
+          title={intl.formatMessage({ id: 'admin.ui.pages.langcorpus.edit-title' })}
           onFinish={async (values) => {
             const result = await handleUpdate({
-              id: editLang?.id ?? 0,
-              body: values as API.UpdateLangRequestDTO,
+              id: editLangCorpus?.id ?? 0,
+              body: values as API.UpdateLangCorpusRequestDTO,
             });
             if (result.success) {
               handleEditModalOpen(false);
@@ -365,7 +405,28 @@ const LangCorpusList: React.FC = () => {
           width="600px"
           open={editModalOpen}
         ></EditForm>
-      } */}
+      }
+      {
+        <LangLocalDialog
+          langs={lineLangs}
+          onCancel={() => handleEditLocalOpen(false)}
+          langCorpus={editLangCorpus}
+          title={intl.formatMessage({ id: 'admin.ui.pages.lang.label_lang_local_value' })}
+          langLocal={langLocal}
+          readonly={readonly}
+          onFinish={async (values) => {
+            const result = await handleConfigLangLocal({
+              id: editLangCorpus?.id || 0,
+              body: values,
+            });
+            if (result.success) {
+              handleEditLocalOpen(false);
+            }
+          }}
+          width="600px"
+          open={editLocalOpen}
+        />
+      }
     </PageContainer>
   );
 };

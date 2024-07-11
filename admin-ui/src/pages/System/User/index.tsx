@@ -67,7 +67,7 @@ const queryUsers = async (
     organizationId: params.organizationId,
     createdTime: convertDateRange(params.createdTime),
     ...convertCommonQueryParams(params, sort),
-  });
+  } as any);
 
   return {
     data: response.data ?? [],
