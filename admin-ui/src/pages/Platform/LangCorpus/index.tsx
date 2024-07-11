@@ -329,7 +329,7 @@ const LangCorpusList: React.FC = () => {
           dom,
         ];
       },
-      width: '7em',
+      width: '14em',
       align: 'center',
       sorter: false,
       fixed: 'right',
@@ -420,6 +420,7 @@ const LangCorpusList: React.FC = () => {
               body: values,
             });
             if (result.success) {
+              actionRef.current?.reload();
               handleEditLocalOpen(false);
             }
           }}

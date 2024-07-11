@@ -144,6 +144,7 @@ const LangList: React.FC = () => {
       dataIndex: 'application',
       valueType: 'dic',
       sorter: true,
+      width: '8em',
       hideInSearch: true,
       fieldProps: {
         dictype: 'application'

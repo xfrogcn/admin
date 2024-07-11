@@ -133,6 +133,7 @@ const OrganizationList: React.FC = () => {
       dataIndex: 'name',
       sorter: false,
       hideInSearch: false,
+      width: '12em',
     },
     {
       title: <FormattedMessage id="admin.ui.pages.organization.label-level" />,

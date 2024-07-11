@@ -113,6 +113,8 @@ const TenantList: React.FC = () => {
       valueType: 'text',
       sorter: false,
       hideInSearch: true,
+      width: '12em',
+      ellipsis: true,
     },
     {
       title: <FormattedMessage id="admin.ui.pages.tenant.label-name" />,
@@ -120,6 +122,8 @@ const TenantList: React.FC = () => {
       valueType: 'text',
       sorter: true,
       hideInSearch: true,
+      width: '12em',
+      ellipsis: true,
     },
     {
       title: <FormattedMessage id="admin.ui.public.keyword" />,
@@ -146,6 +150,7 @@ const TenantList: React.FC = () => {
       sorter: false,
       hideInSearch: true,
       copyable: true,
+      width: '10em',
     },
 
     {

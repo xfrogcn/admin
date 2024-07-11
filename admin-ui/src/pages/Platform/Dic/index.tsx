@@ -102,6 +102,7 @@ const DicList: React.FC = () => {
       valueType: 'text',
       sorter: true,
       hideInSearch: true,
+      width: '12em',
     },
     {
       title: <FormattedMessage id="admin.ui.pages.dic.label-type" />,
@@ -111,6 +112,7 @@ const DicList: React.FC = () => {
       sorter: true,
       copyable: true,
       hideInSearch: true,
+      width: '15em',
     },
     {
       title: <FormattedMessage id="admin.ui.public.keyword" />,
@@ -128,6 +130,7 @@ const DicList: React.FC = () => {
       ellipsis: {showTitle: true},
       sorter: false,
       hideInSearch: true,
+      width: '12em',
     },
     {
       title: <FormattedMessage id="admin.ui.public.created-time" />,

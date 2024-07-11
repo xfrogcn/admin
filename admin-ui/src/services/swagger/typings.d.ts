@@ -378,6 +378,8 @@ declare namespace API {
     configured?: boolean;
     /** 创建时间 */
     createdTime?: string;
+    /** 本地化语言配置 */
+    langLocales?: Record<string, any>;
   };
 
   type LangCorpusItemDTO = {
@@ -524,6 +526,8 @@ declare namespace API {
     sortItems?: SortItem[];
     /** 应用 */
     application?: string;
+    /** 是否启用 */
+    enabled?: boolean;
   };
 
   type QueryOrganizationRequestDTO = {
