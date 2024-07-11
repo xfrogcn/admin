@@ -2,35 +2,62 @@ import { CloseOutlined } from '@ant-design/icons';
 import { RouteContext } from '@ant-design/pro-components';
 import { history, useAppData } from '@umijs/max';
 import { Flex, Tabs } from 'antd';
-import KeepAlive, { useKeepaliveRef } from 'keepalive-for-react';
+import KeepAlive, { useEffectOnActive, useKeepaliveRef } from 'keepalive-for-react';
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useLocation, useOutlet } from 'react-router';
+
+type TabTo =
+  | {
+      pathname: string;
+      search?: string;
+    }
+  | string;
 
 export interface PageTabsProps {}
 export interface PageTabContextObject {
   setTabLabel: (label: string | any) => void;
+  close: (to?: TabTo, reload?: boolean) => void;
+  closeTab: (key: string, to?: TabTo, reload?: boolean) => void;
+  reloadComplete: () => void;
   tab: { defaultLabel: string };
   key?: string;
+  mustReload: () => boolean;
 }
 
 const nilfunction = () => void {};
 export const PageTabContext = React.createContext<PageTabContextObject>({
   setTabLabel: nilfunction,
+  close: nilfunction,
+  closeTab: nilfunction,
   tab: { defaultLabel: '' },
+  mustReload: () => false,
+  reloadComplete: nilfunction,
 });
 
 export const usePageTabContext = () => {
   return useContext(PageTabContext);
 };
 
+export const usePageTabReload =  (reloader: (() => Promise<void>) | (() => void)): void => {
+  const pageTabContext = usePageTabContext();
+  useEffectOnActive((active) => {
+    if (active && pageTabContext.mustReload()) {
+      pageTabContext.reloadComplete();
+      reloader();
+    }
+  }, true, [pageTabContext])
+}
+
 const ALL_TAB_KEY = 'ALL_TAB';
 
-function getCacheKey(location: { pathname: string; search: string }) {
-  return location.pathname + location.search;
+function getCacheKey(location: { pathname: string; search?: string }) {
+  return location.pathname + (location.search || '');
 }
 
 export const PageTabs = (props: PageTabsProps): JSX.Element => {
   const [tabs, setTabs] = useState<any[]>([]);
+  const [, updateState] = useState<any>();
+  const forceUpdate = useCallback(() => updateState({}), []);
   const map = useRef<Record<string, any>>({});
   const routes = useContext(RouteContext);
   const appData = useAppData();
@@ -42,7 +69,14 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
 
   const pageTabContext = useMemo(() => {
     if (location.pathname === '/') {
-      return { setTabLabel: nilfunction, tab: { defaultLabel: '' } };
+      return {
+        setTabLabel: nilfunction,
+        tab: { defaultLabel: '' },
+        close: nilfunction,
+        closeTab: nilfunction,
+        mustReload: () => false,
+        reloadComplete: nilfunction,
+      };
     }
 
     const key = getCacheKey(location);
@@ -54,7 +88,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         label: routes.currentMenu?.name,
         defaultLabel: routes.currentMenu?.name,
       };
-      map.current[key] = { ...location };
+      map.current[key] = { location: { ...location }, reload: false };
       if (tabs.length === 1) {
         tabs[0].closable = true;
       }
@@ -65,9 +99,51 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
       tabItem = tabs.findLast((item) => item.key === key);
     }
 
+    const closeTab = (key: string, to?: TabTo, reload?: boolean) => {
+      const tabs: { key: string; closable: boolean }[] = map.current[ALL_TAB_KEY] || [];
+      const itemIndex = tabs.findLastIndex((it) => it.key === key);
+      if (itemIndex >= 0) {
+        keepalive.current?.removeCache(key as string);
+        const newTabs = tabs.filter((it) => it.key !== key);
+        if (newTabs.length === 1) {
+          newTabs[0].closable = false;
+        }
+        map.current[ALL_TAB_KEY] = newTabs;
+        setTabs(newTabs);
+        delete map.current[key as string];
+        let switchLocation = to;
+        if (to && typeof to === 'string') {
+          switchLocation = {
+            pathname: to,
+            search: '',
+          };
+        }
+        if (!switchLocation) {
+          const switchTabIndex = itemIndex === 0 ? 0 : itemIndex - 1;
+          switchLocation =
+            switchTabIndex >= newTabs.length
+              ? { pathname: '/' }
+              : map.current[newTabs[switchTabIndex].key].location;
+        }
+        const targetKey = getCacheKey(switchLocation as any);
+        if (map.current[targetKey]) {
+          map.current[targetKey].reload = reload;
+        }
+
+        history.replace(switchLocation as any);
+      }
+    };
     return {
       key: key,
       tab: tabItem,
+      mustReload: () => map.current[key].reload,
+      reloadComplete: () => {
+        map.current[key].reload = false;
+      },
+      closeTab: closeTab,
+      close: (to?: TabTo, reload?: boolean) => {
+        closeTab(key, to, reload);
+      },
       setTabLabel: (label: string | any) => {
         const tabs = map.current[ALL_TAB_KEY] || [];
         const index = tabs.findIndex((item: any) => item.key === key);
@@ -100,25 +176,9 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         return;
       }
 
-      const itemIndex = tabs.findLastIndex((it) => it.key === targetKey);
-      if (itemIndex >= 0) {
-        keepalive.current?.removeCache(targetKey as string);
-        const newTabs = tabs.filter((it) => it.key !== targetKey);
-        if (newTabs.length === 1) {
-          newTabs[0].closable = false;
-        }
-        map.current[ALL_TAB_KEY] = newTabs;
-        setTabs(newTabs);
-        delete map.current[targetKey as string];
-        const switchTabIndex = itemIndex === 0 ? 0 : itemIndex - 1;
-        const switchLocation =
-          switchTabIndex >= newTabs.length
-            ? { pathname: '/' }
-            : map.current[newTabs[switchTabIndex].key];
-        history.replace(switchLocation);
-      }
+      pageTabContext.closeTab(targetKey as string);
     },
-    [tabs, setTabs, keepalive],
+    [pageTabContext],
   );
 
   const removeIcon = tabs.length == 1 ? false : <CloseOutlined />;
@@ -134,7 +194,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         animated
         removeIcon={removeIcon}
         onTabClick={(key) => {
-          history.replace(map.current[key]);
+          history.replace(map.current[key].location);
         }}
         onEdit={onEdit}
       />
