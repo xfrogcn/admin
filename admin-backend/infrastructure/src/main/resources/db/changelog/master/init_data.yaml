@@ -12,3 +12,15 @@ databaseChangeLog:
             splitStatements: true
             endDelimiter: ";"
             stripComments: true
+        - sqlFile:
+              path: ../data/init_dic.sql
+              relativeToChangelogFile: true
+              splitStatements: true
+              endDelimiter: ";"
+              stripComments: true
+        - sqlFile:
+              path: ../data/init_lang.sql
+              relativeToChangelogFile: true
+              splitStatements: true
+              endDelimiter: ";"
+              stripComments: true
