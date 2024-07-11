@@ -17,4 +17,6 @@ import lombok.experimental.SuperBuilder;
 public class QueryLangRequestDTO extends PageQueryDTO {
     @Schema(description = "应用")
     private String application;
+    @Schema(description = "是否启用")
+    private Boolean enabled;
 }

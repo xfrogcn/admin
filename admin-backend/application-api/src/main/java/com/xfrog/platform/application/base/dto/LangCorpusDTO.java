@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -34,4 +35,6 @@ public class LangCorpusDTO {
     private Boolean configured;
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
+    @Schema(description = "本地化语言配置")
+    private Map<String, String> langLocales;
 }

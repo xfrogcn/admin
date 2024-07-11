@@ -8,6 +8,8 @@ import com.xfrog.platform.application.base.dto.QueryLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateLangCorpusRequestDTO;
 import com.xfrog.platform.domain.base.aggregate.Lang;
 import com.xfrog.platform.domain.base.aggregate.LangCorpus;
+import com.xfrog.platform.domain.base.aggregate.LangFixtures;
+import com.xfrog.platform.domain.base.aggregate.LangLocal;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(LangApiFixtures.class)
@@ -55,9 +58,21 @@ public class LangCorpusApiTest extends BaseApiTest {
 
     @Test
     @SneakyThrows
+    @Sql(statements = {LangApiFixtures.SQL_TRUNCATE_LANG_CORPUS, LangApiFixtures.SQL_TRUNCATE_LANG})
     void getLangCorpus_should_success() {
-        request(get("/api/langcorpus/1"))
-                .andExpect(status().isOk());
+        Lang lang = langApiFixtures.saveLang(LangFixtures.createDefaultLang()
+                .code("zh-CN")
+                .name("中文")
+                .build());
+        LangCorpus langCorpus = langApiFixtures.createAndSaveLangCorpus();
+        LangLocal langLocal = langApiFixtures.saveLangLocale(LangFixtures.createDefaultLocal(langCorpus, lang)
+                .localValue("测试")
+                .build());
+
+
+        request(get(url("/api/langcorpus/{id}", langCorpus.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.langLocales['zh-CN']").value("测试"));
     }
     @Test
     @SneakyThrows

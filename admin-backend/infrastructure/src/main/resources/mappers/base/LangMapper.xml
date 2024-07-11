@@ -11,6 +11,9 @@
             <if test="queryDTO.application != null and queryDTO.application != ''">
                 AND l.application = #{queryDTO.application}
             </if>
+            <if test="queryDTO.enabled != null">
+                AND l.enabled = #{queryDTO.enabled}
+            </if>
         </where>
     </select>
 </mapper>

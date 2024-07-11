@@ -9,9 +9,11 @@ import com.xfrog.platform.application.base.converter.LangCorpusDTOConverter;
 import com.xfrog.platform.application.base.dto.CreateLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.dto.LangCorpusDTO;
 import com.xfrog.platform.application.base.dto.LangCorpusItemDTO;
+import com.xfrog.platform.application.base.dto.LangLocalDTO;
 import com.xfrog.platform.application.base.dto.QueryLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.repository.LangCorpusRepository;
+import com.xfrog.platform.application.base.repository.LangLocalRepository;
 import com.xfrog.platform.application.base.service.LangCorpusService;
 import com.xfrog.platform.domain.base.aggregate.Lang;
 import com.xfrog.platform.domain.base.aggregate.LangCorpus;
@@ -41,6 +43,7 @@ public class LangCorpusServiceImpl implements LangCorpusService {
     private final LangCorpusRepository langCorpusRepository;
     private final LangDomainRepository langDomainRepository;
     private final LangLocalDomainRepository langLocalDomainRepository;
+    private final LangLocalRepository langLocalRepository;
 
     @Override
     @Transactional
@@ -123,7 +126,13 @@ public class LangCorpusServiceImpl implements LangCorpusService {
 
     @Override
     public LangCorpusDTO getLangCorpus(Long langCorpusId) {
-        return langCorpusRepository.findById(langCorpusId);
+        LangCorpusDTO langCorpus =  langCorpusRepository.findById(langCorpusId);
+        if (langCorpus != null) {
+            langCorpus.setLangLocales(langLocalRepository.queryByLangCorpusId(langCorpus.getId()).stream()
+                    .collect(Collectors.toMap(LangLocalDTO::getLangCode, LangLocalDTO::getLangValue)));
+        }
+
+        return langCorpus;
     }
 
     @Override

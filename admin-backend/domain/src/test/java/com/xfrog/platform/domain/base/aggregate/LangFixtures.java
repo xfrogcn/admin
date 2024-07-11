@@ -49,6 +49,7 @@ public class LangFixtures {
                 .langCorpusId(langCorpus.getId())
                 .langId(lang.getId())
                 .localValue("创建")
+                .configured(true)
                 .createdBy(1L);
     }
 }
