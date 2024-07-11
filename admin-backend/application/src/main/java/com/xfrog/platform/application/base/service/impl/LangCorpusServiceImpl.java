@@ -128,8 +128,11 @@ public class LangCorpusServiceImpl implements LangCorpusService {
     public LangCorpusDTO getLangCorpus(Long langCorpusId) {
         LangCorpusDTO langCorpus =  langCorpusRepository.findById(langCorpusId);
         if (langCorpus != null) {
-            langCorpus.setLangLocales(langLocalRepository.queryByLangCorpusId(langCorpus.getId()).stream()
-                    .collect(Collectors.toMap(LangLocalDTO::getLangCode, LangLocalDTO::getLangValue)));
+            List<LangLocalDTO> langLocal = langLocalRepository.queryByLangCorpusId(langCorpus.getId());
+
+            langCorpus.setLangLocales(langLocal.stream()
+                    .collect(Collectors.toMap(LangLocalDTO::getLangCode,
+                            it -> it.getLangValue() == null ? "" : it.getLangValue())));
         }
 
         return langCorpus;

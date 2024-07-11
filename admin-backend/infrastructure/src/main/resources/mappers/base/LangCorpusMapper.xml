@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xfrog.platform.infrastructure.base.mapper.LangCorpusMapper">
+
+    <sql id="local_configured">
+        EXISTS (
+            SELECT
+                1
+            FROM
+                langs b
+                LEFT JOIN lang_locales c ON b.id = c.lang_id
+                    AND c.lang_corpus_id = lc.id
+                    AND c.deleted = 0
+            WHERE
+                b.application = lc.application
+                AND b.enabled = TRUE
+                AND b.deleted = FALSE
+                AND ( c.configured = FALSE OR c.configured IS NULL )
+        )
+    </sql>
     <select id="queryAll" resultType="com.xfrog.platform.application.base.dto.LangCorpusDTO">
         SELECT
-          *
+          lc.*,
+          !(<include refid="local_configured"></include>) as configured
         FROM
         lang_corpus lc
         <where>
@@ -20,6 +38,14 @@
             <if test="queryDTO.keyword != null and queryDTO.keyword != ''">
                 AND (lc.corpus_code LIKE CONCAT('%', #{queryDTO.keyword}, '%')
                 OR lc.memo LIKE CONCAT('%', #{queryDTO.keyword}, '%'))
+            </if>
+            <if test="queryDTO.configured != null">
+                <if test="queryDTO.configured">
+                    AND NOT <include refid="local_configured"></include>
+                </if>
+                <if test="!queryDTO.configured">
+                    AND <include refid="local_configured"></include>
+                </if>
             </if>
         </where>
     </select>
