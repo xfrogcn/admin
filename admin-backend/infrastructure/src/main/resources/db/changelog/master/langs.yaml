@@ -241,7 +241,7 @@ databaseChangeLog:
                   name: local_value
                   type: VARCHAR(512)
                   constraints:
-                    nullable: false
+                    nullable: true
                     comment: '本地语言'
               - column:
                   name: configured
