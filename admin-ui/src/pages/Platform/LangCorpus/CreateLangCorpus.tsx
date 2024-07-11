@@ -1,10 +1,11 @@
 import EditableProTablePage from '@/components/EditableProTablePage';
+import { usePageTabContext } from '@/components/PageTabs';
 import { ExProColumnsType, ExProFormColumnsType } from '@/components/ValueTypes';
 import { listLanguages } from '@/services/swagger/langApi';
 import { createLangCorpus } from '@/services/swagger/langCorpusApi';
 import { patterns } from '@/utils/bizUtils';
 import { useMessageBox } from '@/utils/messageUtils';
-import type { ActionType, ProFormInstance } from '@ant-design/pro-components';
+import type { ProFormInstance } from '@ant-design/pro-components';
 import {
   BetaSchemaForm,
   EditableFormInstance,
@@ -12,9 +13,9 @@ import {
   ListToolBar,
   PageContainer,
 } from '@ant-design/pro-components';
-import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { Card, Flex, message, Popconfirm } from 'antd';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from '@umijs/max';
+import { Card, Flex, message } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const handleAdd = useMessageBox<API.CreateLangCorpusRequestDTO, number[]>(createLangCorpus);
 
@@ -31,6 +32,7 @@ const CreateLangCorpusPage: React.FC = () => {
   const tableRef = useRef<EditableFormInstance>();
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
+  const pageTabContext = usePageTabContext();
 
   const corpusGroupFilter = useCallback(
     (items: API.DicItemDTO[]) => {
@@ -55,7 +57,6 @@ const CreateLangCorpusPage: React.FC = () => {
       },
     );
   }, [groupCondition.application]);
-
 
   const columns: ExProFormColumnsType<API.CreateLangCorpusRequestDTO>[] = [
     {
@@ -249,9 +250,13 @@ const CreateLangCorpusPage: React.FC = () => {
           memo: it.memo,
         })),
       };
-      console.log(request);
+
       const result = await handleAdd(request);
       if (result.success) {
+        message.success(
+          intl.formatMessage({ id: 'admin.ui.pages.langcorpus.corpus-success-redirect' }),
+        );
+        pageTabContext.close('/platform/corpus', true);
       }
     },
     [corpusLines],

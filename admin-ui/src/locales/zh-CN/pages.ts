@@ -235,6 +235,7 @@ export default {
   "admin.ui.pages.langcorpus.rule-corpus-code-unique": "语料编码不可重复",
   "admin.ui.pages.langcorpus.corpus-list-editing": "语料列表处于编辑状态，请先保存编辑行!",
   "admin.ui.pages.langcorpus.corpus-list-empty": "语料列表为空，请先添加!",
+  "admin.ui.pages.langcorpus.corpus-success-redirect": "创建语料成功，跳转回语料管理页面",
 
 
   'pages.layouts.userLayout.title': 'Ant Design 是西湖区最具影响力的 Web 设计规范',

@@ -1,4 +1,5 @@
 import { withAccessRender } from '@/access';
+import { usePageTabContext, usePageTabReload } from '@/components/PageTabs';
 import ProTablePage from '@/components/ProTablePage';
 import { ExProColumnsType } from '@/components/ValueTypes';
 import {
@@ -67,6 +68,12 @@ const LangCorpusList: React.FC = () => {
   const intl = useIntl();
   const access = useAccess();
   const navigate = useNavigate();
+  const pageTabContext = usePageTabContext();
+
+  usePageTabReload(() => {
+    console.log('auto reload');
+    actionRef.current?.reload();
+  });
 
   const corpusGroupFilter = useCallback(
     (items: API.DicItemDTO[]) => {
@@ -143,6 +150,7 @@ const LangCorpusList: React.FC = () => {
           ),
         'admin:platform:langcorpus:delete': (_, record) => (
           <Popconfirm
+            key="delete"
             title={<FormattedMessage id="admin.ui.public.confirm-ok-button" />}
             description={<FormattedMessage id="admin.ui.pages.lang.delete-confirm-desc" />}
             onConfirm={async () => {
@@ -152,7 +160,7 @@ const LangCorpusList: React.FC = () => {
               }
             }}
           >
-            <a key="delete">
+            <a>
               <FormattedMessage id="admin.ui.public.delete-button" />
             </a>
           </Popconfirm>
@@ -310,7 +318,7 @@ const LangCorpusList: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                navigate('/platform/corpus/new')
+                navigate('/platform/corpus/new');
               }}
             >
               <PlusOutlined /> <FormattedMessage id="admin.ui.public.new-button" />
