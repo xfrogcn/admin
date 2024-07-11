@@ -69,7 +69,7 @@ const LangCorpusList: React.FC = () => {
 
   const [editLocalOpen, handleEditLocalOpen] = useState<boolean>(false);
   const [langLocal, setLangLocal] = useState<Record<string, string>>({});
-  const [langs, setLangs] = useState<API.LangDTO[]>([]);
+  const langs = useRef<API.LangDTO[]>([]);
   const [lineLangs, setLineLangs] = useState<API.LangDTO[]>([]);
   const [readonly, setReadonly] = useState<boolean>(false);
 
@@ -96,7 +96,7 @@ const LangCorpusList: React.FC = () => {
 
   const openLangLocalDialog = useCallback(
     async (record: API.LangCorpusDTO, readonly: boolean) => {
-      const applicationLangs = langs.filter((it) => it.application === record.application);
+      const applicationLangs = langs.current.filter((it) => it.application === record.application);
       setLineLangs(applicationLangs);
 
       const corpus = await getLangCorpus({ langCorpusId: record.id || 0 });
@@ -114,7 +114,7 @@ const LangCorpusList: React.FC = () => {
       setReadonly(readonly);
       handleEditLocalOpen(true);
     },
-    [langs],
+    []
   );
 
   const operationRender = useMemo(() => {
@@ -192,7 +192,7 @@ const LangCorpusList: React.FC = () => {
       },
       access,
     );
-  }, [access]);
+  }, [access, openLangLocalDialog]);
 
   const columns: ExProColumnsType<API.LangCorpusDTO>[] = [
     {
@@ -353,7 +353,7 @@ const LangCorpusList: React.FC = () => {
 
   useEffect(() => {
     listLanguages({ pageSize: 300, pageNum: 1 }).then((res) => {
-      setLangs(res.data || []);
+      langs.current.push(...res.data || [])
     });
   }, []);
 
