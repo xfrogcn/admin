@@ -56,6 +56,11 @@ export default function ProTablePage<DataType extends Record<string, any>, Param
   }, [size])
 
   const {style, className, ...restProps} = props;
+  let pagination = props.pagination
+  if (pagination === undefined 
+    || (typeof pagination === 'object' && !pagination.pageSizeOptions)) {
+    pagination = {pageSizeOptions: ['10', '20', '50', '100'], showSizeChanger: true}
+  }
 
   return (
         <div className={`table-page-wrapper ${className}`} style={style} ref={wrapperRef as any}>
@@ -63,6 +68,7 @@ export default function ProTablePage<DataType extends Record<string, any>, Param
             {...restProps as any}
             options={{fullScreen: true, ...props.options}}
             scroll = {{y: scrollY, x: props.width}}
+            pagination = {pagination}
           />
         </div>
   );

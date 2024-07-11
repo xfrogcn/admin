@@ -5,6 +5,7 @@ export default {
   "admin.ui.public.process-failed-text": '操作失败',
   "admin.ui.public.default-select-placeholder": '请选择',
   "admin.ui.public.new-button": '新建',
+  "admin.ui.public.import-button": '导入',
   "admin.ui.public.edit-button": '编辑',
   "admin.ui.public.save-button": '保存',
   "admin.ui.public.cancel-button": '取消',
@@ -213,6 +214,7 @@ export default {
 
   "admin.ui.pages.langcorpus.create-new-title": "新建语料",
   "admin.ui.pages.langcorpus.edit-title": "修改语料信息",
+  "admin.ui.pages.langcorpus.import-title": "导入语料",
   "admin.ui.pages.langcorpus.table-title": "语料列表",
   "admin.ui.pages.langcorpus.label-application": '所属应用',
   "admin.ui.pages.langcorpus.label-type": '类型',
@@ -228,6 +230,8 @@ export default {
   "admin.ui.pages.langcorpus.label-group-code": '分组编码',
   "admin.ui.pages.langcorpus.label-group-rel-type": '关联类型',
   "admin.ui.pages.langcorpus.label-group-rel-application": '关联应用',
+  "admin.ui.pages.langcorpus.label-import-lang": '语言',
+  "admin.ui.pages.langcorpus.label-import-json": '导入JSON',
 
   "admin.ui.pages.langcorpus.create-basic-info": '基本信息',
   "admin.ui.pages.langcorpus.create-corpus-list": '语料列表',
@@ -238,7 +242,9 @@ export default {
   "admin.ui.pages.langcorpus.corpus-list-editing": "语料列表处于编辑状态，请先保存编辑行!",
   "admin.ui.pages.langcorpus.corpus-list-empty": "语料列表为空，请先添加!",
   "admin.ui.pages.langcorpus.corpus-success-redirect": "创建语料成功，跳转回语料管理页面",
-
+  "admin.ui.pages.langcorpus.rule-require-import-lang": "请选择导入语言",
+  "admin.ui.pages.langcorpus.rule-require-import-json": "请输入待导入的JSON",
+  "admin.ui.pages.langcorpus.invalid-import-json": "非法的JSON内容",
 
   'pages.layouts.userLayout.title': 'Ant Design 是西湖区最具影响力的 Web 设计规范',
   'pages.login.accountLogin.tab': '账户密码登录',

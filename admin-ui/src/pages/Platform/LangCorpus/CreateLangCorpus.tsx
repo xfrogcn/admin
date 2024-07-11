@@ -5,6 +5,7 @@ import { listLanguages } from '@/services/swagger/langApi';
 import { createLangCorpus } from '@/services/swagger/langCorpusApi';
 import { patterns } from '@/utils/bizUtils';
 import { useMessageBox } from '@/utils/messageUtils';
+import { ImportOutlined } from '@ant-design/icons';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import {
   BetaSchemaForm,
@@ -13,9 +14,10 @@ import {
   ListToolBar,
   PageContainer,
 } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
-import { Card, Flex, message } from 'antd';
+import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
+import { Button, Card, Flex, message } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import ImportForm from './components/ImportForm';
 
 const handleAdd = useMessageBox<API.CreateLangCorpusRequestDTO, number[]>(createLangCorpus);
 
@@ -29,10 +31,13 @@ const CreateLangCorpusPage: React.FC = () => {
   >([]);
   const currentEditLineId = useRef<number>(0);
 
+  const [importOpen, handleImportOpen] = useState(false);
+
   const tableRef = useRef<EditableFormInstance>();
   const intl = useIntl();
   const formRef = useRef<ProFormInstance>();
   const pageTabContext = usePageTabContext();
+  const access = useAccess();
 
   const corpusGroupFilter = useCallback(
     (items: API.DicItemDTO[]) => {
@@ -241,6 +246,24 @@ const CreateLangCorpusPage: React.FC = () => {
         return;
       }
 
+      const repeatMap: Record<string, number> = {};
+      corpusLines.forEach((it) => {
+        if (repeatMap[it.corpusCode]) {
+          repeatMap[it.corpusCode] += 1;
+        } else {
+          repeatMap[it.corpusCode] = 1;
+        }
+      });
+      const repeatList = Object.keys(repeatMap).filter((it) => repeatMap[it] > 1);
+      if (repeatList.length > 0) {
+        message.error(
+          `${intl.formatMessage({
+            id: 'admin.ui.pages.langcorpus.rule-corpus-code-unique',
+          })} ${repeatList.join(',')}`,
+        );
+        return;
+      }
+
       const request: API.CreateLangCorpusRequestDTO = {
         ...values,
         corpusItems: corpusLines.map((it) => ({
@@ -283,6 +306,7 @@ const CreateLangCorpusPage: React.FC = () => {
           columns={columns as any}
           onFinish={onSubmit}
           submitter={{
+            resetButtonProps: { style: { display: 'none' } },
             render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
           }}
         />
@@ -316,7 +340,40 @@ const CreateLangCorpusPage: React.FC = () => {
             return [defaultDoms.save, defaultDoms.cancel];
           },
         }}
+        toolBarRender={() => [
+          groupCondition.application ? (
+            <Access accessible={access.hasPermission('admin:platform:lang:create')}>
+              <Button
+                type="primary"
+                key="primary"
+                onClick={() => {
+                  handleImportOpen(true);
+                }}
+              >
+                <ImportOutlined /> <FormattedMessage id="admin.ui.public.import-button" />
+              </Button>
+            </Access>
+          ) : null,
+        ]}
       />
+
+      {
+        <ImportForm
+          open={importOpen}
+          langs={langs}
+          onCancel={() => handleImportOpen(false)}
+          title={intl.formatMessage({ id: 'admin.ui.pages.langcorpus.import-title' })}
+          width={600}
+          onFinish={async (items) => {
+            items.forEach((item) => {
+              LINE_ID++;
+              item.id = LINE_ID;
+            });
+            setCorpusLines([...items, ...corpusLines]);
+            handleImportOpen(false);
+          }}
+        />
+      }
     </PageContainer>
   );
 };
