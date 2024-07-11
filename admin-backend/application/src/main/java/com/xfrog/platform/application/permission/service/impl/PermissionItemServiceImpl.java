@@ -1,6 +1,7 @@
 package com.xfrog.platform.application.permission.service.impl;
 
-import com.xfrog.framework.exception.BusinessException;
+import com.xfrog.framework.exception.business.AlreadyExistsException;
+import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
@@ -40,7 +41,7 @@ public class PermissionItemServiceImpl implements PermissionItemService {
         }
 
         if (permissionItemDomainRepository.existsByCode(permissionItemRequestDTO.getCode(), null)) {
-            throw new BusinessException("permission item code already exists");
+            throw new AlreadyExistsException("permission item code already exists");
         }
 
         PermissionItem permissionItem = PermissionItem.builder()
@@ -77,7 +78,7 @@ public class PermissionItemServiceImpl implements PermissionItemService {
     public void deletePermissionItem(Long permissionItemId) {
 
         if (permissionItemDomainRepository.existsChildren(permissionItemId)) {
-            throw new BusinessException("permission item has children, can not delete");
+            throw new FailedPreconditionException("permission item has children, can not delete");
         }
 
         // 删除所有关联的角色权限
