@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Setter(AccessLevel.PROTECTED)
@@ -67,6 +68,6 @@ public class LangLocal extends AuditEntity {
 
     public void updateLocalValue(String local) {
         this.localValue = local;
-        this.configured = true;
+        this.configured = StringUtils.hasText(local);
     }
 }

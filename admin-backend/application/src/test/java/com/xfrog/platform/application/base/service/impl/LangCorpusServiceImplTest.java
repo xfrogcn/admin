@@ -11,6 +11,7 @@ import com.xfrog.platform.application.base.repository.LangCorpusRepository;
 import com.xfrog.platform.domain.base.aggregate.Lang;
 import com.xfrog.platform.domain.base.aggregate.LangCorpus;
 import com.xfrog.platform.domain.base.aggregate.LangFixtures;
+import com.xfrog.platform.domain.base.aggregate.LangLocal;
 import com.xfrog.platform.domain.base.repository.LangCorpusDomainRepository;
 import com.xfrog.platform.domain.base.repository.LangDomainRepository;
 import com.xfrog.platform.domain.base.repository.LangLocalDomainRepository;
@@ -23,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LangCorpusServiceImplTest {
@@ -145,9 +148,28 @@ class LangCorpusServiceImplTest {
     }
 
     @Test
-    void deleteLangCorpus_WithValidId_ShouldDelete() {
-        langCorpusService.deleteLangCorpus(1L);
-        verify(langCorpusDomainRepository).logicDelete(1L);
+    void deleteLangCorpus_whenLangCorpusNotFound_shouldThrowNotFoundException() {
+        when(langCorpusDomainRepository.findById(1L)).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> langCorpusService.deleteLangCorpus(1L));
+    }
+
+    @Test
+    void deleteLangCorpus_whenLangCorpusFound_shouldDeleteCorpusAndLangLocals() {
+        LangCorpus langCorpus = LangFixtures.createDefaultCorpus().build();
+        Lang lang = LangFixtures.createDefaultLang().build();
+        LangLocal langLocal = LangFixtures.createDefaultLocal(langCorpus, lang).build();
+
+        when(langCorpusDomainRepository.findById(langCorpus.getId())).thenReturn(langCorpus);
+        when(langLocalDomainRepository.findAllByApplicationAndCorpusIds(langCorpus.getApplication(), Collections.singletonList(langCorpus.getId())))
+                .thenReturn(List.of(langLocal));
+
+        langCorpusService.deleteLangCorpus(langCorpus.getId());
+
+
+        verify(langCorpusDomainRepository, times(1)).logicDelete(langCorpus.getId());
+        verify(langLocalDomainRepository, times(1))
+                .logicDeleteAll(argThat(list -> list.size() == 1 && list.get(0).getId().equals(langLocal.getId())));
     }
 
     @Test

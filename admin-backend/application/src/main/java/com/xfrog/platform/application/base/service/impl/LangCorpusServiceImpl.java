@@ -54,7 +54,7 @@ public class LangCorpusServiceImpl implements LangCorpusService {
         if (langCorpusDomainRepository.existsByApplicationAndCodes(langCorpusRequestDTO.getApplication(), corpusCodes)) {
             throw new AlreadyExistsException("corpus code exists");
         }
-
+        
         // 保存语言定义
         List<CreateLangCorpusCommand> createCommands = langCorpusRequestDTO.getCorpusItems().stream()
                 .map(it -> LangCorpusDTOConverter.INSTANCE.toCreateCommand(langCorpusRequestDTO, it))
@@ -85,7 +85,15 @@ public class LangCorpusServiceImpl implements LangCorpusService {
     @Override
     @Transactional
     public void deleteLangCorpus(Long langCorpusId) {
+        LangCorpus langCorpus = langCorpusDomainRepository.findById(langCorpusId);
+        if (langCorpus == null) {
+            throw new NotFoundException("lang corpus not exists");
+        }
+
         langCorpusDomainRepository.logicDelete(langCorpusId);
+
+        List<LangLocal> langsLocal = langLocalDomainRepository.findAllByApplicationAndCorpusIds(langCorpus.getApplication(), List.of(langCorpus.getId()));
+        langLocalDomainRepository.logicDeleteAll(langsLocal);
     }
 
     @Override
