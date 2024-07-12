@@ -184,7 +184,7 @@ class OrganizationServiceImplTest {
                 .build();
 
         organizationService.listOrganizations(queryDTO);
-        verify(organizationRepository, times(1)).queryAll(queryDTO);
+        verify(organizationRepository, times(1)).queryBy(queryDTO);
     }
 
     @Test

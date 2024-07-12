@@ -107,7 +107,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public List<OrganizationDTO> listOrganizations(QueryOrganizationRequestDTO queryDTO) {
-        return organizationRepository.queryAll(queryDTO);
+        return organizationRepository.queryBy(queryDTO);
     }
 
     @Override

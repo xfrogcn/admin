@@ -120,7 +120,7 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public PageDTO<TenantDTO> listTenants(QueryTenantRequestDTO requestDTO) {
-        return tenantRepository.queryAllBy(requestDTO);
+        return tenantRepository.queryBy(requestDTO);
     }
 
     @Override

@@ -5,9 +5,11 @@ import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.platform.application.permission.api.dto.QueryTenantRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.TenantDTO;
 import com.xfrog.platform.application.permission.repository.TenantRepository;
+import com.xfrog.platform.infrastructure.permission.converter.TenantPOConverter;
+import com.xfrog.platform.infrastructure.permission.dataobject.TenantPO;
 import com.xfrog.platform.infrastructure.permission.mapper.TenantMapper;
+import com.xfrog.platform.infrastructure.persistent.repository.BasePageableApplicationRepository;
 import com.xfrog.platform.infrastructure.util.PageUtils;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.springframework.stereotype.Repository;
 
@@ -15,10 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-@RequiredArgsConstructor
-public class TenantRepositoryImpl implements TenantRepository {
+public class TenantRepositoryImpl extends BasePageableApplicationRepository<TenantDTO, TenantPO, TenantMapper, QueryTenantRequestDTO>
+        implements TenantRepository {
 
-    private final TenantMapper tenantMapper;
+    public TenantRepositoryImpl(TenantMapper tenantMapper) {
+        super(tenantMapper, TenantPOConverter.INSTANCE);
+    }
 
     private static final CaseInsensitiveMap<String, String> ORDER_FIELD_MAP =
             new CaseInsensitiveMap<>(Map.of(
@@ -26,9 +30,8 @@ public class TenantRepositoryImpl implements TenantRepository {
                     "name", "t.name"));
 
     @Override
-    public PageDTO<TenantDTO> queryAllBy(QueryTenantRequestDTO queryDTO) {
-        Page<TenantDTO> page = PageUtils.page(queryDTO, ORDER_FIELD_MAP);
-        List<TenantDTO> tenantDTOS = tenantMapper.queryAllBy(queryDTO, page);
-        return PageUtils.result(page, tenantDTOS);
+    protected Map<String, String> orderedFieldMap() {
+        return ORDER_FIELD_MAP;
     }
+
 }

@@ -68,7 +68,7 @@ class UserServiceImplTest {
                 .pageSize(10)
                 .build();
 
-        when(userRepository.queryAllBy(requestDTO)).thenReturn(new PageDTO<>(1L, 10L, 0L, 0L, Collections.emptyList()));
+        when(userRepository.queryBy(requestDTO)).thenReturn(new PageDTO<>(1L, 10L, 0L, 0L, Collections.emptyList()));
 
         PageDTO<UserDTO> result = userService.listUsers(requestDTO);
 
@@ -85,7 +85,7 @@ class UserServiceImplTest {
         RoleDTO role = PermissionDTOFixtures.defaultRoleDTO().id(1L).build();
         UserRole userRole = PermissionFixtures.createDefaultUserRole(user.getId(), role.getId()).build();
 
-        when(userRepository.queryAllBy(requestDTO)).thenReturn(new PageDTO<>(1L, 10L, 1L, 1L, List.of(user)));
+        when(userRepository.queryBy(requestDTO)).thenReturn(new PageDTO<>(1L, 10L, 1L, 1L, List.of(user)));
         when(userRoleDomainRepository.getByUserIds(Collections.singletonList(user.getId()))).thenReturn(List.of(userRole));
         when(roleRepository.queryByIds(Collections.singletonList(role.getId()))).thenReturn(List.of(role));
 

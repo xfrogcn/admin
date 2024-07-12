@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xfrog.platform.infrastructure.permission.mapper.TenantMapper">
-    <select id="queryAllBy" resultType="com.xfrog.platform.application.permission.api.dto.TenantDTO">
+    <select id="queryBy" resultType="com.xfrog.platform.application.permission.api.dto.TenantDTO">
         SELECT t.*
         FROM tenants t
         <where>

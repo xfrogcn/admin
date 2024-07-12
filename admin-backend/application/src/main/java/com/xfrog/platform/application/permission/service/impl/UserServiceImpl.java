@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageDTO<UserDTO> listUsers(QueryUserRequestDTO queryUserRequestDTO) {
-        PageDTO<UserDTO> result = userRepository.queryAllBy(queryUserRequestDTO);
+        PageDTO<UserDTO> result = userRepository.queryBy(queryUserRequestDTO);
         if (!CollectionUtils.isEmpty(result.getData())) {
             List<UserRole> userRoles = userRoleDomainRepository.getByUserIds(result.getData().stream()
                     .map(UserDTO::getId).toList());

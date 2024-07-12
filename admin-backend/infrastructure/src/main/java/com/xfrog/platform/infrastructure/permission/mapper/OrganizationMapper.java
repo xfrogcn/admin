@@ -11,5 +11,5 @@ import java.util.List;
 
 @Mapper
 public interface OrganizationMapper extends BaseMapperEx<OrganizationPO> {
-    List<OrganizationDTO> queryAll(@Param("queryDTO") QueryOrganizationRequestDTO queryDTO);
+    List<OrganizationDTO> queryBy(@Param("queryDTO") QueryOrganizationRequestDTO queryDTO);
 }
