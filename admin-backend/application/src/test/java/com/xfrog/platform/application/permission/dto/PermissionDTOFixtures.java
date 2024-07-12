@@ -3,7 +3,7 @@ package com.xfrog.platform.application.permission.dto;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
 
-public class PermissionItemDTOFixtures {
+public class PermissionDTOFixtures {
     public static CreatePermissionItemRequestDTO.CreatePermissionItemRequestDTOBuilder defaultCreatePermissionItemRequestDTO() {
         return CreatePermissionItemRequestDTO.builder()
                 .code("code")

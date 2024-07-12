@@ -5,11 +5,10 @@ import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
-import com.xfrog.platform.application.permission.dto.PermissionItemDTOFixtures;
-import com.xfrog.platform.application.permission.dto.RolePermissionItemFixtures;
+import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.application.permission.repository.PermissionItemRepository;
 import com.xfrog.platform.domain.permission.aggregate.PermissionItem;
-import com.xfrog.platform.domain.permission.aggregate.PermissionItemFixtures;
+import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
 import com.xfrog.platform.domain.permission.aggregate.RolePermissionItem;
 import com.xfrog.platform.domain.permission.repository.PermissionItemDomainRepository;
 import com.xfrog.platform.domain.permission.repository.RolePermissionItemDomainRepository;
@@ -44,14 +43,14 @@ class PermissionItemServiceImplTest {
 
     @Test
     void createPermissionItem_Success() {
-        PermissionItem parent = PermissionItemFixtures.createDefaultPermissionItem().build();
-        CreatePermissionItemRequestDTO requestDTO = PermissionItemDTOFixtures.defaultCreatePermissionItemRequestDTO()
+        PermissionItem parent = PermissionFixtures.createDefaultPermissionItem().build();
+        CreatePermissionItemRequestDTO requestDTO = PermissionDTOFixtures.defaultCreatePermissionItemRequestDTO()
                 .parentId(parent.getId())
                 .build();
 
         when(permissionItemDomainRepository.findById(requestDTO.getParentId())).thenReturn(parent);
         when(permissionItemDomainRepository.existsByCode(requestDTO.getCode(), null)).thenReturn(false);
-        when(permissionItemDomainRepository.save(any(PermissionItem.class))).thenReturn(PermissionItemFixtures.createDefaultPermissionItem().build());
+        when(permissionItemDomainRepository.save(any(PermissionItem.class))).thenReturn(PermissionFixtures.createDefaultPermissionItem().build());
 
         // Act
         Long result = permissionItemService.createPermissionItem(requestDTO);
@@ -69,7 +68,7 @@ class PermissionItemServiceImplTest {
 
     @Test
     void createPermissionItem_ThrowsNotFoundException_WhenParentIdIsInvalid() {
-        CreatePermissionItemRequestDTO requestDTO = PermissionItemDTOFixtures.defaultCreatePermissionItemRequestDTO()
+        CreatePermissionItemRequestDTO requestDTO = PermissionDTOFixtures.defaultCreatePermissionItemRequestDTO()
                 .parentId(1L)
                 .build();
 
@@ -81,8 +80,8 @@ class PermissionItemServiceImplTest {
 
     @Test
     void createPermissionItem_ThrowsBusinessException_WhenCodeAlreadyExists() {
-        PermissionItem parent = PermissionItemFixtures.createDefaultPermissionItem().build();
-        CreatePermissionItemRequestDTO requestDTO = PermissionItemDTOFixtures.defaultCreatePermissionItemRequestDTO()
+        PermissionItem parent = PermissionFixtures.createDefaultPermissionItem().build();
+        CreatePermissionItemRequestDTO requestDTO = PermissionDTOFixtures.defaultCreatePermissionItemRequestDTO()
                 .parentId(parent.getId())
                 .build();
 
@@ -96,8 +95,8 @@ class PermissionItemServiceImplTest {
 
     @Test
     void updatePermissionItem_Success() {
-        PermissionItem permissionItem = PermissionItemFixtures.createDefaultPermissionItem().build();
-        UpdatePermissionItemRequestDTO requestDTO = PermissionItemDTOFixtures.defaultUpdatePermissionItemRequestDTO()
+        PermissionItem permissionItem = PermissionFixtures.createDefaultPermissionItem().build();
+        UpdatePermissionItemRequestDTO requestDTO = PermissionDTOFixtures.defaultUpdatePermissionItemRequestDTO()
                 .name("updated_name")
                 .type("updated_type")
                 .build();
@@ -138,8 +137,8 @@ class PermissionItemServiceImplTest {
 
     @Test
     void deletePermissionItem_ShouldDeleteRolePermissionItemsAndPermissionItem() {
-        PermissionItem permissionItem = PermissionItemFixtures.createDefaultPermissionItem().build();
-        RolePermissionItem rolePermissionItem = RolePermissionItemFixtures.createDefaultRolePermissionItem()
+        PermissionItem permissionItem = PermissionFixtures.createDefaultPermissionItem().build();
+        RolePermissionItem rolePermissionItem = PermissionFixtures.createDefaultRolePermissionItem()
                         .permissionItemId(permissionItem.getId()).roleId(1L).build();
 
         when(permissionItemDomainRepository.existsChildren(permissionItem.getId())).thenReturn(false);

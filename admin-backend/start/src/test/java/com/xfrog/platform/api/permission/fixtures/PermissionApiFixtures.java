@@ -1,7 +1,7 @@
 package com.xfrog.platform.api.permission.fixtures;
 
 import com.xfrog.platform.domain.permission.aggregate.PermissionItem;
-import com.xfrog.platform.domain.permission.aggregate.PermissionItemFixtures;
+import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
 import com.xfrog.platform.domain.permission.aggregate.RolePermissionItem;
 import com.xfrog.platform.domain.permission.repository.PermissionItemDomainRepository;
 import com.xfrog.platform.domain.permission.repository.RolePermissionItemDomainRepository;
@@ -22,7 +22,7 @@ public class PermissionApiFixtures {
     public RolePermissionItemDomainRepository rolePermissionItemDomainRepository;
 
     public PermissionItem createAndSavePermissionItem(String code, Long parentId) {
-        PermissionItem permissionItem = PermissionItemFixtures.createDefaultPermissionItem()
+        PermissionItem permissionItem = PermissionFixtures.createDefaultPermissionItem()
                 .code(code)
                 .parentId(parentId)
                 .platform(false)
@@ -33,7 +33,7 @@ public class PermissionApiFixtures {
     }
 
     public PermissionItem createAndSavePlatformPermissionItem(String code, Long parentId) {
-        PermissionItem permissionItem = PermissionItemFixtures.createDefaultPermissionItem()
+        PermissionItem permissionItem = PermissionFixtures.createDefaultPermissionItem()
                 .code(code)
                 .parentId(parentId)
                 .platform(true)

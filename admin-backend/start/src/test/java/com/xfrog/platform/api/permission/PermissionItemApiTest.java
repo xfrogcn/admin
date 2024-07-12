@@ -4,7 +4,7 @@ import com.xfrog.platform.api.BaseApiTest;
 import com.xfrog.platform.api.permission.fixtures.PermissionApiFixtures;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
-import com.xfrog.platform.application.permission.dto.PermissionItemDTOFixtures;
+import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.domain.permission.aggregate.PermissionItem;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ public class PermissionItemApiTest extends BaseApiTest {
     void createPermissionItem_ShouldSuccessfully() {
         PermissionItem parent = permissionApiFixtures.createAndSavePermissionItem("parent_code", null);
 
-        CreatePermissionItemRequestDTO requestDTO = PermissionItemDTOFixtures.defaultCreatePermissionItemRequestDTO()
+        CreatePermissionItemRequestDTO requestDTO = PermissionDTOFixtures.defaultCreatePermissionItemRequestDTO()
                 .parentId(parent.getId())
                 .build();
 
@@ -41,7 +41,7 @@ public class PermissionItemApiTest extends BaseApiTest {
         PermissionItem parent = permissionApiFixtures.createAndSavePermissionItem("parent_code", null);
         PermissionItem permissionItem = permissionApiFixtures.createAndSavePermissionItem("code", parent.getId());
 
-        UpdatePermissionItemRequestDTO requestDTO = PermissionItemDTOFixtures.defaultUpdatePermissionItemRequestDTO()
+        UpdatePermissionItemRequestDTO requestDTO = PermissionDTOFixtures.defaultUpdatePermissionItemRequestDTO()
                 .name("updated_name")
                 .type("updated_type")
                 .build();
