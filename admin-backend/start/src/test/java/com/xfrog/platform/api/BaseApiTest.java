@@ -33,7 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
         "admin.api-server.validOperatePermission=false",
         "admin.api-server.validExpiredToken=false"
 })
-public class BaseApiTest {
+public abstract class BaseApiTest {
 
     @Autowired
     protected MockMvc mockMvc;

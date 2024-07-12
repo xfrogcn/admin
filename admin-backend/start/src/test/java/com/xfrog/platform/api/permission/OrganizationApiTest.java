@@ -1,6 +1,5 @@
 package com.xfrog.platform.api.permission;
 
-import com.xfrog.platform.api.BaseApiTest;
 import com.xfrog.platform.api.permission.fixtures.PermissionApiFixtures;
 import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateOrganizationRequestDTO;
@@ -10,17 +9,13 @@ import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
 import com.xfrog.platform.domain.share.permission.OrganizationStatus;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import({ PermissionApiFixtures.class })
-public class OrganizationApiTest  extends BaseApiTest {
-    @Autowired
-    private PermissionApiFixtures permissionApiFixtures;
+
+public class OrganizationApiTest  extends BasePermissionApiTest {
 
     @SneakyThrows
     @Test
