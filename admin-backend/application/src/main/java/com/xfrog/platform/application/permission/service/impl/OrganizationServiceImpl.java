@@ -1,6 +1,6 @@
 package com.xfrog.platform.application.permission.service.impl;
 
-import com.xfrog.framework.exception.BusinessException;
+import com.xfrog.framework.exception.business.AlreadyExistsException;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
 import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
@@ -42,7 +42,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
 
         if (organizationDomainRepository.existsByName(organizationRequestDTO.getName(), parent.getId(), null)) {
-            throw new BusinessException("organization name exists");
+            throw new AlreadyExistsException("organization name exists");
         }
 
         int seq = getMaxSeq(parent) + 1;
@@ -77,7 +77,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (organizationDomainRepository.existsByName(updateOrganizationRequestDTO.getName(),
                 organization.getParentId(),
                 List.of(organizationId))) {
-            throw new BusinessException("organization name exists");
+            throw new AlreadyExistsException("organization name exists");
         }
 
         UpdateOrganizationCommand command = OrganizationDTOToCommandConverter.INSTANCE.toUpdateCommand(updateOrganizationRequestDTO);
@@ -100,7 +100,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new FailedPreconditionException("can not delete root organization");
         }
         if (organizationDomainRepository.existsChildren(organizationId)) {
-            throw new BusinessException("organization has children");
+            throw new FailedPreconditionException("organization has children");
         }
         organizationDomainRepository.logicDelete(organizationId);
     }
@@ -112,15 +112,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public OrganizationDTO getOrganization(Long organizationId) {
-        Organization organization = organizationDomainRepository.findById(organizationId);
+        OrganizationDTO organization = organizationRepository.queryById(organizationId);
         if (organization != null) {
-            OrganizationDTO organizationDTO = OrganizationDTOToCommandConverter.INSTANCE.toDTO(organization);
             if (!CollectionUtils.isEmpty(organization.getParentIds())) {
-                organizationDTO.setParentNames(organizationDomainRepository.findByIds(organization.getParentIds()).stream()
+                organization.setParentNames(organizationRepository.queryByIds(organization.getParentIds()).stream()
                                 .sorted((o1, o2) -> o1.getLevel() - o2.getLevel())
-                        .map(Organization::getName).toList());
+                        .map(OrganizationDTO::getName).toList());
             }
-            return organizationDTO;
+            return organization;
         }
         return null;
     }
