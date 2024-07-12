@@ -1,6 +1,7 @@
 package com.xfrog.platform.domain.permission.aggregate;
 
 import com.xfrog.framework.common.SnowflakeUidGenerator;
+import com.xfrog.platform.domain.share.permission.OrganizationStatus;
 
 public class PermissionFixtures {
     public static PermissionItem.PermissionItemBuilder createDefaultPermissionItem() {
@@ -22,13 +23,14 @@ public class PermissionFixtures {
 
     public static Organization.OrganizationBuilder createDefaultOrganization() {
         return Organization.builder()
-                .code("0001")
+                .code("00010001")
                 .createdBy(1L)
                 .createdTime(null)
                 .deleted(false)
                 .deletedBy(null)
                 .deletedTime(null)
                 .displayOrder(1)
+                .status(OrganizationStatus.NORMAL)
                 .id(SnowflakeUidGenerator.INSTANCE.nextId())
                 .level(1)
                 .name("name")
