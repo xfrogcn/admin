@@ -4,7 +4,7 @@ package com.xfrog.platform.infrastructure.persistent.repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xfrog.framework.converter.DomainAndPOConverter;
 import com.xfrog.framework.po.AuditPO;
-import com.xfrog.platform.domain.repository.DomainRepository;
+import com.xfrog.framework.repository.DomainRepository;
 import com.xfrog.platform.infrastructure.persistent.mapper.BaseMapperEx;
 import org.springframework.util.CollectionUtils;
 

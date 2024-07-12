@@ -1,7 +1,7 @@
 package com.xfrog.platform.domain.base.repository;
 
 import com.xfrog.platform.domain.base.aggregate.LangLocal;
-import com.xfrog.platform.domain.repository.DomainRepository;
+import com.xfrog.framework.repository.DomainRepository;
 
 import java.util.List;
 

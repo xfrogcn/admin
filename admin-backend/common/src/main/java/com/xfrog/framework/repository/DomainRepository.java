@@ -1,4 +1,4 @@
-package com.xfrog.platform.domain.repository;
+package com.xfrog.framework.repository;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.xfrog.platform.domain.permission.repository;
 
 import com.xfrog.platform.domain.permission.aggregate.DataScope;
-import com.xfrog.platform.domain.repository.DomainRepository;
+import com.xfrog.framework.repository.DomainRepository;
 import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
 
 import java.util.List;
