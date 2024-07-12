@@ -19,7 +19,7 @@
             <include refid="common.auditColumns">
                 <property name="tn" value="u."/>
             </include>
-        FROM admin2.users u
+        FROM users u
         LEFT JOIN organizations org ON u.organization_id = org.id
         <where>
             u.deleted = false
