@@ -1,7 +1,11 @@
 package com.xfrog.platform.application.permission.dto;
 
+import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
+import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
+import com.xfrog.platform.application.permission.api.dto.UpdateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
+import com.xfrog.platform.domain.share.permission.OrganizationStatus;
 
 public class PermissionDTOFixtures {
     public static CreatePermissionItemRequestDTO.CreatePermissionItemRequestDTOBuilder defaultCreatePermissionItemRequestDTO() {
@@ -18,4 +22,39 @@ public class PermissionDTOFixtures {
                 .name("name")
                 .type("type");
     }
+
+    public static CreateOrganizationRequestDTO.CreateOrganizationRequestDTOBuilder defaultCreateOrganizationRequestDTO() {
+        return CreateOrganizationRequestDTO.builder()
+                .name("name")
+                .parentId(1L)
+                .principal("principal")
+                .status(OrganizationStatus.NORMAL)
+                .displayOrder(100)
+                .telephone("telephone");
+    }
+
+    public static UpdateOrganizationRequestDTO.UpdateOrganizationRequestDTOBuilder defaultUpdateOrganizationRequestDTO() {
+        return UpdateOrganizationRequestDTO.builder()
+                .name("name")
+                .principal("principal")
+                .status(OrganizationStatus.NORMAL)
+                .displayOrder(100)
+                .telephone("telephone");
+    }
+
+    public static OrganizationDTO.OrganizationDTOBuilder defaultOrganizationDTO() {
+        return OrganizationDTO.builder()
+                .code("code")
+                .createdTime(null)
+                .displayOrder(100)
+                .id(1L)
+                .level(1)
+                .name("name")
+                .parentId(null)
+                .parentIds(null)
+                .parentNames(null)
+                .principal("principal")
+                .status(OrganizationStatus.NORMAL)
+                .telephone("telephone");
+            }
 }

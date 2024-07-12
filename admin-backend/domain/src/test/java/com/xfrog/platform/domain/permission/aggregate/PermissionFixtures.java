@@ -19,4 +19,19 @@ public class PermissionFixtures {
                 .permissionItemId(1L)
                 .roleId(1L);
     }
+
+    public static Organization.OrganizationBuilder createDefaultOrganization() {
+        return Organization.builder()
+                .code("0001")
+                .createdBy(1L)
+                .createdTime(null)
+                .deleted(false)
+                .deletedBy(null)
+                .deletedTime(null)
+                .displayOrder(1)
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
+                .level(1)
+                .name("name")
+                .parentId(1L);
+    }
 }
