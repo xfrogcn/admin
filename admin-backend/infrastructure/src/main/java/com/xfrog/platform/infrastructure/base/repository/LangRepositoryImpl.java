@@ -35,7 +35,7 @@ public class LangRepositoryImpl implements LangRepository {
     }
 
     @Override
-    public LangDTO findById(Long id) {
+    public LangDTO queryById(Long id) {
         LangPO langPO = langMapper.selectById(id);
         return LangPOConverter.INSTANCE.toDTO(langPO);
     }

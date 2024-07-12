@@ -135,14 +135,14 @@ class DicServiceTest {
     void getDic_ShouldSuccessfully() {
         dicService.getDic(1L);
         verify(dicRepository, times(1))
-                .findById(1L);
+                .queryById(1L);
     }
 
     @Test
     void getDicByTypes_ShouldSuccessfully() {
         dicService.getDicByTypes(anyList());
         verify(dicRepository, times(1))
-                .findByTypes(anyList());
+                .queryByTypes(anyList());
     }
 
     @Test

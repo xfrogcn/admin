@@ -81,7 +81,7 @@ public class DicServiceImpl implements DicService {
 
     @Override
     public DicDTO getDic(Long dicId) {
-        DicDTO dicDTO = dicRepository.findById(dicId);
+        DicDTO dicDTO = dicRepository.queryById(dicId);
         if (dicDTO != null) {
             fillDicItems(List.of(dicDTO));
         }
@@ -90,7 +90,7 @@ public class DicServiceImpl implements DicService {
 
     @Override
     public List<DicDTO> getDicByTypes(List<String> dicTypes) {
-        List<DicDTO> dics = dicRepository.findByTypes(dicTypes);
+        List<DicDTO> dics = dicRepository.queryByTypes(dicTypes);
         fillDicItems(dics);
         return dics;
     }
@@ -100,7 +100,7 @@ public class DicServiceImpl implements DicService {
             return;
         }
 
-        List<DicItemDTO> dicItems = dicRepository.findItemsByDicId(dics.stream()
+        List<DicItemDTO> dicItems = dicRepository.queryItemsByDicId(dics.stream()
                 .map(DicDTO::getId)
                 .toList());
 

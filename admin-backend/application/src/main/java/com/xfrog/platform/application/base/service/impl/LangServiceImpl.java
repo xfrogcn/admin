@@ -81,7 +81,7 @@ public class LangServiceImpl implements LangService {
 
     @Override
     public LangDTO getLanguage(Long languageId) {
-        return languageRepository.findById(languageId);
+        return languageRepository.queryById(languageId);
     }
 
     @Override

@@ -7,5 +7,5 @@ import com.xfrog.platform.application.base.dto.QueryLangCorpusRequestDTO;
 public interface LangCorpusRepository {
     PageDTO<LangCorpusDTO> queryAll(QueryLangCorpusRequestDTO queryDTO);
 
-    LangCorpusDTO findById(Long id);
+    LangCorpusDTO queryById(Long id);
 }

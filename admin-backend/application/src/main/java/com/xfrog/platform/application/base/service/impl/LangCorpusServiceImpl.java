@@ -126,7 +126,7 @@ public class LangCorpusServiceImpl implements LangCorpusService {
 
     @Override
     public LangCorpusDTO getLangCorpus(Long langCorpusId) {
-        LangCorpusDTO langCorpus =  langCorpusRepository.findById(langCorpusId);
+        LangCorpusDTO langCorpus =  langCorpusRepository.queryById(langCorpusId);
         if (langCorpus != null) {
             List<LangLocalDTO> langLocal = langLocalRepository.queryByLangCorpusId(langCorpus.getId());
 

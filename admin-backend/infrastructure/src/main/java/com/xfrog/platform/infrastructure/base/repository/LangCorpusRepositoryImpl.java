@@ -38,7 +38,7 @@ public class LangCorpusRepositoryImpl implements LangCorpusRepository {
     }
 
     @Override
-    public LangCorpusDTO findById(Long id) {
+    public LangCorpusDTO queryById(Long id) {
         LangCorpusPO langCorpusPO = langCorpusMapper.selectById(id);
         return LangCorpusPOConverter.INSTANCE.toDTO(langCorpusPO);
     }

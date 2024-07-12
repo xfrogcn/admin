@@ -7,5 +7,5 @@ import com.xfrog.platform.application.base.dto.QueryLangRequestDTO;
 public interface LangRepository {
     PageDTO<LangDTO> queryAll(QueryLangRequestDTO queryDTO);
 
-    LangDTO findById(Long id);
+    LangDTO queryById(Long id);
 }

@@ -43,13 +43,13 @@ public class DicRepositoryImpl implements DicRepository {
     }
 
     @Override
-    public DicDTO findById(Long id) {
+    public DicDTO queryById(Long id) {
         DicPO dicPO = dicMapper.selectById(id);
         return DicPOConverter.INSTANCE.toDTO(dicPO);
     }
 
     @Override
-    public List<DicDTO> findByTypes(List<String> types) {
+    public List<DicDTO> queryByTypes(List<String> types) {
         if (CollectionUtils.isEmpty(types)) {
             return new LinkedList<>();
         }
@@ -62,7 +62,7 @@ public class DicRepositoryImpl implements DicRepository {
     }
 
     @Override
-    public List<DicItemDTO> findItemsByDicId(List<Long> dicIds) {
+    public List<DicItemDTO> queryItemsByDicId(List<Long> dicIds) {
         if (CollectionUtils.isEmpty(dicIds)) {
             return new LinkedList<>();
         }

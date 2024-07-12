@@ -132,7 +132,7 @@ class LangServiceImplTest {
     @Test
     void getLanguage_ShouldSuccessfully() {
         langService.getLanguage(1L);
-        verify(langRepository, times(1)).findById(1L);
+        verify(langRepository, times(1)).queryById(1L);
     }
 
     @Test

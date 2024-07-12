@@ -10,9 +10,9 @@ import java.util.List;
 public interface DicRepository {
     PageDTO<DicDTO> queryAll(QueryDicRequestDTO queryDTO);
 
-    DicDTO findById(Long id);
+    DicDTO queryById(Long id);
 
-    List<DicDTO> findByTypes(List<String> types);
+    List<DicDTO> queryByTypes(List<String> types);
 
-    List<DicItemDTO> findItemsByDicId(List<Long> dicIds);
+    List<DicItemDTO> queryItemsByDicId(List<Long> dicIds);
 }

@@ -181,7 +181,7 @@ class LangCorpusServiceImplTest {
     @Test
     void getLangCorpus_Should_Success() {
         langCorpusService.getLangCorpus(1L);
-        verify(langCorpusRepository).findById(1L);
+        verify(langCorpusRepository).queryById(1L);
     }
 
     @Test
