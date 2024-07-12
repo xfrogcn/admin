@@ -36,4 +36,12 @@ public class PermissionFixtures {
                 .name("name")
                 .parentId(1L);
     }
+
+    public static Role.RoleBuilder createDefaultRole() {
+        return Role.builder()
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
+                .name("name")
+                .memo("memo")
+                .enabled(true);
+    }
 }

@@ -11,8 +11,6 @@ import java.util.List;
 public interface RoleService {
     Long createRole(CreateRoleRequestDTO createRoleRequestDTO);
 
-    Long createTenantRole(CreateRoleRequestDTO createRoleRequestDTO, String tenantId);
-
     List<RoleDTO> listRoles();
 
     List<PermissionItemDTO> getRolePermissionItems(Long roleId);

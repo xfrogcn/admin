@@ -35,11 +35,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public Long createRole(CreateRoleRequestDTO createRoleRequestDTO) {
-        return createTenantRole(createRoleRequestDTO, null);
-    }
-
-    @Override
-    public Long createTenantRole(CreateRoleRequestDTO createRoleRequestDTO, String tenantId) {
         if (roleDomainRepository.existsByName(createRoleRequestDTO.getName(), null)) {
             throw new AlreadyExistsException("role name already exists");
         }
@@ -48,7 +43,6 @@ public class RoleServiceImpl implements RoleService {
                 .name(createRoleRequestDTO.getName())
                 .memo(createRoleRequestDTO.getMemo())
                 .enabled(createRoleRequestDTO.getEnabled())
-
                 .build();
 
         return roleDomainRepository.save(role).getId();
