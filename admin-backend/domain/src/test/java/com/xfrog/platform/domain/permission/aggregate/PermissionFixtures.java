@@ -44,4 +44,35 @@ public class PermissionFixtures {
                 .memo("memo")
                 .enabled(true);
     }
+
+    public static UserRole.UserRoleBuilder createDefaultUserRole(Long userId, Long roleId) {
+        return UserRole.builder()
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
+                .roleId(roleId)
+                .userId(userId);
+    }
+
+    public static User.UserBuilder createDefaultUser() {
+        return User.builder()
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
+                .accountNonExpired(true)
+                .accountNonLocked(true)
+                .credentialsNonExpired(true)
+                .email("")
+                .enabled(true)
+                .lastLoginTime(null)
+                .mobilePhone("")
+                .name("name")
+                .organizationId(1L)
+                .password("password");
+    }
+
+    public static Tenant.TenantBuilder createDefaultTenant() {
+        return Tenant.builder()
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
+                .name("name")
+                .code("tid")
+                .enabled(true)
+                .memo("memo");
+    }
 }

@@ -3,10 +3,14 @@ package com.xfrog.platform.application.permission.dto;
 import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreateRoleRequestDTO;
+import com.xfrog.platform.application.permission.api.dto.CreateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
+import com.xfrog.platform.application.permission.api.dto.RoleDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateRoleRequestDTO;
+import com.xfrog.platform.application.permission.api.dto.UpdateUserRequestDTO;
+import com.xfrog.platform.application.permission.api.dto.UserDTO;
 import com.xfrog.platform.domain.share.permission.OrganizationStatus;
 
 public class PermissionDTOFixtures {
@@ -71,5 +75,48 @@ public class PermissionDTOFixtures {
         return UpdateRoleRequestDTO.builder()
                 .name("name")
                 .memo("memo");
+    }
+
+    public static CreateUserRequestDTO.CreateUserRequestDTOBuilder defaultCreateUserRequestDTO(){
+        return CreateUserRequestDTO.builder()
+                .email("email")
+                .enabled(true)
+                .mobilePhone("mobilePhone")
+                .name("name")
+                .organizationId(1L)
+                .password("password")
+                .sex("F")
+                .userName("userName");
+    }
+
+    public static UpdateUserRequestDTO.UpdateUserRequestDTOBuilder defaultUpdateUserRequestDTO(){
+        return UpdateUserRequestDTO.builder()
+                .email("email")
+                .mobilePhone("mobilePhone")
+                .name("name")
+                .organizationId(1L)
+                .sex("F");
+    }
+
+    public static UserDTO.UserDTOBuilder defaultUserDTO(){
+        return UserDTO.builder()
+                .email("email")
+                .enabled(true)
+                .id(1L)
+                .organizationName("GLOBAL")
+                .mobilePhone("mobilePhone")
+                .name("name")
+                .organizationId(1L)
+                .sex("F")
+                .userName("userName");
+    }
+
+    public static RoleDTO.RoleDTOBuilder defaultRoleDTO(){
+        return RoleDTO.builder()
+                .createdTime(null)
+                .enabled(true)
+                .id(1L)
+                .memo("memo")
+                .name("name");
     }
 }
