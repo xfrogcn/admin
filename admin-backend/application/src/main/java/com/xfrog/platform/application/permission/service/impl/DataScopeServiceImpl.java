@@ -1,16 +1,15 @@
 package com.xfrog.platform.application.permission.service.impl;
 
 import com.xfrog.framework.common.ListComparator;
-import com.xfrog.framework.domain.IdEntity;
 import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
 import com.xfrog.platform.application.permission.api.dto.GrantDataScopeRequestDTO;
-import com.xfrog.platform.application.permission.converter.DataScopeDTOConverter;
+import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
+import com.xfrog.platform.application.permission.repository.DataScopeRepository;
+import com.xfrog.platform.application.permission.repository.OrganizationRepository;
 import com.xfrog.platform.application.permission.service.DataScopeService;
 import com.xfrog.platform.domain.permission.aggregate.DataScope;
-import com.xfrog.platform.domain.permission.aggregate.Organization;
 import com.xfrog.platform.domain.permission.aggregate.UserRole;
 import com.xfrog.platform.domain.permission.repository.DataScopeDomainRepository;
-import com.xfrog.platform.domain.permission.repository.OrganizationDomainRepository;
 import com.xfrog.platform.domain.permission.repository.UserRoleDomainRepository;
 import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
 import com.xfrog.platform.domain.share.permission.DataScopeType;
@@ -32,8 +31,9 @@ import java.util.stream.Stream;
 public class DataScopeServiceImpl implements DataScopeService {
 
     private final DataScopeDomainRepository dataScopeDomainRepository;
+    private final DataScopeRepository dataScopeRepository;
     private final UserRoleDomainRepository userRoleDomainRepository;
-    private final OrganizationDomainRepository organizationDomainRepository;
+    private final OrganizationRepository organizationRepository;
 
     @Override
     public void grantDataScope(GrantDataScopeRequestDTO requestDTO) {
@@ -59,9 +59,7 @@ public class DataScopeServiceImpl implements DataScopeService {
 
     @Override
     public List<DataScopeDTO> getDataScopes(DataScopeTargetType targetType, Long targetId) {
-        List<DataScope> dataScopes = dataScopeDomainRepository.findByTargetTypeAndTargetId(targetType, List.of(targetId));
-
-        List<DataScopeDTO> result = DataScopeDTOConverter.INSTANCE.toDTOList(dataScopes);
+        List<DataScopeDTO> result = dataScopeRepository.findByTargetTypeAndTargetId(targetType, List.of(targetId));
         fillOrganizationScopeInfo(result);
         return result;
     }
@@ -74,12 +72,12 @@ public class DataScopeServiceImpl implements DataScopeService {
         List<UserRole> userRoles = userRoleDomainRepository.getByUserId(userId);
         List<DataScopeDTO> result = new LinkedList<>();
         if (!CollectionUtils.isEmpty(userRoles)) {
-            List<DataScope> roleDataScopes = dataScopeDomainRepository.findByTargetTypeAndTargetId(DataScopeTargetType.ROLE,
+            List<DataScopeDTO> roleDataScopes = dataScopeRepository.findByTargetTypeAndTargetId(DataScopeTargetType.ROLE,
                     userRoles.stream().map(UserRole::getRoleId).toList());
-            result.addAll(DataScopeDTOConverter.INSTANCE.toDTOList(roleDataScopes));
+            result.addAll(roleDataScopes);
         }
 
-        result.addAll(DataScopeDTOConverter.INSTANCE.toDTOList(dataScopeDomainRepository.findByTargetTypeAndTargetId(DataScopeTargetType.USER, List.of(userId))));
+        result.addAll(dataScopeRepository.findByTargetTypeAndTargetId(DataScopeTargetType.USER, List.of(userId)));
 
         fillOrganizationScopeInfo(result);
 
@@ -99,20 +97,20 @@ public class DataScopeServiceImpl implements DataScopeService {
         if (CollectionUtils.isEmpty(organizationIds)) {
             return;
         }
-        List<Organization> organizations = organizationDomainRepository.findByIds(organizationIds);
+        List<OrganizationDTO> organizations = organizationRepository.queryByIds(organizationIds);
         List<Long> parentOrganizationIds = organizations.stream().filter(it -> it.getParentIds() != null).flatMap(it -> it.getParentIds().stream())
                 .distinct()
                 .filter(it -> !organizationIds.contains(it))
                 .toList();
-        List<Organization> parentOrganizations = organizationDomainRepository.findByIds(parentOrganizationIds);
+        List<OrganizationDTO> parentOrganizations = organizationRepository.queryByIds(parentOrganizationIds);
 
-        Map<Long, Organization> organizationMap = Stream.concat(organizations.stream(), parentOrganizations.stream())
-                .collect(Collectors.toMap(IdEntity::getId, Function.identity()));
+        Map<Long, OrganizationDTO> organizationMap = Stream.concat(organizations.stream(), parentOrganizations.stream())
+                .collect(Collectors.toMap(OrganizationDTO::getId, Function.identity()));
 
         dataScopes.stream()
             .filter(it -> it.getScopeType() == DataScopeType.ORGANIZATION)
             .forEach(item -> {
-                Organization organization = organizationMap.get(item.getScopeId());
+                OrganizationDTO organization = organizationMap.get(item.getScopeId());
                 Map<String, Object> scopeInfo = new HashMap<>();
                 if (organization != null) {
                     scopeInfo.put("id", organization.getId());
@@ -122,7 +120,7 @@ public class DataScopeServiceImpl implements DataScopeService {
                         scopeInfo.put("parentNames", organization.getParentIds().stream()
                                 .map(organizationMap::get)
                                 .filter(Objects::nonNull)
-                                .map(Organization::getName)
+                                .map(OrganizationDTO::getName)
                                 .toList());
                     }
                     item.setScopeInfo(scopeInfo);
