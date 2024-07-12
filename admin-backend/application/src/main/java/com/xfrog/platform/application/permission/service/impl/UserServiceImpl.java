@@ -108,8 +108,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserDetail(Long userId) {
-        User user = userDomainRepository.findById(userId);
-        return UserDTOConverter.INSTANCE.toDTO(user);
+       return userRepository.queryById(userId);
     }
 
     @Override

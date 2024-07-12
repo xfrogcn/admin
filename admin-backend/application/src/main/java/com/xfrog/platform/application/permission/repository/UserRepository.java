@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface UserRepository {
     PageDTO<UserDTO> queryAllBy(QueryUserRequestDTO queryDTO);
+    UserDTO queryById(Long userId);
 
     List<String> queryUserPermissionCodes(Long userId);
 }
