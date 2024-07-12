@@ -1,6 +1,5 @@
 package com.xfrog.platform.api.base;
 
-import com.xfrog.platform.api.BaseApiTest;
 import com.xfrog.platform.api.base.fixtures.LangApiFixtures;
 import com.xfrog.platform.application.base.dto.CreateLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.dto.LangDTOFixtures;
@@ -23,11 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(LangApiFixtures.class)
-public class LangCorpusApiTest extends BaseApiTest {
-
-    @Autowired
-    private LangApiFixtures langApiFixtures;
+public class LangCorpusApiTest extends BaseBaseApiTest {
 
     @BeforeEach
     void setUp() {

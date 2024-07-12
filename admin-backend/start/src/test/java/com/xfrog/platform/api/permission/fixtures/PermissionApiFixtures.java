@@ -1,11 +1,13 @@
 package com.xfrog.platform.api.permission.fixtures;
 
 import com.xfrog.platform.domain.permission.aggregate.Organization;
-import com.xfrog.platform.domain.permission.aggregate.PermissionItem;
 import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
+import com.xfrog.platform.domain.permission.aggregate.PermissionItem;
+import com.xfrog.platform.domain.permission.aggregate.Role;
 import com.xfrog.platform.domain.permission.aggregate.RolePermissionItem;
 import com.xfrog.platform.domain.permission.repository.OrganizationDomainRepository;
 import com.xfrog.platform.domain.permission.repository.PermissionItemDomainRepository;
+import com.xfrog.platform.domain.permission.repository.RoleDomainRepository;
 import com.xfrog.platform.domain.permission.repository.RolePermissionItemDomainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +28,8 @@ public class PermissionApiFixtures {
     public RolePermissionItemDomainRepository rolePermissionItemDomainRepository;
     @Autowired
     public OrganizationDomainRepository organizationDomainRepository;
+    @Autowired
+    public RoleDomainRepository roleDomainRepository;
 
     public PermissionItem createAndSavePermissionItem(String code, Long parentId) {
         PermissionItem permissionItem = PermissionFixtures.createDefaultPermissionItem()
@@ -62,5 +66,10 @@ public class PermissionApiFixtures {
     public Organization saveOrganization(Organization organization) {
         organization.setId(null);
         return organizationDomainRepository.save(organization);
+    }
+
+    public Role saveRole(Role role) {
+        role.setId(null);
+        return roleDomainRepository.save(role);
     }
 }

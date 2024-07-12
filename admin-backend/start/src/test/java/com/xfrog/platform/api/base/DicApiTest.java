@@ -1,6 +1,5 @@
 package com.xfrog.platform.api.base;
 
-import com.xfrog.platform.api.BaseApiTest;
 import com.xfrog.platform.api.base.fixtures.DicApiFixtures;
 import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.CreateDicRequestDTO;
@@ -13,8 +12,6 @@ import com.xfrog.platform.domain.base.aggregate.DicItem;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -23,11 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(DicApiFixtures.class)
-public class DicApiTest extends BaseApiTest {
 
-    @Autowired
-    private DicApiFixtures dicApiFixtures;
+public class DicApiTest extends BaseBaseApiTest {
 
     @BeforeEach
     void setUp() {

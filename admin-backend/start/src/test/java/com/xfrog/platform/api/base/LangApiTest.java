@@ -1,6 +1,5 @@
 package com.xfrog.platform.api.base;
 
-import com.xfrog.platform.api.BaseApiTest;
 import com.xfrog.platform.api.base.fixtures.LangApiFixtures;
 import com.xfrog.platform.application.base.dto.CreateLangRequestDTO;
 import com.xfrog.platform.application.base.dto.LangDTOFixtures;
@@ -10,18 +9,13 @@ import com.xfrog.platform.domain.base.aggregate.Lang;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(LangApiFixtures.class)
-public class LangApiTest extends BaseApiTest {
-
-    @Autowired
-    private LangApiFixtures langApiFixtures;
+public class LangApiTest extends BaseBaseApiTest {
 
     @BeforeEach
     void setUp() {
