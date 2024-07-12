@@ -53,7 +53,7 @@ public interface UserApi {
 
     @PutMapping("/change-password")
     @Operation(summary = "修改当前用户密码")
-    void changeCurrentUserPassword(@RequestParam String newPassword);
+    void changeCurrentUserPassword(@RequestParam(name = "newPassword") String newPassword);
 
     @PutMapping("/grant-roles/{userId}")
     @Operation(summary = "为用户授予角色")

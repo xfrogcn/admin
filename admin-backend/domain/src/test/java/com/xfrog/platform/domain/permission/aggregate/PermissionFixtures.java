@@ -63,6 +63,7 @@ public class PermissionFixtures {
                 .lastLoginTime(null)
                 .mobilePhone("")
                 .name("name")
+                .userName("testUser")
                 .organizationId(1L)
                 .password("password");
     }
