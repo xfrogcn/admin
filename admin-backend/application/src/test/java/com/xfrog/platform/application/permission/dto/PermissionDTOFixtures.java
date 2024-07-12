@@ -4,6 +4,7 @@ import com.xfrog.platform.application.permission.api.dto.CreateOrganizationReque
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreateRoleRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreateUserRequestDTO;
+import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
 import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
 import com.xfrog.platform.application.permission.api.dto.RoleDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateOrganizationRequestDTO;
@@ -11,6 +12,8 @@ import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemReq
 import com.xfrog.platform.application.permission.api.dto.UpdateRoleRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UserDTO;
+import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
+import com.xfrog.platform.domain.share.permission.DataScopeType;
 import com.xfrog.platform.domain.share.permission.OrganizationStatus;
 
 public class PermissionDTOFixtures {
@@ -118,5 +121,13 @@ public class PermissionDTOFixtures {
                 .id(1L)
                 .memo("memo")
                 .name("name");
+    }
+
+    public static DataScopeDTO.DataScopeDTOBuilder defaultDataScopeDTO(){
+        return DataScopeDTO.builder()
+                .targetId(1L)
+                .targetType(DataScopeTargetType.ROLE)
+                .scopeId(1L)
+                .scopeType(DataScopeType.ORGANIZATION);
     }
 }

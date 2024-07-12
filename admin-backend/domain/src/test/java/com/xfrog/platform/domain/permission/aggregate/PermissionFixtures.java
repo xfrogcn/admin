@@ -1,6 +1,8 @@
 package com.xfrog.platform.domain.permission.aggregate;
 
 import com.xfrog.framework.common.SnowflakeUidGenerator;
+import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
+import com.xfrog.platform.domain.share.permission.DataScopeType;
 import com.xfrog.platform.domain.share.permission.OrganizationStatus;
 
 public class PermissionFixtures {
@@ -75,5 +77,14 @@ public class PermissionFixtures {
                 .code("tid")
                 .enabled(true)
                 .memo("memo");
+    }
+
+    public static DataScope.DataScopeBuilder createDefaultDataScope() {
+        return DataScope.builder()
+                .id(SnowflakeUidGenerator.INSTANCE.nextId())
+                .scopeId(1L)
+                .scopeType(DataScopeType.ORGANIZATION)
+                .targetId(1L)
+                .targetType(DataScopeTargetType.ROLE);
     }
 }

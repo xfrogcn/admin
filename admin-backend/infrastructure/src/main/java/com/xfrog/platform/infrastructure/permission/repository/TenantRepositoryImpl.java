@@ -1,7 +1,5 @@
 package com.xfrog.platform.infrastructure.permission.repository;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.platform.application.permission.api.dto.QueryTenantRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.TenantDTO;
 import com.xfrog.platform.application.permission.repository.TenantRepository;
@@ -9,11 +7,9 @@ import com.xfrog.platform.infrastructure.permission.converter.TenantPOConverter;
 import com.xfrog.platform.infrastructure.permission.dataobject.TenantPO;
 import com.xfrog.platform.infrastructure.permission.mapper.TenantMapper;
 import com.xfrog.platform.infrastructure.persistent.repository.BasePageableApplicationRepository;
-import com.xfrog.platform.infrastructure.util.PageUtils;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Map;
 
 @Repository
