@@ -101,7 +101,7 @@ public class LangCorpusServiceImpl implements LangCorpusService {
 
     @Override
     public PageDTO<LangCorpusDTO> listLangCorpus(QueryLangCorpusRequestDTO queryDTO) {
-        return langCorpusRepository.queryAll(queryDTO);
+        return langCorpusRepository.queryBy(queryDTO);
     }
 
     @Override

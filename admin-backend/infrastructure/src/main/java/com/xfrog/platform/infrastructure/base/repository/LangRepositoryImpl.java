@@ -8,6 +8,7 @@ import com.xfrog.platform.application.base.repository.LangRepository;
 import com.xfrog.platform.infrastructure.base.converter.LangPOConverter;
 import com.xfrog.platform.infrastructure.base.dataobject.LangPO;
 import com.xfrog.platform.infrastructure.base.mapper.LangMapper;
+import com.xfrog.platform.infrastructure.persistent.repository.BasePageableApplicationRepository;
 import com.xfrog.platform.infrastructure.util.PageUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
@@ -17,10 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-@RequiredArgsConstructor
-public class LangRepositoryImpl implements LangRepository {
+public class LangRepositoryImpl extends BasePageableApplicationRepository<LangDTO, LangPO, LangMapper, QueryLangRequestDTO>
+        implements LangRepository {
 
-    private final LangMapper langMapper;
+    public LangRepositoryImpl(LangMapper langMapper) {
+        super(langMapper, LangPOConverter.INSTANCE);
+    }
 
     private static final CaseInsensitiveMap<String, String> ORDER_FIELD_MAP =
             new CaseInsensitiveMap<>(Map.of(
@@ -28,15 +31,7 @@ public class LangRepositoryImpl implements LangRepository {
                     "application", "l.application"));
 
     @Override
-    public PageDTO<LangDTO> queryAll(QueryLangRequestDTO queryDTO) {
-        Page<LangDTO> page = PageUtils.page(queryDTO, ORDER_FIELD_MAP);
-        List<LangDTO> langDTOS = langMapper.queryAll(queryDTO, page);
-        return PageUtils.result(page, langDTOS);
-    }
-
-    @Override
-    public LangDTO queryById(Long id) {
-        LangPO langPO = langMapper.selectById(id);
-        return LangPOConverter.INSTANCE.toDTO(langPO);
+    protected Map<String, String> orderedFieldMap() {
+        return ORDER_FIELD_MAP;
     }
 }

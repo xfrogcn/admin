@@ -175,7 +175,7 @@ class LangCorpusServiceImplTest {
     @Test
     void listLangCorpus_Should_Success() {
         langCorpusService.listLangCorpus(new QueryLangCorpusRequestDTO());
-        verify(langCorpusRepository).queryAll(any(QueryLangCorpusRequestDTO.class));
+        verify(langCorpusRepository).queryBy(any(QueryLangCorpusRequestDTO.class));
     }
 
     @Test

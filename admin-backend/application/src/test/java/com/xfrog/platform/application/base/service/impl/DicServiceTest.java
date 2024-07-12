@@ -128,7 +128,7 @@ class DicServiceTest {
                 .build();
         dicService.listDics(queryDicRequestDTO);
         verify(dicRepository, times(1))
-                .queryAll(queryDicRequestDTO);
+                .queryBy(queryDicRequestDTO);
     }
 
     @Test

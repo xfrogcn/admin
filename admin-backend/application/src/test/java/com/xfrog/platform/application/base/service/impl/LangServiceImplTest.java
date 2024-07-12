@@ -126,7 +126,7 @@ class LangServiceImplTest {
     @Test
     void listLanguages_ShouldSuccessfully() {
         langService.listLanguages(QueryLangRequestDTO.builder().pageNum(1).pageSize(10).build());
-        verify(langRepository,times(1)).queryAll(any(QueryLangRequestDTO.class));
+        verify(langRepository,times(1)).queryBy(any(QueryLangRequestDTO.class));
     }
 
     @Test

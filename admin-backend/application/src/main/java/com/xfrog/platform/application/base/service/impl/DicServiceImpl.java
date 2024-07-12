@@ -76,7 +76,7 @@ public class DicServiceImpl implements DicService {
 
     @Override
     public PageDTO<DicDTO> listDics(QueryDicRequestDTO queryDTO) {
-        return dicRepository.queryAll(queryDTO);
+        return dicRepository.queryBy(queryDTO);
     }
 
     @Override

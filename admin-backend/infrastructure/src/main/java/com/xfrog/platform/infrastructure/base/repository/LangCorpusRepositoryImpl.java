@@ -8,6 +8,7 @@ import com.xfrog.platform.application.base.repository.LangCorpusRepository;
 import com.xfrog.platform.infrastructure.base.converter.LangCorpusPOConverter;
 import com.xfrog.platform.infrastructure.base.dataobject.LangCorpusPO;
 import com.xfrog.platform.infrastructure.base.mapper.LangCorpusMapper;
+import com.xfrog.platform.infrastructure.persistent.repository.BasePageableApplicationRepository;
 import com.xfrog.platform.infrastructure.util.PageUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
@@ -17,10 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-@RequiredArgsConstructor
-public class LangCorpusRepositoryImpl implements LangCorpusRepository {
+public class LangCorpusRepositoryImpl extends BasePageableApplicationRepository<LangCorpusDTO, LangCorpusPO, LangCorpusMapper, QueryLangCorpusRequestDTO>
+        implements LangCorpusRepository {
 
-    private final LangCorpusMapper langCorpusMapper;
+    public LangCorpusRepositoryImpl(LangCorpusMapper mapper) {
+        super(mapper, LangCorpusPOConverter.INSTANCE);
+    }
+
 
     private static final CaseInsensitiveMap<String, String> ORDER_FIELD_MAP =
             new CaseInsensitiveMap<>(Map.of(
@@ -31,15 +35,8 @@ public class LangCorpusRepositoryImpl implements LangCorpusRepository {
                     "corpusCode", "lc.corpus_code"));
 
     @Override
-    public PageDTO<LangCorpusDTO> queryAll(QueryLangCorpusRequestDTO queryDTO) {
-        Page<LangCorpusDTO> page = PageUtils.page(queryDTO, ORDER_FIELD_MAP);
-        List<LangCorpusDTO> langCorpusDTOS = langCorpusMapper.queryAll(queryDTO, page);
-        return PageUtils.result(page, langCorpusDTOS);
+    protected Map<String, String> orderedFieldMap() {
+        return ORDER_FIELD_MAP;
     }
 
-    @Override
-    public LangCorpusDTO queryById(Long id) {
-        LangCorpusPO langCorpusPO = langCorpusMapper.selectById(id);
-        return LangCorpusPOConverter.INSTANCE.toDTO(langCorpusPO);
-    }
 }

@@ -18,7 +18,7 @@
                 AND ( c.configured = FALSE OR c.configured IS NULL )
         )
     </sql>
-    <select id="queryAll" resultType="com.xfrog.platform.application.base.dto.LangCorpusDTO">
+    <select id="queryBy" resultType="com.xfrog.platform.application.base.dto.LangCorpusDTO">
         SELECT
           lc.*,
           !(<include refid="local_configured"></include>) as configured

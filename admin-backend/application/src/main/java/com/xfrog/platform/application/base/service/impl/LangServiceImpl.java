@@ -76,7 +76,7 @@ public class LangServiceImpl implements LangService {
 
     @Override
     public PageDTO<LangDTO> listLanguages(QueryLangRequestDTO queryDTO) {
-        return languageRepository.queryAll(queryDTO);
+        return languageRepository.queryBy(queryDTO);
     }
 
     @Override
