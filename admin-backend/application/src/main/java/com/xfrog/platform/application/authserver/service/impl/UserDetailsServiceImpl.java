@@ -1,6 +1,7 @@
 package com.xfrog.platform.application.authserver.service.impl;
 
 import com.xfrog.platform.application.authserver.dto.UserDetailsDTO;
+import com.xfrog.platform.application.common.RequestThreadMark;
 import com.xfrog.platform.application.common.RequestThreadMarkContext;
 import com.xfrog.platform.domain.permission.aggregate.Tenant;
 import com.xfrog.platform.domain.permission.aggregate.User;
@@ -21,24 +22,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        RequestThreadMarkContext.threadMark().setIgnoreTenant(true);
-        User user = userDomainRepository.findByUserName(username);
+        try (RequestThreadMark.AutoRecovery recovery = RequestThreadMarkContext.threadMark().setIgnoreTenant(true)) {
+            User user = userDomainRepository.findByUserName(username);
 
-        if (user == null) {
-            return null;
+            if (user == null) {
+                return null;
+            }
+
+            Tenant tenant = tenantDomainRepository.findByCode(user.getTenantId());
+            return UserDetailsDTO.builder()
+                    .userId(user.getId())
+                    .organizationId(user.getOrganizationId())
+                    .username(user.getUserName())
+                    .enabled(tenant != null && Boolean.TRUE.equals(tenant.getEnabled()) && user.isEnabled())
+                    .accountNonExpired(user.isAccountNonExpired())
+                    .credentialsNonExpired(user.isCredentialsNonExpired())
+                    .accountNonLocked(user.isAccountNonLocked())
+                    .password(user.getPassword())
+                    .tenantId(user.getTenantId())
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        Tenant tenant = tenantDomainRepository.findByCode(user.getTenantId());
-        return UserDetailsDTO.builder()
-                .userId(user.getId())
-                .organizationId(user.getOrganizationId())
-                .username(user.getUserName())
-                .enabled(tenant != null && Boolean.TRUE.equals(tenant.getEnabled()) && user.isEnabled())
-                .accountNonExpired(user.isAccountNonExpired())
-                .credentialsNonExpired(user.isCredentialsNonExpired())
-                .accountNonLocked(user.isAccountNonLocked())
-                .password(user.getPassword())
-                .tenantId(user.getTenantId())
-                .build();
     }
 }
