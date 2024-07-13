@@ -1,8 +1,8 @@
 apply plugin: 'jacoco'
 
 ext {
-    jacocoLineMin = 0.0
-    jacocoBranchMin = 0.0
+    jacocoLineMin = 0.75
+    jacocoBranchMin = 0.85
     jacocoExcludes = [
         "**/StartApplication*",
         "**/GlobalExceptionHandler*",
