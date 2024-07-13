@@ -3,6 +3,7 @@ package com.xfrog.platform.application.permission.dto;
 import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreateRoleRequestDTO;
+import com.xfrog.platform.application.permission.api.dto.CreateTenantRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
 import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
@@ -11,6 +12,7 @@ import com.xfrog.platform.application.permission.api.dto.TenantDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateRoleRequestDTO;
+import com.xfrog.platform.application.permission.api.dto.UpdateTenantRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UserDTO;
 import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
@@ -143,5 +145,20 @@ public class PermissionDTOFixtures {
                 .memo("memo")
                 .name("name")
                 .organizationId(1L);
+    }
+
+    public static CreateTenantRequestDTO.CreateTenantRequestDTOBuilder defaultCreateTenantRequestDTO(){
+        return CreateTenantRequestDTO.builder()
+                .adminUserName("adminUserName")
+                .code("code")
+                .enabled(true)
+                .memo("memo")
+                .name("name");
+    }
+
+    public static UpdateTenantRequestDTO.UpdateTenantRequestDTOBuilder defaultUpdateTenantRequestDTO(){
+        return UpdateTenantRequestDTO.builder()
+                .memo("memo")
+                .name("name");
     }
 }
