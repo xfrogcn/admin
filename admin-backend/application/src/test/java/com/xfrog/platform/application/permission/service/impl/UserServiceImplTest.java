@@ -10,17 +10,17 @@ import com.xfrog.platform.application.permission.api.dto.CreateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CurrentUserInfoDTO;
 import com.xfrog.platform.application.permission.api.dto.QueryUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.RoleDTO;
+import com.xfrog.platform.application.permission.api.dto.TenantDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UserDTO;
 import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.application.permission.repository.RoleRepository;
+import com.xfrog.platform.application.permission.repository.TenantRepository;
 import com.xfrog.platform.application.permission.repository.UserRepository;
 import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
 import com.xfrog.platform.domain.permission.aggregate.Role;
-import com.xfrog.platform.domain.permission.aggregate.Tenant;
 import com.xfrog.platform.domain.permission.aggregate.User;
 import com.xfrog.platform.domain.permission.aggregate.UserRole;
-import com.xfrog.platform.domain.permission.repository.TenantDomainRepository;
 import com.xfrog.platform.domain.permission.repository.UserDomainRepository;
 import com.xfrog.platform.domain.permission.repository.UserRoleDomainRepository;
 import org.junit.jupiter.api.Test;
@@ -31,6 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,7 +59,7 @@ class UserServiceImplTest {
     @Mock
     private RoleRepository roleRepository;
     @Mock
-    private TenantDomainRepository tenantDomainRepository;
+    private TenantRepository tenantRepository;
     @InjectMocks
     private UserServiceImpl userService;
     @Test
@@ -86,7 +87,7 @@ class UserServiceImplTest {
         UserRole userRole = PermissionFixtures.createDefaultUserRole(user.getId(), role.getId()).build();
 
         when(userRepository.queryBy(requestDTO)).thenReturn(new PageDTO<>(1L, 10L, 1L, 1L, List.of(user)));
-        when(userRoleDomainRepository.getByUserIds(Collections.singletonList(user.getId()))).thenReturn(List.of(userRole));
+        when(userRepository.queryUserRoleIds(List.of(user.getId()))).thenReturn(Map.of(user.getId(), List.of(role.getId())));
         when(roleRepository.queryByIds(Collections.singletonList(role.getId()))).thenReturn(List.of(role));
 
         PageDTO<UserDTO> result = userService.listUsers(requestDTO);
@@ -334,12 +335,12 @@ class UserServiceImplTest {
     void getCurrentUserDetail_Success() {
 
         User user = PermissionFixtures.createDefaultUser().tenantId("tid").build();
-        Tenant tenant = PermissionFixtures.createDefaultTenant().code("tid").organizationId(1L).build();
+        TenantDTO tenant = PermissionDTOFixtures.defaultTenantDTO().code("tid").organizationId(1L).build();
         PrincipalInfo userPrincipal = PrincipalInfo.create(user.getId(), "testUser", 1L, "testClient", "testTenant");
         CurrentPrincipalContext.setCurrentPrincipal(userPrincipal);
 
         when(userDomainRepository.findById(user.getId())).thenReturn(user);
-        when(tenantDomainRepository.findByCode(user.getTenantId())).thenReturn(tenant);
+        when(tenantRepository.queryByCode(user.getTenantId())).thenReturn(tenant);
 
         CurrentUserInfoDTO result = userService.getCurrentUserDetail();
 
@@ -351,12 +352,12 @@ class UserServiceImplTest {
     @Test
     void getCurrentUserDetail_TenantDisabled_ThrowsPermissionDeniedException() {
         User user = PermissionFixtures.createDefaultUser().tenantId("tid").build();
-        Tenant tenant = PermissionFixtures.createDefaultTenant().code("tid").enabled(false).organizationId(1L).build();
+        TenantDTO tenant = PermissionDTOFixtures.defaultTenantDTO().code("tid").organizationId(1L).enabled(false).build();
         PrincipalInfo userPrincipal = PrincipalInfo.create(user.getId(), "testUser", 1L, "testClient", "testTenant");
         CurrentPrincipalContext.setCurrentPrincipal(userPrincipal);
 
         when(userDomainRepository.findById(user.getId())).thenReturn(user);
-        when(tenantDomainRepository.findByCode(user.getTenantId())).thenReturn(tenant);
+        when(tenantRepository.queryByCode(user.getTenantId())).thenReturn(tenant);
 
         assertThrows(PermissionDeniedException.class, () -> userService.getCurrentUserDetail());
     }
@@ -379,7 +380,7 @@ class UserServiceImplTest {
         CurrentPrincipalContext.setCurrentPrincipal(userPrincipal);
 
         when(userDomainRepository.findById(user.getId())).thenReturn(user);
-        when(tenantDomainRepository.findByCode(user.getTenantId())).thenReturn(null);
+        when(tenantRepository.queryByCode(user.getTenantId())).thenReturn(null);
 
         assertThrows(PermissionDeniedException.class, () -> userService.getCurrentUserDetail(), "Expected PermissionDeniedException when tenant is not found");
     }

@@ -32,4 +32,6 @@ public class TenantDTO {
     private Long adminUserId;
     @Schema(description = "租户管理员登录账号")
     private String adminUserName;
+    @Schema(description = "租户根组织ID")
+    private Long organizationId;
 }

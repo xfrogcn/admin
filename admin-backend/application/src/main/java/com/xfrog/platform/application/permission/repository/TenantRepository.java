@@ -5,5 +5,5 @@ import com.xfrog.platform.application.permission.api.dto.QueryTenantRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.TenantDTO;
 
 public interface TenantRepository extends PageableApplicationRepository<TenantDTO, QueryTenantRequestDTO> {
-
+    TenantDTO queryByCode(String code);
 }

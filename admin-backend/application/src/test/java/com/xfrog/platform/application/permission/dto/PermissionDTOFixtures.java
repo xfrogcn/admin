@@ -7,6 +7,7 @@ import com.xfrog.platform.application.permission.api.dto.CreateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
 import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
 import com.xfrog.platform.application.permission.api.dto.RoleDTO;
+import com.xfrog.platform.application.permission.api.dto.TenantDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateRoleRequestDTO;
@@ -129,5 +130,18 @@ public class PermissionDTOFixtures {
                 .targetType(DataScopeTargetType.ROLE)
                 .scopeId(1L)
                 .scopeType(DataScopeType.ORGANIZATION);
+    }
+
+    public static TenantDTO.TenantDTOBuilder defaultTenantDTO(){
+        return TenantDTO.builder()
+                .adminUserId(1L)
+                .adminUserName("adminUserName")
+                .code("code")
+                .createdTime(null)
+                .enabled(true)
+                .id(1L)
+                .memo("memo")
+                .name("name")
+                .organizationId(1L);
     }
 }

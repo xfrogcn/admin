@@ -1,24 +1,31 @@
 package com.xfrog.platform.infrastructure.permission.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xfrog.platform.application.permission.api.dto.QueryUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UserDTO;
 import com.xfrog.platform.application.permission.repository.UserRepository;
 import com.xfrog.platform.infrastructure.permission.converter.UserPOConverter;
 import com.xfrog.platform.infrastructure.permission.dataobject.UserPO;
+import com.xfrog.platform.infrastructure.permission.dataobject.UserRolePO;
 import com.xfrog.platform.infrastructure.permission.mapper.UserMapper;
+import com.xfrog.platform.infrastructure.permission.mapper.UserRoleMapper;
 import com.xfrog.platform.infrastructure.persistent.repository.BasePageableApplicationRepository;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserRepositoryImpl extends BasePageableApplicationRepository<UserDTO, UserPO, UserMapper, QueryUserRequestDTO>
         implements UserRepository {
 
-    public UserRepositoryImpl(UserMapper mapper) {
+    private final UserRoleMapper userRoleMapper;
+
+    public UserRepositoryImpl(UserMapper mapper, UserRoleMapper userRoleMapper) {
         super(mapper, UserPOConverter.INSTANCE);
+        this.userRoleMapper = userRoleMapper;
     }
 
     private static final CaseInsensitiveMap<String, String> ORDER_FIELD_MAP =
@@ -38,5 +45,26 @@ public class UserRepositoryImpl extends BasePageableApplicationRepository<UserDT
     @Override
     public List<String> queryUserPermissionCodes(Long userId) {
         return mapper.queryUserPermissionCodes(userId);
+    }
+
+    @Override
+    public List<Long> queryUserRoleIds(Long userId) {
+        LambdaQueryWrapper<UserRolePO> queryWrapper = new LambdaQueryWrapper<UserRolePO>()
+                .eq(UserRolePO::getDeleted, false)
+                .eq(UserRolePO::getUserId, userId)
+                .select(UserRolePO::getRoleId);
+        return userRoleMapper.selectObjs(queryWrapper);
+    }
+
+    @Override
+    public Map<Long, List<Long>> queryUserRoleIds(List<Long> userIds) {
+        LambdaQueryWrapper<UserRolePO> queryWrapper = new LambdaQueryWrapper<UserRolePO>()
+                .eq(UserRolePO::getDeleted, false)
+                .in(UserRolePO::getUserId, userIds);
+        List<UserRolePO> userRolePOS = userRoleMapper.selectList(queryWrapper);
+
+        return userRolePOS.stream()
+                .collect(Collectors.groupingBy(UserRolePO::getUserId,
+                        Collectors.mapping(UserRolePO::getRoleId, Collectors.toList())));
     }
 }

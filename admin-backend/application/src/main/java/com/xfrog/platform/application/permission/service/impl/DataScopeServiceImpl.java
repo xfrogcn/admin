@@ -6,11 +6,10 @@ import com.xfrog.platform.application.permission.api.dto.GrantDataScopeRequestDT
 import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
 import com.xfrog.platform.application.permission.repository.DataScopeRepository;
 import com.xfrog.platform.application.permission.repository.OrganizationRepository;
+import com.xfrog.platform.application.permission.repository.UserRepository;
 import com.xfrog.platform.application.permission.service.DataScopeService;
 import com.xfrog.platform.domain.permission.aggregate.DataScope;
-import com.xfrog.platform.domain.permission.aggregate.UserRole;
 import com.xfrog.platform.domain.permission.repository.DataScopeDomainRepository;
-import com.xfrog.platform.domain.permission.repository.UserRoleDomainRepository;
 import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
 import com.xfrog.platform.domain.share.permission.DataScopeType;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,7 @@ public class DataScopeServiceImpl implements DataScopeService {
 
     private final DataScopeDomainRepository dataScopeDomainRepository;
     private final DataScopeRepository dataScopeRepository;
-    private final UserRoleDomainRepository userRoleDomainRepository;
+    private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
 
     @Override
@@ -69,11 +68,11 @@ public class DataScopeServiceImpl implements DataScopeService {
         if (userId == null) {
             return new LinkedList<>();
         }
-        List<UserRole> userRoles = userRoleDomainRepository.getByUserId(userId);
+        List<Long> userRoleIds = userRepository.queryUserRoleIds(userId);
         List<DataScopeDTO> result = new LinkedList<>();
-        if (!CollectionUtils.isEmpty(userRoles)) {
+        if (!CollectionUtils.isEmpty(userRoleIds)) {
             List<DataScopeDTO> roleDataScopes = dataScopeRepository.findByTargetTypeAndTargetId(DataScopeTargetType.ROLE,
-                    userRoles.stream().map(UserRole::getRoleId).toList());
+                    userRoleIds);
             result.addAll(roleDataScopes);
         }
 
@@ -84,7 +83,7 @@ public class DataScopeServiceImpl implements DataScopeService {
         return result;
     }
 
-    private void fillOrganizationScopeInfo(List<DataScopeDTO> dataScopes) {
+    protected void fillOrganizationScopeInfo(List<DataScopeDTO> dataScopes) {
         if (CollectionUtils.isEmpty(dataScopes)) {
             return;
         }
@@ -115,6 +114,7 @@ public class DataScopeServiceImpl implements DataScopeService {
                 if (organization != null) {
                     scopeInfo.put("id", organization.getId());
                     scopeInfo.put("name", organization.getName());
+                    scopeInfo.put("parentId", organization.getParentId());
                     scopeInfo.put("parentIds", organization.getParentIds());
                     if (!CollectionUtils.isEmpty(organization.getParentIds())) {
                         scopeInfo.put("parentNames", organization.getParentIds().stream()

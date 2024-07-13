@@ -28,7 +28,8 @@ public class UserApiTest extends BasePermissionApiTest {
         request(post("/api/users/list", requestDTO))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total").value(1L))
-                .andExpect(jsonPath("$.data[0].id").value(1L));
+                .andExpect(jsonPath("$.data[0].id").value(1L))
+                .andExpect(jsonPath("$.data[0].roles[0]").exists());
     }
 
     @SneakyThrows

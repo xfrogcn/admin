@@ -1,5 +1,6 @@
 package com.xfrog.platform.infrastructure.permission.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xfrog.platform.application.permission.api.dto.QueryTenantRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.TenantDTO;
 import com.xfrog.platform.application.permission.repository.TenantRepository;
@@ -30,4 +31,11 @@ public class TenantRepositoryImpl extends BasePageableApplicationRepository<Tena
         return ORDER_FIELD_MAP;
     }
 
+    @Override
+    public TenantDTO queryByCode(String code) {
+        TenantPO po = mapper.selectOne(new LambdaQueryWrapper<TenantPO>()
+                .eq(TenantPO::getCode, code)
+                .eq(TenantPO::getDeleted, false));
+        return converter.toDTO(po);
+    }
 }

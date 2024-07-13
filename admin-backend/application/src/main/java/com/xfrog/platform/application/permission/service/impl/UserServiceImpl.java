@@ -11,16 +11,16 @@ import com.xfrog.platform.application.permission.api.dto.CreateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CurrentUserInfoDTO;
 import com.xfrog.platform.application.permission.api.dto.QueryUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.RoleDTO;
+import com.xfrog.platform.application.permission.api.dto.TenantDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateUserRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UserDTO;
 import com.xfrog.platform.application.permission.converter.UserDTOConverter;
 import com.xfrog.platform.application.permission.repository.RoleRepository;
+import com.xfrog.platform.application.permission.repository.TenantRepository;
 import com.xfrog.platform.application.permission.repository.UserRepository;
 import com.xfrog.platform.application.permission.service.UserService;
-import com.xfrog.platform.domain.permission.aggregate.Tenant;
 import com.xfrog.platform.domain.permission.aggregate.User;
 import com.xfrog.platform.domain.permission.aggregate.UserRole;
-import com.xfrog.platform.domain.permission.repository.TenantDomainRepository;
 import com.xfrog.platform.domain.permission.repository.UserDomainRepository;
 import com.xfrog.platform.domain.permission.repository.UserRoleDomainRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -43,22 +44,22 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserRoleDomainRepository userRoleDomainRepository;
     private final RoleRepository roleRepository;
-    private final TenantDomainRepository tenantDomainRepository;
+    private final TenantRepository tenantsRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public PageDTO<UserDTO> listUsers(QueryUserRequestDTO queryUserRequestDTO) {
         PageDTO<UserDTO> result = userRepository.queryBy(queryUserRequestDTO);
         if (!CollectionUtils.isEmpty(result.getData())) {
-            List<UserRole> userRoles = userRoleDomainRepository.getByUserIds(result.getData().stream()
-                    .map(UserDTO::getId).toList());
-            Map<Long, RoleDTO> roleMap = roleRepository.queryByIds(userRoles.stream().map(UserRole::getRoleId).distinct().toList())
+            Map<Long, List<Long>> userRoleIdsMap = userRepository.queryUserRoleIds(result.getData().stream()
+                            .map(UserDTO::getId).toList());
+            Map<Long, RoleDTO> roleMap = roleRepository.queryByIds(userRoleIdsMap.values().stream()
+                            .flatMap(List::stream).distinct().toList())
                     .stream()
                     .collect(Collectors.toMap(RoleDTO::getId, Function.identity()));
             result.getData().forEach(user -> {
-                user.setRoles(userRoles.stream()
-                        .filter(it -> Objects.equals(it.getUserId(), user.getId()))
-                        .map(it -> roleMap.get(it.getRoleId()))
+                user.setRoles(userRoleIdsMap.getOrDefault(user.getId(), new ArrayList<>()).stream()
+                        .map(roleMap::get)
                         .filter(role -> role != null && Boolean.TRUE.equals(role.getEnabled()))
                         .toList());
             });
@@ -181,7 +182,7 @@ public class UserServiceImpl implements UserService {
         Long userId = CurrentPrincipalContext.currentPrincipal().getUserId();
         CurrentUserInfoDTO userDTO = UserDTOConverter.INSTANCE.toCurrentUser(userDomainRepository.findById(userId));
         if (userDTO != null) {
-           Tenant tenant = tenantDomainRepository.findByCode(userDTO.getTenantId());
+           TenantDTO tenant = tenantsRepository.queryByCode(userDTO.getTenantId());
            if (tenant == null ||Boolean.FALSE.equals(tenant.getEnabled())) {
                throw new PermissionDeniedException("tenant is disabled");
            }
