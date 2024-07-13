@@ -29,6 +29,7 @@ import EditUserDialog from './components/EditForm';
 import UserRolesDialog from './components/UserRolesForm';
 import ViewUserDataScopeDialog from './components/ViewUserDataScopeDialog';
 import './index.less';
+import { stopEvent } from '@/utils/commonUtils';
 
 const handleAdd = useMessageBox<API.CreateUserRequestDTO, number>(createUser);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateUserRequestDTO }, void>((args) =>
@@ -344,7 +345,7 @@ const UserList: React.FC = () => {
         buttons.push(...operationRender.render(dom, record));
         if (moreAction.length > 0) {
           buttons.push(
-            <Dropdown menu={{ items: moreAction, onClick: (e) => moreActionClick(e, record) }}>
+            <Dropdown trigger={['click']} destroyPopupOnHide menu={{ items: moreAction, onClick: (e) => moreActionClick(e, record) }}>
               <a>
                 <FormattedMessage id="admin.ui.public.label-more" /> <DownOutlined />
               </a>

@@ -1,8 +1,8 @@
-import { CloseOutlined } from '@ant-design/icons';
+import KeepAlive, { useEffectOnActive, useKeepaliveRef } from '@/components/Keepalive';
+import { CloseOutlined, ReloadOutlined } from '@ant-design/icons';
 import { RouteContext } from '@ant-design/pro-components';
-import { history, useAppData } from '@umijs/max';
-import { Flex, Tabs } from 'antd';
-import KeepAlive, { useEffectOnActive, useKeepaliveRef } from 'keepalive-for-react';
+import { FormattedMessage, history, useAppData } from '@umijs/max';
+import { Button, Flex, Tabs, Tooltip } from 'antd';
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useLocation, useOutlet } from 'react-router';
 
@@ -22,6 +22,7 @@ export interface PageTabContextObject {
   tab: { defaultLabel: string };
   key?: string;
   mustReload: () => boolean;
+  refresh: () => void;
 }
 
 const nilfunction = () => void {};
@@ -32,21 +33,26 @@ export const PageTabContext = React.createContext<PageTabContextObject>({
   tab: { defaultLabel: '' },
   mustReload: () => false,
   reloadComplete: nilfunction,
+  refresh: nilfunction,
 });
 
 export const usePageTabContext = () => {
   return useContext(PageTabContext);
 };
 
-export const usePageTabReload =  (reloader: (() => Promise<void>) | (() => void)): void => {
+export const usePageTabReload = (reloader: (() => Promise<void>) | (() => void)): void => {
   const pageTabContext = usePageTabContext();
-  useEffectOnActive((active) => {
-    if (active && pageTabContext.mustReload()) {
-      pageTabContext.reloadComplete();
-      reloader();
-    }
-  }, true, [pageTabContext])
-}
+  useEffectOnActive(
+    (active) => {
+      if (active && pageTabContext.mustReload()) {
+        pageTabContext.reloadComplete();
+        reloader();
+      }
+    },
+    true,
+    [pageTabContext],
+  );
+};
 
 const ALL_TAB_KEY = 'ALL_TAB';
 
@@ -76,6 +82,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         closeTab: nilfunction,
         mustReload: () => false,
         reloadComplete: nilfunction,
+        refresh: nilfunction,
       };
     }
 
@@ -137,6 +144,14 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
       key: key,
       tab: tabItem,
       mustReload: () => map.current[key].reload,
+      refresh: () => {
+        keepalive.current?.removeCache(key as string);
+        setTimeout(() => {
+          forceUpdate();
+          console.log(keepalive.current?.getCaches());
+        }, 2000);
+        // history.replace(map.current[key].location as any);
+      },
       reloadComplete: () => {
         map.current[key].reload = false;
       },
@@ -193,6 +208,21 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         items={tabs}
         animated
         removeIcon={removeIcon}
+        tabBarExtraContent={{
+          left: (
+            <Tooltip title={<FormattedMessage id="admin.ui.components.tab-pages.refresh-button" />}>
+              <Button
+                key="refresh"
+                type="text"
+                ghost={true}
+                icon={<ReloadOutlined />}
+                onClick={() => {
+                  pageTabContext.refresh();
+                }}
+              />
+            </Tooltip>
+          ),
+        }}
         onTabClick={(key) => {
           history.replace(map.current[key].location);
         }}

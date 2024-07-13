@@ -56,7 +56,7 @@ export default {
   "admin.ui.components.datascope-dialog.data-scope-type-user-organization": '用户所属组织',
   "admin.ui.components.datascope-dialog.repeat-data-scope-item": '该数据权限已存在',
   "admin.ui.components.datascope-dialog.include-chidren-data-scope-item": '已有上级组织包含了此组织，建议不要重复选择已包含的组织',
-
+  "admin.ui.components.tab-pages.refresh-button": '刷新当前页面',
 
   "admin.ui.pages.organization.table-title": '组织列表',
   "admin.ui.pages.organization.create-new-title": '新建组织',
