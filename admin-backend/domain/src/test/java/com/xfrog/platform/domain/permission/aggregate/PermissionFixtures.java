@@ -76,6 +76,9 @@ public class PermissionFixtures {
                 .name("name")
                 .code("tid")
                 .enabled(true)
+                .organizationId(1L)
+                .adminUserId(1L)
+                .adminUserName("admin")
                 .memo("memo");
     }
 

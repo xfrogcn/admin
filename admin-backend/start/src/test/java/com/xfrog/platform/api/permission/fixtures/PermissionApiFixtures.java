@@ -5,6 +5,7 @@ import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
 import com.xfrog.platform.domain.permission.aggregate.PermissionItem;
 import com.xfrog.platform.domain.permission.aggregate.Role;
 import com.xfrog.platform.domain.permission.aggregate.RolePermissionItem;
+import com.xfrog.platform.domain.permission.aggregate.Tenant;
 import com.xfrog.platform.domain.permission.aggregate.User;
 import com.xfrog.platform.domain.permission.repository.OrganizationDomainRepository;
 import com.xfrog.platform.domain.permission.repository.PermissionItemDomainRepository;
@@ -83,5 +84,10 @@ public class PermissionApiFixtures {
     public User saveUser(User user) {
         user.setId(null);
         return userDomainRepository.save(user);
+    }
+
+    public Tenant saveTenant(Tenant tenant) {
+        tenant.setId(null);
+        return tenantDomainRepository.save(tenant);
     }
 }
