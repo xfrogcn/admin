@@ -7,7 +7,7 @@ import { FC, useEffect, useState } from 'react';
 import LangLocalDialog from '../LangLocalDialog';
 
 
-export const LangLocalEditor: FC<ProFieldFCRenderProps> = (props) => {
+export const LangLocalEditor: FC<ProFieldFCRenderProps & Record<string, any>> = (props) => {
   const [value, setValue] = useState<any>(props.fieldProps.value);
   const [open, setOpen] = useState<boolean>(false);
   const [corpusInfo, setCorpusInfo] = useState<API.LangCorpusDTO>();
@@ -41,6 +41,9 @@ export const LangLocalEditor: FC<ProFieldFCRenderProps> = (props) => {
               let corpusInfo = undefined;
               if (corpus && isFunction(corpus)) {
                 corpusInfo = corpus();
+              }
+              if (!corpusInfo) {
+                corpusInfo = props.record;
               }
               setCorpusInfo(corpusInfo);
               setOpen(true);

@@ -365,11 +365,18 @@ const CreateLangCorpusPage: React.FC = () => {
           title={intl.formatMessage({ id: 'admin.ui.pages.langcorpus.import-title' })}
           width={600}
           onFinish={async (items) => {
+            const newLines = [...corpusLines];
             items.forEach((item) => {
-              LINE_ID++;
-              item.id = LINE_ID;
+              const oldItem = newLines.findLast((it) => it.corpusCode === item.corpusCode);
+              if (oldItem) {
+                oldItem.langLocales = { ...oldItem.langLocales, ...item.langLocales };
+              } else {
+                LINE_ID++;
+                item.id = LINE_ID;
+                newLines.push(item);
+              }
             });
-            setCorpusLines([...items, ...corpusLines]);
+            setCorpusLines(newLines);
             handleImportOpen(false);
           }}
         />

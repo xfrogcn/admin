@@ -26,7 +26,6 @@ export default {
   "admin.ui.public.pattern-tootip-userName": '只能包含字母、数字或下划线',
   "admin.ui.public.pattern-tooltip-code": '只能包含字母、数字、.、-、:',
 
-
   "admin.ui.dic.application-admin-ui": '管理平台',
   "admin.ui.dic.lang-corpus-type-public": '公共',
   "admin.ui.dic.lang-corpus-type-dic": '字典',
