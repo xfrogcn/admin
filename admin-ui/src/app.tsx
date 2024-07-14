@@ -77,7 +77,7 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
 
-  if (history.location.pathname === '/403') {
+  if (history.location.pathname === '/401') {
     return {
       fetchUserInfo,
       settings: defaultSettings as Partial<LayoutSettings>,
@@ -116,7 +116,7 @@ export async function getInitialState(): Promise<{
   }
 
   localStorage.setItem('__path', JSON.stringify(history.location));
-  history.push('/403');
+  history.push('/401');
   await userManager.signinRedirect();
 
   return {
@@ -159,7 +159,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         ]
       : [],
     menuHeaderRender: undefined,
-    // 自定义 403 页面
+    // 自定义 401 页面
     unAccessible: <div>unAccessible</div>,
     layout: 'top',
     // 增加一个 loading 的状态

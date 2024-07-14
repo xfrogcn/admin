@@ -112,17 +112,6 @@ export default [
     ],
   },
   {
-    path: '/user',
-    layout: false,
-    routes: [
-      {
-        name: 'login',
-        path: '/user/login',
-        component: './User/Login',
-      },
-    ],
-  },
-  {
     path: '/admin',
     name: 'admin',
     icon: 'crown',
@@ -140,15 +129,9 @@ export default [
     ],
   },
   {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
-  {
-    path: '/403',
+    path: '/401',
     layout: false,
-    component: './403',
+    component: './401',
   },
   {
     path: '*',
