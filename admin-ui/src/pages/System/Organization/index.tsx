@@ -15,6 +15,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Access, FormattedMessage, useAccess, useIntl, useModel } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
+import LinkButton from '@/components/LinkButton';
 import EditForm from './components/EditForm';
 
 const handleAdd = useMessageBox<API.CreateOrganizationRequestDTO, number>(createOrganization);
@@ -77,7 +78,7 @@ const OrganizationList: React.FC = () => {
     return withAccessRender<withChildrenType<API.OrganizationDTO>>(
       {
         'admin:system:organization:create': (_, record) => (
-          <a
+          <LinkButton type='primary'
             key="add"
             onClick={() => {
               setNewOrganization({ ...newOrganization, parentId: record.id });
@@ -85,10 +86,10 @@ const OrganizationList: React.FC = () => {
             }}
           >
             <FormattedMessage id="admin.ui.public.new-button" />
-          </a>
+          </LinkButton>
         ),
         'admin:system:organization:edit': (_, record) => (
-          <a
+          <LinkButton type='primary'
             key="edit"
             onClick={async () => {
               const organization = await getOrganization({ organizationId: record.id || 0 });
@@ -99,7 +100,7 @@ const OrganizationList: React.FC = () => {
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
-          </a>
+          </LinkButton>
         ),
         'admin:system:organization:delete': (_, record) => (
           <Popconfirm
@@ -113,13 +114,13 @@ const OrganizationList: React.FC = () => {
               }
             }}
           >
-            <a
+            <LinkButton type='primary'
               key="delete"
               // @ts-ignore
               disabled={record.children?.length > 0 || !!!record.parentId}
             >
               <FormattedMessage id="admin.ui.public.delete-button" />
-            </a>
+            </LinkButton>
           </Popconfirm>
         ),
       },
@@ -179,7 +180,7 @@ const OrganizationList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: '10em',
+      width: operateRender.columnWidth,
       fixed: 'right',
       align: 'center',
       render: (dom, record) => (

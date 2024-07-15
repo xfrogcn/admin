@@ -45,6 +45,7 @@ export function withAccessRender<T>(
 ): {
   hasPermisions: boolean;
   permissionCodes: string[];
+  columnWidth: string;
   render: (dom: React.ReactNode, record: T) => JSX.Element[];
 } {
   const renderList: ((dom: React.ReactNode, record: T) => JSX.Element)[] = [];
@@ -62,6 +63,7 @@ export function withAccessRender<T>(
   const result= {
     hasPermisions: renderList.length> 0,
     permissionCodes: permissionCodes,
+    columnWidth: permissionCodes.length * 2.5 + 1 + 'em',
     render: (dom: React.ReactNode, record: T) => {
       const buttons: JSX.Element[] = [];
       for (let i = 0; i < renderList.length; i++) {

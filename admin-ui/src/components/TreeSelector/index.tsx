@@ -2,7 +2,7 @@ import { findById, getAllFolderNodes } from '@/utils/treeItemUtils';
 import { useIntl } from '@umijs/max';
 import { Input, Tree, TreeDataNode, theme } from 'antd';
 import React, { Key, useCallback, useEffect, useMemo, useState } from 'react';
-import Panel from '../Panel';
+import Panel, { SpaceSize } from '../Panel';
 
 const { Search } = Input;
 
@@ -28,6 +28,7 @@ export interface TreeSelectorProps<TData> {
   style?: React.CSSProperties;
   treeWrapperStyle?: React.CSSProperties;
   treeStyle?: React.CSSProperties;
+  spaceTop?: SpaceSize;
   defaultExpandAll?: boolean;
   onBeforeSelect?: (id: number, selected: boolean) => boolean;
 }
@@ -164,6 +165,7 @@ function TreeSelector<T>(props: TreeSelectorProps<T>): JSX.Element {
         style={props.treeWrapperStyle}
         panelStyle={{ paddingTop: 8, paddingBottom: 8, ...props.treeStyle }}
         panelClassName={props.treeClassName}
+        spaceTop={props.spaceTop}
       >
         <Tree
           treeData={treeData}

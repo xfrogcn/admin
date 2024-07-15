@@ -370,6 +370,7 @@ const UserList: React.FC = () => {
             </Typography.Title>
 
             <TreeSelector<API.OrganizationDTO>
+              spaceTop='sm'
               style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
               treeData={treeData}
               selectedKeys={defaultOrganizationId}

@@ -279,7 +279,9 @@ const RoleList: React.FC = () => {
                 </Access>
               </Space>
             </Flex>
+            
             <ListBox<API.RoleDTO>
+              spaceTop='sm'
               dataSource={roles}
               rowKey="id"
               selectedKey={currentRole?.id}
@@ -415,7 +417,7 @@ const RoleList: React.FC = () => {
                 </div>
               </Access>
             </Flex>
-            <Panel panelStyle={{ padding: 10 }}>
+            <Panel panelStyle={{ padding: 10 }} spaceTop='sm'>
               <Tree
                 showLine={true}
                 showIcon={true}
