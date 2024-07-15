@@ -11,6 +11,7 @@ import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import EditForm from './components/EditForm';
+import LinkButton from '@/components/LinkButton';
 
 const handleAdd = useMessageBox<API.CreateTenantRequestDTO, number>(createTenant);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateTenantRequestDTO }, void>((args) =>
@@ -59,7 +60,7 @@ const TenantList: React.FC = () => {
     return withAccessRender<withChildrenType<API.TenantDTO>>(
       {
         'admin:platform:tenant:edit': (_, record) => (
-          <a
+          <LinkButton type='primary'
             key="edit"
             onClick={async () => {
               setEditTenant({ ...record } as any);
@@ -67,7 +68,7 @@ const TenantList: React.FC = () => {
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
-          </a>
+          </LinkButton>
         ),
         'admin:platform:tenant:disable': (_, record) =>
           record.enabled ? (
@@ -81,9 +82,9 @@ const TenantList: React.FC = () => {
                 }
               }}
             >
-              <a key="disabled">
+              <LinkButton type='primary' key="disabled">
                 <FormattedMessage id="admin.ui.public.label-enabled-false" />
-              </a>
+              </LinkButton>
             </Popconfirm>
           ) : (
             <Popconfirm
@@ -96,9 +97,9 @@ const TenantList: React.FC = () => {
                 }
               }}
             >
-              <a key="enabled">
+              <LinkButton type='primary' key="enabled">
                 <FormattedMessage id="admin.ui.public.label-enabled-true" />
-              </a>
+              </LinkButton>
             </Popconfirm>
           ),
       },
@@ -180,7 +181,7 @@ const TenantList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: (operationRender.permissionCodes.length * 4 + 1) + 'em',
+      width: operationRender.columnWidth,
       fixed: 'right',
       align: 'center',
       render: (dom, record) => (

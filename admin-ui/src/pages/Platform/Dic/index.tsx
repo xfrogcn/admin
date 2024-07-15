@@ -1,5 +1,7 @@
 import { withAccessRender } from '@/access';
+import LinkButton from '@/components/LinkButton';
 import ProTablePage from '@/components/ProTablePage';
+import { removeDicCache } from '@/services/DicCache';
 import { createDic, deleteDic, listDics, updateDic } from '@/services/swagger/dicApi';
 import { convertCommonQueryParams } from '@/utils/bizUtils';
 import { useMessageBox } from '@/utils/messageUtils';
@@ -10,7 +12,6 @@ import { Access, FormattedMessage, useAccess, useIntl, useNavigate } from '@umij
 import { Button, Flex, Popconfirm } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
 import EditForm from './components/EditForm';
-import { removeDicCache } from '@/services/DicCache';
 
 const handleAdd = useMessageBox<API.CreateDicRequestDTO, number>(createDic);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateDicRequestDTO }, void>((args) =>
@@ -57,14 +58,19 @@ const DicList: React.FC = () => {
     return withAccessRender<API.DicDTO>(
       {
         'admin:platform:dic:items': (_, record) => (
-          <a key="items" onClick={() => {
-            navigation(`/platform/dic/${record.id}`, { replace: false});
-          }}>
+          <LinkButton
+            type="primary"
+            key="items"
+            onClick={() => {
+              navigation(`/platform/dic/${record.id}`, { replace: false });
+            }}
+          >
             <FormattedMessage id="admin.ui.pages.dic.button-items" />
-          </a>
+          </LinkButton>
         ),
         'admin:platform:dic:edit': (_, record) => (
-          <a
+          <LinkButton
+            type="primary"
             key="edit"
             onClick={async () => {
               setEditDic({ ...record } as any);
@@ -72,7 +78,7 @@ const DicList: React.FC = () => {
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
-          </a>
+          </LinkButton>
         ),
         'admin:platform:dic:delete': (_, record) => (
           <Popconfirm
@@ -85,9 +91,9 @@ const DicList: React.FC = () => {
               }
             }}
           >
-            <a key="delete">
+            <LinkButton type="primary" key="delete">
               <FormattedMessage id="admin.ui.public.delete-button" />
-            </a>
+            </LinkButton>
           </Popconfirm>
         ),
       },
@@ -127,7 +133,7 @@ const DicList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.pages.dic.label-memo" />,
       dataIndex: 'memo',
       valueType: 'text',
-      ellipsis: {showTitle: true},
+      ellipsis: { showTitle: true },
       sorter: false,
       hideInSearch: true,
       width: '12em',
@@ -149,7 +155,7 @@ const DicList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: (operationRender.permissionCodes.length * 4 + 1) + 'em',
+      width: operationRender.columnWidth,
       fixed: 'right',
       align: 'center',
       render: (dom, record) => (
@@ -198,7 +204,7 @@ const DicList: React.FC = () => {
             const result = await handleAdd(values as API.CreateDicRequestDTO);
             if (result.success) {
               handleCreateModalOpen(false);
-              removeDicCache(values?.type || '')
+              removeDicCache(values?.type || '');
               actionRef.current?.reload();
             }
           }}
@@ -219,7 +225,7 @@ const DicList: React.FC = () => {
             });
             if (result.success) {
               handleEditModalOpen(false);
-              removeDicCache(editDic?.type || '')
+              removeDicCache(editDic?.type || '');
               actionRef.current?.reload();
             }
           }}

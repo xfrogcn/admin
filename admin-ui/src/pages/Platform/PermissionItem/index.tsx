@@ -1,4 +1,5 @@
 import { withAccessRender } from '@/access';
+import LinkButton from '@/components/LinkButton';
 import ProTablePage from '@/components/ProTablePage';
 import {
   createPermissionItem,
@@ -30,7 +31,7 @@ const PermissionItemList: React.FC = () => {
     parentId: undefined,
     type: 'F',
     code: '',
-    platform: false
+    platform: false,
   } as API.PermissionItemDTO);
 
   const [editModalOpen, handleEditModalOpen] = useState<boolean>(false);
@@ -47,7 +48,8 @@ const PermissionItemList: React.FC = () => {
     return withAccessRender<withChildrenType<API.PermissionItemDTO>>(
       {
         'admin:platform:permissionitem:create': (_, record) => (
-          <a
+          <LinkButton
+            type="primary"
             key="add"
             // @ts-ignore
             disabled={record.type === 'B'}
@@ -67,10 +69,11 @@ const PermissionItemList: React.FC = () => {
             }}
           >
             <FormattedMessage id="admin.ui.public.new-button" />
-          </a>
+          </LinkButton>
         ),
         'admin:platform:permissionitem:edit': (_, record) => (
-          <a
+          <LinkButton
+            type="primary"
             key="edit"
             onClick={async () => {
               const parent = record.parentId ? permissionItemMap[record.parentId] : undefined;
@@ -79,7 +82,7 @@ const PermissionItemList: React.FC = () => {
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
-          </a>
+          </LinkButton>
         ),
         'admin:platform:permissionitem:delete': (_, record) => (
           <Popconfirm
@@ -95,13 +98,14 @@ const PermissionItemList: React.FC = () => {
               }
             }}
           >
-            <a
+            <LinkButton
+              type="primary"
               key="delete"
               // @ts-ignore
               disabled={record.children?.length > 0}
             >
               <FormattedMessage id="admin.ui.public.delete-button" />
-            </a>
+            </LinkButton>
           </Popconfirm>
         ),
       },
@@ -151,7 +155,7 @@ const PermissionItemList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: '10em',
+      width: operationRender.columnWidth,
       fixed: 'right',
       align: 'center',
       render: (dom, record) => (
@@ -203,7 +207,7 @@ const PermissionItemList: React.FC = () => {
                   type: 'F',
                   code: '',
                   parentName: '',
-                  platform: false
+                  platform: false,
                 } as any);
                 handleCreateModalOpen(true);
               }}

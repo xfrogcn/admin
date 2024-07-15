@@ -1,5 +1,7 @@
 import { withAccessRender } from '@/access';
+import LinkButton from '@/components/LinkButton';
 import ProTablePage from '@/components/ProTablePage';
+import { ExProColumnsType } from '@/components/ValueTypes';
 import {
   createLanguage,
   deleteLanguage,
@@ -11,13 +13,12 @@ import { convertCommonQueryParams, enabledStatusEnum } from '@/utils/bizUtils';
 import { stopEvent } from '@/utils/commonUtils';
 import { useMessageBox } from '@/utils/messageUtils';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
 import { Button, Flex, Popconfirm } from 'antd';
 import React, { useMemo, useRef, useState } from 'react';
-import EditForm from './components/EditForm'
-import { ExProColumnsType } from '@/components/ValueTypes';
+import EditForm from './components/EditForm';
 
 const handleAdd = useMessageBox<API.CreateLangRequestDTO, number>(createLanguage);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateLangRequestDTO }, void>((args) =>
@@ -58,7 +59,7 @@ const queryLangs = async (
 
 const LangList: React.FC = () => {
   const [createModalOpen, handleCreateModalOpen] = useState<boolean>(false);
-  const [newLang, setNewLang] = useState<API.LangDTO>({enabled: true});
+  const [newLang, setNewLang] = useState<API.LangDTO>({ enabled: true });
 
   const [editModalOpen, handleEditModalOpen] = useState<boolean>(false);
   const [editLang, setEditLang] = useState<API.LangDTO | undefined>();
@@ -71,7 +72,8 @@ const LangList: React.FC = () => {
     return withAccessRender<API.LangDTO>(
       {
         'admin:platform:lang:edit': (_, record) => (
-          <a
+          <LinkButton
+            type="primary"
             key="edit"
             onClick={async () => {
               setEditLang({ ...record } as any);
@@ -79,7 +81,7 @@ const LangList: React.FC = () => {
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
-          </a>
+          </LinkButton>
         ),
         'admin:platform:lang:enable': (_, record) =>
           record.enabled ? (
@@ -95,9 +97,9 @@ const LangList: React.FC = () => {
                 }
               }}
             >
-              <a onClick={stopEvent}>
+              <LinkButton type="primary" onClick={stopEvent}>
                 <FormattedMessage id="admin.ui.public.label-enabled-false" />
-              </a>
+              </LinkButton>
             </Popconfirm>
           ) : (
             <Popconfirm
@@ -112,9 +114,9 @@ const LangList: React.FC = () => {
                 }
               }}
             >
-              <a onClick={stopEvent}>
+              <LinkButton type="primary" onClick={stopEvent}>
                 <FormattedMessage id="admin.ui.public.label-enabled-true" />
-              </a>
+              </LinkButton>
             </Popconfirm>
           ),
         'admin:platform:lang:delete': (_, record) => (
@@ -128,9 +130,9 @@ const LangList: React.FC = () => {
               }
             }}
           >
-            <a key="delete">
+            <LinkButton type="primary" key="delete">
               <FormattedMessage id="admin.ui.public.delete-button" />
-            </a>
+            </LinkButton>
           </Popconfirm>
         ),
       },
@@ -147,8 +149,8 @@ const LangList: React.FC = () => {
       width: '8em',
       hideInSearch: true,
       fieldProps: {
-        dictype: 'application'
-      }
+        dictype: 'application',
+      },
     },
     {
       title: <FormattedMessage id="admin.ui.pages.lang.label-lang-code" />,
@@ -214,7 +216,7 @@ const LangList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: operationRender.permissionCodes.length * 4 + 1 + 'em',
+      width: operationRender.columnWidth,
       fixed: 'right',
       align: 'center',
       render: (dom, record) => (
@@ -237,7 +239,7 @@ const LangList: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                setNewLang({enabled: true} as any);
+                setNewLang({ enabled: true } as any);
                 handleCreateModalOpen(true);
               }}
             >

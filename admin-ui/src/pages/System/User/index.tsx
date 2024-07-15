@@ -28,6 +28,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import EditUserDialog from './components/EditForm';
 import UserRolesDialog from './components/UserRolesForm';
 import ViewUserDataScopeDialog from './components/ViewUserDataScopeDialog';
+import LinkButton from '@/components/LinkButton';
 
 const handleAdd = useMessageBox<API.CreateUserRequestDTO, number>(createUser);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateUserRequestDTO }, void>((args) =>
@@ -132,7 +133,7 @@ const UserList: React.FC = () => {
     return withAccessRender<API.UserDTO>(
       {
         'admin:system:user:edit': (_, record) => (
-          <a
+          <LinkButton type='primary'
             key="edit"
             onClick={async () => {
               const user = await getUserDetail({ userId: record.id || 0 });
@@ -143,7 +144,7 @@ const UserList: React.FC = () => {
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
-          </a>
+          </LinkButton>
         ),
         'admin:system:user:disable': (_, record) =>
           record.enabled ? (
@@ -157,9 +158,9 @@ const UserList: React.FC = () => {
                 }
               }}
             >
-              <a key="disabled">
+              <LinkButton type='primary' key="disabled">
                 <FormattedMessage id="admin.ui.public.label-enabled-false" />
-              </a>
+              </LinkButton>
             </Popconfirm>
           ) : (
             <Popconfirm
@@ -172,9 +173,9 @@ const UserList: React.FC = () => {
                 }
               }}
             >
-              <a key="enabled">
+              <LinkButton type='primary' key="enabled">
                 <FormattedMessage id="admin.ui.public.label-enabled-true" />
-              </a>
+              </LinkButton>
             </Popconfirm>
           ),
       },
@@ -336,7 +337,7 @@ const UserList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: '11em',
+      width: operationRender.permissionCodes.length * 3 + (moreAction.length>0 ? 6 : 0) + 1 + 'em',
       fixed: 'right',
       align: 'center',
       render: (dom, record) => {
@@ -349,9 +350,9 @@ const UserList: React.FC = () => {
               getPopupContainer={() => document.body}
               menu={{ items: moreAction, onClick: (e) => moreActionClick(e, record) }}
             >
-              <a>
+              <LinkButton type='primary'>
                 <FormattedMessage id="admin.ui.public.label-more" /> <DownOutlined />
-              </a>
+              </LinkButton>
             </Dropdown>,
           );
         }

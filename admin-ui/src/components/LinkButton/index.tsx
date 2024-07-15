@@ -11,7 +11,7 @@ const LinkButton: FC<LinkButtonProps> = (props: LinkButtonProps) => {
   const { className, type } = props;
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('link-button');
-  const { wrapSSR, hashId } = useStyle(prefixCls);
+  const { hashId } = useStyle(prefixCls);
 
   const classString = classNames(
     prefixCls,
@@ -20,7 +20,7 @@ const LinkButton: FC<LinkButtonProps> = (props: LinkButtonProps) => {
     hashId,
   );
 
-  return wrapSSR(<a className={classString} {...props} />);
+  return <a className={classString} {...props} />;
 };
 
 export default LinkButton;

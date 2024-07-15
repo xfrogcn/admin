@@ -1,4 +1,5 @@
 import DataScopeDialog from '@/components/DataScopeDialog';
+import LinkButton from '@/components/LinkButton';
 import ListBox from '@/components/ListBox';
 import Panel from '@/components/Panel';
 import { getDataScopes, grantDataScope } from '@/services/swagger/dataScopeApi';
@@ -279,9 +280,9 @@ const RoleList: React.FC = () => {
                 </Access>
               </Space>
             </Flex>
-            
+
             <ListBox<API.RoleDTO>
-              spaceTop='sm'
+              spaceTop="sm"
               dataSource={roles}
               rowKey="id"
               selectedKey={currentRole?.id}
@@ -296,7 +297,8 @@ const RoleList: React.FC = () => {
                 </div>,
                 <Flex style={{ width: 110, minWidth: 110 }} justify="space-around">
                   <Access accessible={access.hasPermission('admin:system:role:edit')}>
-                    <a
+                    <LinkButton
+                      type="primary"
                       key="edit"
                       onClick={(e) => {
                         stopEvent(e);
@@ -305,7 +307,7 @@ const RoleList: React.FC = () => {
                       }}
                     >
                       <FormattedMessage id="admin.ui.public.edit-button" />
-                    </a>
+                    </LinkButton>
                   </Access>
                   <Access accessible={access.hasPermission('admin:system:role:disable')}>
                     {item.enabled ? (
@@ -323,9 +325,9 @@ const RoleList: React.FC = () => {
                           }
                         }}
                       >
-                        <a onClick={stopEvent}>
+                        <LinkButton type="primary" onClick={stopEvent}>
                           <FormattedMessage id="admin.ui.public.label-enabled-false" />
-                        </a>
+                        </LinkButton>
                       </Popconfirm>
                     ) : (
                       <Popconfirm
@@ -342,9 +344,9 @@ const RoleList: React.FC = () => {
                           }
                         }}
                       >
-                        <a onClick={stopEvent}>
+                        <LinkButton type="primary" onClick={stopEvent}>
                           <FormattedMessage id="admin.ui.public.label-enabled-true" />
-                        </a>
+                        </LinkButton>
                       </Popconfirm>
                     )}
                   </Access>
@@ -363,9 +365,9 @@ const RoleList: React.FC = () => {
                         }
                       }}
                     >
-                      <a onClick={stopEvent}>
+                      <LinkButton type="primary" onClick={stopEvent}>
                         <FormattedMessage id="admin.ui.public.delete-button" />
-                      </a>
+                      </LinkButton>
                     </Popconfirm>
                   </Access>
                 </Flex>,
@@ -417,7 +419,7 @@ const RoleList: React.FC = () => {
                 </div>
               </Access>
             </Flex>
-            <Panel panelStyle={{ padding: 10 }} spaceTop='sm'>
+            <Panel panelStyle={{ padding: 10 }} spaceTop="sm">
               <Tree
                 showLine={true}
                 showIcon={true}

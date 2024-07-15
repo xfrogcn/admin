@@ -1,5 +1,6 @@
 import { withAccessRender } from '@/access';
 import LangLocalDialog from '@/components/LangLocalDialog';
+import LinkButton from '@/components/LinkButton';
 import { usePageTabReload } from '@/components/PageTabs';
 import ProTablePage from '@/components/ProTablePage';
 import { ExProColumnsType } from '@/components/ValueTypes';
@@ -94,34 +95,32 @@ const LangCorpusList: React.FC = () => {
     [groupCondition],
   );
 
-  const openLangLocalDialog = useCallback(
-    async (record: API.LangCorpusDTO, readonly: boolean) => {
-      const applicationLangs = langs.current.filter((it) => it.application === record.application);
-      setLineLangs(applicationLangs);
+  const openLangLocalDialog = useCallback(async (record: API.LangCorpusDTO, readonly: boolean) => {
+    const applicationLangs = langs.current.filter((it) => it.application === record.application);
+    setLineLangs(applicationLangs);
 
-      const corpus = await getLangCorpus({ langCorpusId: record.id || 0 });
+    const corpus = await getLangCorpus({ langCorpusId: record.id || 0 });
 
-      let localMap: Record<string, string> = {};
-      // @ts-ignore
-      applicationLangs.forEach((l) => (localMap[l.code] = null));
+    let localMap: Record<string, string> = {};
+    // @ts-ignore
+    applicationLangs.forEach((l) => (localMap[l.code] = null));
 
-      if (corpus && corpus.langLocales) {
-        localMap = { ...localMap, ...corpus.langLocales };
-      }
+    if (corpus && corpus.langLocales) {
+      localMap = { ...localMap, ...corpus.langLocales };
+    }
 
-      setEditLangCorpus(record);
-      setLangLocal(localMap);
-      setReadonly(readonly);
-      handleEditLocalOpen(true);
-    },
-    []
-  );
+    setEditLangCorpus(record);
+    setLangLocal(localMap);
+    setReadonly(readonly);
+    handleEditLocalOpen(true);
+  }, []);
 
   const operationRender = useMemo(() => {
     return withAccessRender<API.LangCorpusDTO>(
       {
         'admin:platform:langcorpus:edit': (_, record) => (
-          <a
+          <LinkButton
+            type="primary"
             key="edit"
             onClick={async () => {
               setEditLangCorpus({ ...record } as any);
@@ -129,12 +128,12 @@ const LangCorpusList: React.FC = () => {
             }}
           >
             <FormattedMessage id="admin.ui.public.edit-button" />
-          </a>
+          </LinkButton>
         ),
         'admin:platform:langcorpus:local': (_, record) => (
-          <a key="local" onClick={() => openLangLocalDialog(record, false)}>
+          <LinkButton type="primary" key="local" onClick={() => openLangLocalDialog(record, false)}>
             <FormattedMessage id="admin.ui.pages.langcorpus.label-local" />
-          </a>
+          </LinkButton>
         ),
         'admin:platform:langcorpus:enable': (_, record) =>
           record.enabled ? (
@@ -150,9 +149,9 @@ const LangCorpusList: React.FC = () => {
                 }
               }}
             >
-              <a onClick={stopEvent}>
+              <LinkButton type="primary" onClick={stopEvent}>
                 <FormattedMessage id="admin.ui.public.label-enabled-false" />
-              </a>
+              </LinkButton>
             </Popconfirm>
           ) : (
             <Popconfirm
@@ -167,9 +166,9 @@ const LangCorpusList: React.FC = () => {
                 }
               }}
             >
-              <a onClick={stopEvent}>
+              <LinkButton type="primary" onClick={stopEvent}>
                 <FormattedMessage id="admin.ui.public.label-enabled-true" />
-              </a>
+              </LinkButton>
             </Popconfirm>
           ),
         'admin:platform:langcorpus:delete': (_, record) => (
@@ -184,9 +183,9 @@ const LangCorpusList: React.FC = () => {
               }
             }}
           >
-            <a>
+            <LinkButton type="primary">
               <FormattedMessage id="admin.ui.public.delete-button" />
-            </a>
+            </LinkButton>
           </Popconfirm>
         ),
       },
@@ -318,18 +317,18 @@ const LangCorpusList: React.FC = () => {
         },
         false: {
           text: intl.formatMessage({ id: 'admin.ui.pages.langcorpus.label-search-local-false' }),
-          status: 'Error',
+          status: 'Warning',
         },
       },
       render: (dom, record) => {
         return [
-          <Button key="edit" type="link" onClick={() => openLangLocalDialog(record, true)}>
+          <LinkButton type="primary" key="edit" style={{marginRight: 12}} onClick={() => openLangLocalDialog(record, true)}>
             <EyeOutlined />
-          </Button>,
+          </LinkButton>,
           dom,
         ];
       },
-      width: '14em',
+      width: '12em',
       align: 'center',
       sorter: false,
       fixed: 'right',
@@ -342,7 +341,7 @@ const LangCorpusList: React.FC = () => {
       title: <FormattedMessage id="admin.ui.public.option-button" defaultMessage="Operating" />,
       dataIndex: 'option',
       valueType: 'option',
-      width: operationRender.permissionCodes.length * 4 + 'em',
+      width: operationRender.columnWidth,
       fixed: 'right',
       align: 'center',
       render: (dom, record) => (
@@ -353,7 +352,7 @@ const LangCorpusList: React.FC = () => {
 
   useEffect(() => {
     listLanguages({ pageSize: 300, pageNum: 1 }).then((res) => {
-      langs.current.push(...res.data || [])
+      langs.current.push(...(res.data || []));
     });
   }, []);
 
