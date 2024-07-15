@@ -36,10 +36,6 @@ ol {
   list-style: none;
 }
 
-.site-tree-search-value {
-  color: #f50;
-}
-
 .ant-pro-layout {
   position: relative;
   height: 100%;
@@ -148,12 +144,12 @@ ol {
         > .ant-table {
           flex: 1;
           overflow-y: hidden;
-          border: solid 1px #f0f0f0;
 
           > .ant-table-container {
             display: flex;
             flex-direction: column;
             height: 100%;
+            // border-bottom: ;
 
             .ant-table-body {
               flex: 1;
@@ -165,53 +161,53 @@ ol {
   }
 }
 
-.list-body-panel-wrapper {
-  position: relative;
-  flex: 1;
-  margin-top: 10px;
-  overflow: auto;
-  background-color: white;
-  border: solid 1px #dcdcdc;
+// .list-body-panel-wrapper {
+//   position: relative;
+//   flex: 1;
+//   margin-top: 10px;
+//   overflow: auto;
+//   // background-color: @component-background;
+//   // border: @border-style-base @border-width-base @border-color-base;
 
-  .list-body-panel {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    overflow: auto;
-  }
-}
+//   .list-body-panel {
+//     position: absolute;
+//     top: 0;
+//     right: 0;
+//     bottom: 0;
+//     left: 0;
+//     overflow: auto;
+//   }
+// }
 
-.selectable-list-item {
-  position: relative;
-  padding: 10px 15px 10px 15px;
-  border-bottom: solid 0px transparent;
-  cursor: pointer;
-  > .bar {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 4px;
-    background: transparent;
-  }
-  &:hover {
-    background-color: #f8f8f8;
-    border-bottom-color: #e7e6e6;
-  }
-  &.selected {
-    background-color: #ececec;
+// .selectable-list-item {
+//   position: relative;
+//   padding: 10px 15px 10px 15px;
+//   border-bottom: solid 0px transparent;
+//   cursor: pointer;
+//   > .bar {
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     left: 0;
+//     width: 4px;
+//     background: transparent;
+//   }
+//   &:hover {
+//     // background-color: #f8f8f8;
+//     // border-bottom-color: #e7e6e6;
+//   }
+//   &.selected {
+//     // background-color: #ececec;
 
-    > .bar {
-      background-color: @primary-color;
-    }
+//     > .bar {
+//       background-color: @primary-color;
+//     }
 
-    .ant-btn-link {
-      color: white;
-    }
-  }
-}
+//     .ant-btn-link {
+//       // color: white;
+//     }
+//   }
+// }
 
 @media (max-width: 768px) {
   .ant-table {

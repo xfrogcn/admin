@@ -22,13 +22,12 @@ import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { Button, Col, Dropdown, Flex, Popconfirm, Row, Typography } from 'antd';
+import { Button, Col, Dropdown, Flex, Popconfirm, Row, Typography, theme } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import EditUserDialog from './components/EditForm';
 import UserRolesDialog from './components/UserRolesForm';
 import ViewUserDataScopeDialog from './components/ViewUserDataScopeDialog';
-import './index.less';
 
 const handleAdd = useMessageBox<API.CreateUserRequestDTO, number>(createUser);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateUserRequestDTO }, void>((args) =>
@@ -99,6 +98,7 @@ const UserList: React.FC = () => {
 
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
+  const {token} = theme.useToken();
 
   const listUsers = useCallback(
     (params: queryCondition, sort: any, filter: any) => {
@@ -371,10 +371,8 @@ const UserList: React.FC = () => {
 
             <TreeSelector<API.OrganizationDTO>
               style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
-              className="user-organization-tree-body"
               treeData={treeData}
               selectedKeys={defaultOrganizationId}
-              treeClassName="user-organization-tree"
               onSelect={(keys: number[]) => {
                 if (keys && keys.length > 0) {
                   // 显示组织下用户

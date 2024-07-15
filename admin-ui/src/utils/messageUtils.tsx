@@ -52,7 +52,7 @@ export function useMessageBox<T1, R>(
   };
 }
 
-export function confirmAction(shouldConfirm: boolean, action: () => void, messageLangId: string ):void {
+export function confirmAction(shouldConfirm: boolean, action: () => void, messageLangId: string, cancel?: () => void ):void {
   if (shouldConfirm) {
     confirm({
       title: messageIntl.formatMessage({ id: 'admin.ui.public.confirm-title' }),
@@ -61,6 +61,11 @@ export function confirmAction(shouldConfirm: boolean, action: () => void, messag
       okText: messageIntl.formatMessage({ id: 'admin.ui.public.confirm-ok-button' }),
       cancelText: messageIntl.formatMessage({ id: 'admin.ui.public.confirm-cancel-button' }),
       onOk: action,
+      onCancel: () => {
+        if (cancel) {
+          cancel();
+        }
+      },
     });
   } else {
     action();

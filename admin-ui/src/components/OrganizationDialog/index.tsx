@@ -4,7 +4,6 @@ import { FormattedMessage } from '@umijs/max';
 import { useCallback, useMemo, useState } from 'react';
 import DraggableModal, { DraggableModalProps } from '../DraggableModal';
 import TreeSelector, { TreeItem, TreeSelectorProps } from '../TreeSelector';
-import './index.less';
 
 interface OrganizationDialogProps extends DraggableModalProps {
   parentId?: number;
@@ -110,7 +109,11 @@ const OrganizationDialog: React.FC<OrganizationDialogProps> = (props: Organizati
       <TreeSelector<API.OrganizationDTO>
         selectedKeys={initSelectedKeys}
         treeData={treeData}
-        className="tree-selector-panel"
+        treeWrapperStyle={{
+          height: 250,
+          marginTop: 10,
+          overflow: 'auto'
+        }}
         {...props.treeProps}
         onBeforeSelect={onBeforeSelected}
         onSelect={(selectedKeys) => setSelectedKeys(selectedKeys)}

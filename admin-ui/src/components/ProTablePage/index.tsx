@@ -36,7 +36,7 @@ export default function ProTablePage<DataType extends Record<string, any>, Param
             headHeight = headers[0].getBoundingClientRect().height;
         }
         const th = table.getBoundingClientRect().height;
-        setScrollY(th - headHeight - 10)
+        setScrollY(th - headHeight - 5)
     }
   }, [timeRef, size])
 
@@ -65,6 +65,7 @@ export default function ProTablePage<DataType extends Record<string, any>, Param
   return (
         <div className={`table-page-wrapper ${className}`} style={style} ref={wrapperRef as any}>
           <ProTable<DataType, ParamsType>
+            bordered
             {...restProps as any}
             options={{fullScreen: true, ...props.options}}
             scroll = {{y: scrollY, x: props.width}}

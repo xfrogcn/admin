@@ -1,19 +1,20 @@
 // https://umijs.org/config/
-import { defineConfig } from '@umijs/max';
-import defaultSettings from './defaultSettings';
-import proxy from './proxy';
-import routes from './routes';
+import { defineConfig } from "@umijs/max";
+import defaultSettings from "./defaultSettings";
+import proxy from "./proxy";
+import routes from "./routes";
 
-const { REACT_APP_ENV = 'dev' } = process.env;
-const isDev = process.env.NODE_ENV === 'development';
+const { REACT_APP_ENV = "dev" } = process.env;
+const isDev = process.env.NODE_ENV === "development";
 
 const headScripts = [
   // 解决首次加载时白屏的问题
-  { src: '/scripts/loading.js', async: true },
+  { src: "/scripts/loading.js", async: true },
 ];
+
 if (!isDev) {
   // 全局url配置
-  headScripts.push({ src: '/scripts/url-config.js', async: false });
+  headScripts.push({ src: "/scripts/url-config.js", async: false });
 }
 
 export default defineConfig({
@@ -48,7 +49,7 @@ export default defineConfig({
   theme: {
     // 如果不想要 configProvide 动态设置主题需要把这个设置为 default
     // 只有设置为 variable， 才能使用 configProvide 动态设置主色调
-    'root-entry-name': 'variable',
+    "root-entry-name": "variable",
   },
   /**
    * @name moment 的国际化配置
@@ -85,7 +86,7 @@ export default defineConfig({
    * @name layout 插件
    * @doc https://umijs.org/docs/max/layout-menu
    */
-  title: 'Ant Design Pro',
+  title: "Ant Design Pro",
   layout: {
     locale: true,
     ...defaultSettings,
@@ -105,7 +106,7 @@ export default defineConfig({
    */
   locale: {
     // default zh-CN
-    default: 'zh-CN',
+    default: "zh-CN",
     antd: true,
     // default true, when it is true, will use `navigator.language` overwrite default
     baseNavigator: true,
@@ -134,7 +135,7 @@ export default defineConfig({
    */
   headScripts: headScripts,
   //================ pro 插件配置 =================
-  presets: ['umi-presets-pro'],
+  presets: ["umi-presets-pro"],
   /**
    * @name openAPI 插件的配置
    * @description 基于 openapi 的规范生成serve 和mock，能减少很多样板代码
@@ -150,13 +151,15 @@ export default defineConfig({
     // },
     {
       requestLibPath: "import request from '@/request'",
-      schemaPath: 'http://192.168.3.244:8080/v3/api-docs',
-      projectName: 'swagger',
+      schemaPath: "http://192.168.3.244:8080/v3/api-docs",
+      projectName: "swagger",
     },
   ],
+
   mfsu: {
-    strategy: 'normal',
+    strategy: "normal",
   },
   esbuildMinifyIIFE: true,
   requestRecord: {},
+  mako: {},
 });

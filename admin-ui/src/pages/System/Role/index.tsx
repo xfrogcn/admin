@@ -1,4 +1,11 @@
-import { listPermissionItems, listPermissionItemsFormPlatform } from '@/services/swagger/permissionItemApi';
+import DataScopeDialog from '@/components/DataScopeDialog';
+import ListBox from '@/components/ListBox';
+import Panel from '@/components/Panel';
+import { getDataScopes, grantDataScope } from '@/services/swagger/dataScopeApi';
+import {
+  listPermissionItems,
+  listPermissionItemsFormPlatform,
+} from '@/services/swagger/permissionItemApi';
 import {
   createRole,
   deleteRole,
@@ -8,7 +15,6 @@ import {
   listRoles,
   updateRole,
 } from '@/services/swagger/roleApi';
-import { getDataScopes, grantDataScope } from '@/services/swagger/dataScopeApi';
 import { stopEvent } from '@/utils/commonUtils';
 import { confirmAction, useMessageBox } from '@/utils/messageUtils';
 import { DataNodeEx, generateDataNodes, getAllFolderNodes } from '@/utils/treeItemUtils';
@@ -27,17 +33,16 @@ import {
   Checkbox,
   Col,
   Flex,
-  List,
   Popconfirm,
   Row,
   Space,
   Tooltip,
   Tree,
   Typography,
+  theme,
 } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import EditForm from './components/EditForm';
-import DataScopeDialog from '@/components/DataScopeDialog';
 
 const handleAdd = useMessageBox<API.CreateRoleRequestDTO, number>(createRole);
 const handleUpdate = useMessageBox<{ id: number; body: API.UpdateRoleRequestDTO }, void>((args) =>
@@ -50,8 +55,11 @@ const handleEnable = useMessageBox<{ id: number; enabled: boolean }, void>((args
   enableRole({ roleId: args.id, enabled: args.enabled }),
 );
 const handleDelete = useMessageBox<number, void>((id) => deleteRole({ roleId: id }));
-const handleGrantDataScope = useMessageBox<{ roleId: number; scopeItems: API.DataScopeItem[] }, void>((args) =>
-  grantDataScope({ targetId: args.roleId, targetType: 'ROLE', scopeItems: args.scopeItems}),
+const handleGrantDataScope = useMessageBox<
+  { roleId: number; scopeItems: API.DataScopeItem[] },
+  void
+>((args) =>
+  grantDataScope({ targetId: args.roleId, targetType: 'ROLE', scopeItems: args.scopeItems }),
 );
 
 const unCheckedAllChildrenNodes = (
@@ -115,6 +123,7 @@ const RoleList: React.FC = () => {
 
   const intl = useIntl();
   const access = useAccess();
+  const { token } = theme.useToken();
 
   const queryRoles = useCallback(() => {
     return listRoles().then((roles) => setRoles(roles));
@@ -210,16 +219,22 @@ const RoleList: React.FC = () => {
     [autoChecked, autoCheckAllChildren],
   );
 
-  const onRoleChanged = (role: API.RoleDTO) => {
+  const onRoleChanged = async (role: API.RoleDTO): Promise<boolean> => {
     if (role.id == currentRole?.id) {
-      return;
+      return Promise.resolve(false);
     }
-    confirmAction(
-      isChanged,
-      () => {
-        setCurrentRole(role);
-      },
-      'admin.ui.pages.role.unsave-tip',
+    return new Promise<boolean>((resolve) =>
+      confirmAction(
+        isChanged,
+        () => {
+          setCurrentRole(role);
+          resolve(true);
+        },
+        'admin.ui.pages.role.unsave-tip',
+        () => {
+          resolve(false);
+        },
+      ),
     );
   };
 
@@ -233,137 +248,128 @@ const RoleList: React.FC = () => {
                 <FormattedMessage id="admin.ui.pages.role.table-title" />
               </Typography.Title>
               <Space>
-
-              <Access accessible={access.hasPermission("admin:system:role:create")}>
-              <Button
-                type="primary"
-                key="primary"
-                onClick={() => {
-                  setNewRole({ ...newRole });
-                  handleCreateModalOpen(true);
-                }}
-              >
-                <PlusOutlined /> <FormattedMessage id="admin.ui.public.new-button" />
-              </Button>
-              </Access>
-              <Access accessible={access.hasPermission("admin:system:role:grantdatascope")}>
-              <Button
-                type="primary"
-                key="primary"
-                disabled={currentRole ? false : true}
-                onClick={async () => {
-                  const dataScopes = await getDataScopes({ targetId: currentRole?.id || 0, targetType: 'ROLE' });
-                  setRoleDataScopes(dataScopes)
-                  handleDataScopeDialogOpen(true);
-                }}
-              >
-                <FormattedMessage id="admin.ui.pages.role.label-data-scope" />
-              </Button>
-              </Access>
+                <Access accessible={access.hasPermission('admin:system:role:create')}>
+                  <Button
+                    type="primary"
+                    key="primary"
+                    onClick={() => {
+                      setNewRole({ ...newRole });
+                      handleCreateModalOpen(true);
+                    }}
+                  >
+                    <PlusOutlined /> <FormattedMessage id="admin.ui.public.new-button" />
+                  </Button>
+                </Access>
+                <Access accessible={access.hasPermission('admin:system:role:grantdatascope')}>
+                  <Button
+                    type="primary"
+                    key="primary"
+                    disabled={currentRole ? false : true}
+                    onClick={async () => {
+                      const dataScopes = await getDataScopes({
+                        targetId: currentRole?.id || 0,
+                        targetType: 'ROLE',
+                      });
+                      setRoleDataScopes(dataScopes);
+                      handleDataScopeDialogOpen(true);
+                    }}
+                  >
+                    <FormattedMessage id="admin.ui.pages.role.label-data-scope" />
+                  </Button>
+                </Access>
               </Space>
             </Flex>
-            <div className="list-body-panel-wrapper">
-              <List
-                className="list-body-panel"
-                renderItem={(item) => (
-                  <Flex
-                    justify="space-between"
-                    className={`selectable-list-item ${
-                      item.id == currentRole?.id ? 'selected' : ''
-                    }`}
-                    onClick={() => onRoleChanged(item)}
-                  >
-                    <div className="bar"></div>
-                    <div>
-                      {item.name}
-                      {item.memo ? (
-                        <Tooltip title={item.memo}>
-                          <QuestionCircleOutlined style={{ marginLeft: 8 }} />
-                        </Tooltip>
-                      ) : undefined}
-                    </div>
-                    <Flex style={{ width: 110, minWidth: 110 }} justify="space-around">
-                      <Access accessible={access.hasPermission("admin:system:role:edit")}>
-                      <a
+            <ListBox<API.RoleDTO>
+              dataSource={roles}
+              rowKey="id"
+              selectedKey={currentRole?.id}
+              renderItem={(item) => [
+                <div>
+                  {item.name}
+                  {item.memo ? (
+                    <Tooltip title={item.memo}>
+                      <QuestionCircleOutlined style={{ marginLeft: 8 }} />
+                    </Tooltip>
+                  ) : undefined}
+                </div>,
+                <Flex style={{ width: 110, minWidth: 110 }} justify="space-around">
+                  <Access accessible={access.hasPermission('admin:system:role:edit')}>
+                    <a
                       key="edit"
-                        onClick={(e) => {
-                          stopEvent(e);
-                          setEditRole({ ...item });
-                          handleEditModalOpen(true);
-                        }}
-                      >
-                        <FormattedMessage id="admin.ui.public.edit-button" />
-                      </a>
-                      </Access>
-                      <Access accessible={access.hasPermission("admin:system:role:disable")}>
-                      {item.enabled ? (
-                        <Popconfirm
-                        key="disable"
-                          onPopupClick={stopEvent}
-                          title={<FormattedMessage id="admin.ui.public.label-enabled-true" />}
-                          description={
-                            <FormattedMessage id="admin.ui.pages.role.disable-confirm-desc" />
-                          }
-                          onConfirm={async () => {
-                            const result = await handleEnable({ id: item.id || 0, enabled: false });
-                            if (result.success) {
-                              await queryRoles();
-                            }
-                          }}
-                        >
-                          <a onClick={stopEvent}>
-                            <FormattedMessage id="admin.ui.public.label-enabled-false" />
-                          </a>
-                        </Popconfirm>
-                      ) : (
-                        <Popconfirm
-                        key="enable"
-                          onPopupClick={stopEvent}
-                          title={<FormattedMessage id="admin.ui.public.label-enabled-true" />}
-                          description={
-                            <FormattedMessage id="admin.ui.pages.role.enable-confirm-desc" />
-                          }
-                          onConfirm={async () => {
-                            const result = await handleEnable({ id: item.id || 0, enabled: true });
-                            if (result.success) {
-                              await queryRoles();
-                            }
-                          }}
-                        >
-                          <a onClick={stopEvent}>
-                            <FormattedMessage id="admin.ui.public.label-enabled-true" />
-                          </a>
-                        </Popconfirm>
-                      )}
-                      </Access>
-                      <Access accessible={access.hasPermission("admin:system:role:delete")}>
+                      onClick={(e) => {
+                        stopEvent(e);
+                        setEditRole({ ...item });
+                        handleEditModalOpen(true);
+                      }}
+                    >
+                      <FormattedMessage id="admin.ui.public.edit-button" />
+                    </a>
+                  </Access>
+                  <Access accessible={access.hasPermission('admin:system:role:disable')}>
+                    {item.enabled ? (
                       <Popconfirm
-                      key="delete"
+                        key="disable"
                         onPopupClick={stopEvent}
-                        title={<FormattedMessage id="admin.ui.public.delete-confirm-title" />}
+                        title={<FormattedMessage id="admin.ui.public.label-enabled-true" />}
                         description={
-                          <FormattedMessage id="admin.ui.pages.role.delete-confirm-desc" />
+                          <FormattedMessage id="admin.ui.pages.role.disable-confirm-desc" />
                         }
                         onConfirm={async () => {
-                          const result = await handleDelete(item.id || 0);
+                          const result = await handleEnable({ id: item.id || 0, enabled: false });
                           if (result.success) {
                             await queryRoles();
                           }
                         }}
                       >
                         <a onClick={stopEvent}>
-                          <FormattedMessage id="admin.ui.public.delete-button" />
+                          <FormattedMessage id="admin.ui.public.label-enabled-false" />
                         </a>
                       </Popconfirm>
-                      </Access>
-                    </Flex>
-                  </Flex>
-                )}
-                dataSource={roles}
-                split={true}
-                rowKey="id"
-              />
-            </div>
+                    ) : (
+                      <Popconfirm
+                        key="enable"
+                        onPopupClick={stopEvent}
+                        title={<FormattedMessage id="admin.ui.public.label-enabled-true" />}
+                        description={
+                          <FormattedMessage id="admin.ui.pages.role.enable-confirm-desc" />
+                        }
+                        onConfirm={async () => {
+                          const result = await handleEnable({ id: item.id || 0, enabled: true });
+                          if (result.success) {
+                            await queryRoles();
+                          }
+                        }}
+                      >
+                        <a onClick={stopEvent}>
+                          <FormattedMessage id="admin.ui.public.label-enabled-true" />
+                        </a>
+                      </Popconfirm>
+                    )}
+                  </Access>
+                  <Access accessible={access.hasPermission('admin:system:role:delete')}>
+                    <Popconfirm
+                      key="delete"
+                      onPopupClick={stopEvent}
+                      title={<FormattedMessage id="admin.ui.public.delete-confirm-title" />}
+                      description={
+                        <FormattedMessage id="admin.ui.pages.role.delete-confirm-desc" />
+                      }
+                      onConfirm={async () => {
+                        const result = await handleDelete(item.id || 0);
+                        if (result.success) {
+                          await queryRoles();
+                        }
+                      }}
+                    >
+                      <a onClick={stopEvent}>
+                        <FormattedMessage id="admin.ui.public.delete-button" />
+                      </a>
+                    </Popconfirm>
+                  </Access>
+                </Flex>,
+              ]}
+              onSelect={onRoleChanged}
+            />
           </Flex>
         </Col>
         <Col span={14}>
@@ -372,46 +378,45 @@ const RoleList: React.FC = () => {
               <Typography.Title level={5}>
                 <FormattedMessage id="admin.ui.pages.role.permission-title" />
               </Typography.Title>
-              <Access accessible={access.hasPermission("admin:system:role:grant")}>
-              <div>
-                <Checkbox
-                  style={{ marginRight: 10 }}
-                  value={autoChecked}
-                  defaultChecked={autoChecked}
-                  onChange={(e) => setAutoChecked(e.target.checked)}
-                >
-                  <FormattedMessage id="admin.ui.pages.role.label-auto-check" />
-                </Checkbox>
-                <Checkbox
-                  style={{ marginRight: 10 }}
-                  value={autoCheckAllChildren}
-                  defaultChecked={autoCheckAllChildren}
-                  onChange={(e) => setAutoCheckAllChildren(e.target.checked)}
-                >
-                  <FormattedMessage id="admin.ui.pages.role.label-auto-check-all" />
-                </Checkbox>
-                <Button
-                  disabled={!currentRole}
-                  type="primary"
-                  onClick={async () => {
-                    const result = await handleGrantPermission({
-                      roleId: currentRole?.id || 0,
-                      body: checkedPermissionIds,
-                    });
-                    if (result.success) {
-                      setIsChanged(false);
-                    }
-                  }}
-                >
-                  <SaveOutlined />
-                  <FormattedMessage id="admin.ui.pages.role.permission-save-button" />
-                </Button>
-              </div>
+              <Access accessible={access.hasPermission('admin:system:role:grant')}>
+                <div>
+                  <Checkbox
+                    style={{ marginRight: 10 }}
+                    value={autoChecked}
+                    defaultChecked={autoChecked}
+                    onChange={(e) => setAutoChecked(e.target.checked)}
+                  >
+                    <FormattedMessage id="admin.ui.pages.role.label-auto-check" />
+                  </Checkbox>
+                  <Checkbox
+                    style={{ marginRight: 10 }}
+                    value={autoCheckAllChildren}
+                    defaultChecked={autoCheckAllChildren}
+                    onChange={(e) => setAutoCheckAllChildren(e.target.checked)}
+                  >
+                    <FormattedMessage id="admin.ui.pages.role.label-auto-check-all" />
+                  </Checkbox>
+                  <Button
+                    disabled={!currentRole}
+                    type="primary"
+                    onClick={async () => {
+                      const result = await handleGrantPermission({
+                        roleId: currentRole?.id || 0,
+                        body: checkedPermissionIds,
+                      });
+                      if (result.success) {
+                        setIsChanged(false);
+                      }
+                    }}
+                  >
+                    <SaveOutlined />
+                    <FormattedMessage id="admin.ui.pages.role.permission-save-button" />
+                  </Button>
+                </div>
               </Access>
             </Flex>
-            <div className="list-body-panel-wrapper">
+            <Panel panelStyle={{ padding: 10 }}>
               <Tree
-                className="list-body-panel"
                 showLine={true}
                 showIcon={true}
                 treeData={permissionTree}
@@ -423,7 +428,7 @@ const RoleList: React.FC = () => {
                 onExpand={(keys) => setExpandedKeys(keys)}
                 checkedKeys={{ checked: checkedPermissionIds, halfChecked: [] }}
               />
-            </div>
+            </Panel>
           </Flex>
           {
             <EditForm
@@ -468,14 +473,19 @@ const RoleList: React.FC = () => {
         open={dataScopeDialogOpen}
         dataScope={roleDataScope}
         onCancel={() => handleDataScopeDialogOpen(false)}
-        targetType='ROLE'
+        targetType="ROLE"
         target={currentRole as any}
         onSave={async (dataScope) => {
-            const scopeItems: API.DataScopeItem[] = dataScope.map(it => ({scopeType: it.scopeType, scopeId: it.scopeId} as API.DataScopeItem))
-            const result = await handleGrantDataScope({roleId: currentRole?.id ?? 0, scopeItems: scopeItems})
-            if (result.success) {
-              handleDataScopeDialogOpen(false)
-            }
+          const scopeItems: API.DataScopeItem[] = dataScope.map(
+            (it) => ({ scopeType: it.scopeType, scopeId: it.scopeId } as API.DataScopeItem),
+          );
+          const result = await handleGrantDataScope({
+            roleId: currentRole?.id ?? 0,
+            scopeItems: scopeItems,
+          });
+          if (result.success) {
+            handleDataScopeDialogOpen(false);
+          }
         }}
       />
     </PageContainer>

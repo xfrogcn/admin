@@ -1,20 +1,19 @@
-import { AvatarDropdown, AvatarName, Footer, Question, SelectLang } from '@/components';
+import { AvatarDropdown, AvatarName, Question, SelectLang } from '@/components';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { ProConfigProvider, SettingDrawer } from '@ant-design/pro-components';
 import type { RequestOptions, RunTimeLayoutConfig } from '@umijs/max';
-import { Link, history, useAppData, useIntl, useOutlet } from '@umijs/max';
+import { Link, history, useIntl } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
+import { PageTabs } from './components/PageTabs';
+import { valueTypeMap } from './components/ValueTypes';
 import { urls } from './config';
 import { signinRedirectCallbackPath, signoutRedirectCallbackPath, userManager } from './oauth2';
 import { errorConfig } from './requestErrorConfig';
 import services from './services/swagger';
-import { setIntl } from './utils/messageUtils';
-import { valueTypeMap } from './components/ValueTypes';
 import { getCurrentUserPermissionCodes } from './services/swagger/userApi';
-import React from 'react';
-import { UNSAFE_RouteContext, useRoutes } from 'react-router';
-import { PageTabs } from './components/PageTabs';
+import { setIntl } from './utils/messageUtils';
+import { ConfigProvider, theme } from 'antd';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -86,7 +85,7 @@ export async function getInitialState(): Promise<{
 
   if (history.location.pathname === signoutRedirectCallbackPath) {
     await userManager.signoutRedirectCallback();
-    history.replace("/")
+    history.replace('/');
   }
 
   const currentUser = await fetchUserInfo();
@@ -94,9 +93,9 @@ export async function getInitialState(): Promise<{
     // 获取当前用户权限
     const permissions = await getCurrentUserPermissionCodes();
     const permissionMap: Record<string, true> = {};
-    permissions.forEach(item => {
+    permissions.forEach((item) => {
       permissionMap[item] = true;
-    })
+    });
     return {
       fetchUserInfo,
       currentUser,
@@ -125,7 +124,7 @@ export async function getInitialState(): Promise<{
   };
 }
 
-const contents = []
+const contents = [];
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
@@ -141,14 +140,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // waterMarkProps: {
     //   content: initialState?.currentUser?.name,
     // },
-    footerRender: () => <Footer />,
-    onPageChange: () => {
-      const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        //  history.push(loginPath);
-      }
-    },
+    footerRender: () => null,
+    onPageChange: () => {},
     bgLayoutImgList: [],
     links: isDev
       ? [
@@ -169,9 +162,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
       return (
         <>
-        <ProConfigProvider valueTypeMap={valueTypeMap}>
-          <PageTabs />
+        <ConfigProvider theme={{
+      
+        }}>
+          <ProConfigProvider valueTypeMap={valueTypeMap}>
+            <PageTabs />
           </ProConfigProvider>
+          </ConfigProvider>
           {isDev && (
             <SettingDrawer
               disableUrlParams

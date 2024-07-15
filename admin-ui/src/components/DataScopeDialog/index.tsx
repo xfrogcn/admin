@@ -15,7 +15,6 @@ import {
 import { useMemo, useState } from 'react';
 import DraggableModal, { DraggableModalProps } from '../DraggableModal';
 import OrganizationDialog from '../OrganizationDialog';
-import './index.less';
 
 interface DataScopeDialogProps extends DraggableModalProps {
   targetType: 'USER' | 'ROLE';
@@ -177,7 +176,7 @@ const DataScopeDialog: React.FC<DataScopeDialogProps> = (props: DataScopeDialogP
         title={tilte}
       >
         <Divider />
-        <Tabs tabPosition="left" className="data-scope-dialog-panel">
+        <Tabs tabPosition="left" style={{height: 300, marginTop: 20}}>
           <Tabs.TabPane
             key="organization"
             tab={<FormattedMessage id="admin.ui.components.datascope-dialog.tab-organization" />}

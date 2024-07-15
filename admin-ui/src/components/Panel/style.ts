@@ -27,6 +27,7 @@ const genSelectBoxStyle: GenerateStyle<PanelToken> = (token: PanelToken) => {
         right: 0,
         bottom: 0,
         overflow: 'auto',
+        scrollbarColor: `${token.colorTextPlaceholder} ${token.colorSplit}`
       },
     }
   };

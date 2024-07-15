@@ -1,7 +1,8 @@
 import { findById, getAllFolderNodes } from '@/utils/treeItemUtils';
 import { useIntl } from '@umijs/max';
-import { Input, Tree, TreeDataNode } from 'antd';
+import { Input, Tree, TreeDataNode, theme } from 'antd';
 import React, { Key, useCallback, useEffect, useMemo, useState } from 'react';
+import Panel from '../Panel';
 
 const { Search } = Input;
 
@@ -25,9 +26,10 @@ export interface TreeSelectorProps<TData> {
   className?: string;
   treeClassName?: string;
   style?: React.CSSProperties;
+  treeWrapperStyle?: React.CSSProperties;
   treeStyle?: React.CSSProperties;
   defaultExpandAll?: boolean;
-  onBeforeSelect?: (id: number, selected: boolean) => boolean
+  onBeforeSelect?: (id: number, selected: boolean) => boolean;
 }
 
 function TreeSelector<T>(props: TreeSelectorProps<T>): JSX.Element {
@@ -36,6 +38,7 @@ function TreeSelector<T>(props: TreeSelectorProps<T>): JSX.Element {
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
+  const { token } = theme.useToken();
 
   useEffect(() => {
     if (props.selectedKeys) {
@@ -72,8 +75,9 @@ function TreeSelector<T>(props: TreeSelectorProps<T>): JSX.Element {
     const loop = (data: TreeItem<T>[]): TreeDataNode[] => {
       return data.map((item) => {
         const strTitle = item.name as string;
-        const index = strTitle.indexOf(searchValue);
+        const index = strTitle.toUpperCase().indexOf(searchValue.toUpperCase());
         const beforeStr = strTitle.substring(0, index);
+        const actualSearchValue = strTitle.substring(index, index + searchValue.length);
         const afterStr = strTitle.slice(index + searchValue.length);
         if (index >= 0) {
           parentIds.push(...item.parentIds);
@@ -82,7 +86,7 @@ function TreeSelector<T>(props: TreeSelectorProps<T>): JSX.Element {
           index > -1 ? (
             <span>
               {beforeStr}
-              <span className="site-tree-search-value">{searchValue}</span>
+              <span style={{ color: token.colorError }}>{actualSearchValue}</span>
               {afterStr}
             </span>
           ) : (
@@ -155,9 +159,13 @@ function TreeSelector<T>(props: TreeSelectorProps<T>): JSX.Element {
         value={searchValue}
         enterButton
       />
-      <div className={props.className} style={props.treeStyle}>
+      <Panel
+        className={props.className}
+        style={props.treeWrapperStyle}
+        panelStyle={{ paddingTop: 8, paddingBottom: 8, ...props.treeStyle }}
+        panelClassName={props.treeClassName}
+      >
         <Tree
-          className={props.treeClassName}
           treeData={treeData}
           onExpand={onExpand}
           expandedKeys={expandedKeys}
@@ -171,7 +179,7 @@ function TreeSelector<T>(props: TreeSelectorProps<T>): JSX.Element {
           onSelect={onSelect}
           onCheck={onCheck as any}
         />
-      </div>
+      </Panel>
     </div>
   );
 }
