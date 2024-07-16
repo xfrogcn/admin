@@ -38,6 +38,7 @@ public class LangLocalRepositoryImpl implements LangLocalRepository {
         }
 
         return langLocalPOs.stream()
+                .filter(it -> it.getLocalValue() != null)
                 .collect(Collectors.toMap(LangLocalPO::getLangCorpusCode, LangLocalPO::getLocalValue, (a, b) -> a));
     }
 }

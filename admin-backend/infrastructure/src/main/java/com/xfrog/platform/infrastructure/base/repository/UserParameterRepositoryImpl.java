@@ -33,6 +33,7 @@ public class UserParameterRepositoryImpl implements UserParameterRepository {
         }
 
         return parameterPOS.stream()
+                .filter(it -> it.getParameterValue() != null)
                 .collect(Collectors.toMap(UserParameterPO::getParameterName, UserParameterPO::getParameterValue, (a, b) -> a));
     }
 }
