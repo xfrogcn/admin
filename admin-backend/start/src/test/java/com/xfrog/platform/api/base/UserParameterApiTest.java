@@ -15,8 +15,8 @@ public class UserParameterApiTest  extends BaseBaseApiTest {
     @Test
     @SneakyThrows
     @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_LANG, BaseApiFixtures.SQL_TRUNCATE_USER_PARAMTERS})
-    void createLangCorpus_should_success() {
-        request(get("/api/user-parameters"))
+    void getUserSettings_should_success() {
+        request(get(url("/api/user-parameters/{application}", "admin-ui")))
                 .andExpect(status().isOk());
     }
 
@@ -29,7 +29,7 @@ public class UserParameterApiTest  extends BaseBaseApiTest {
                 .parameters(Map.of("theme", "dark", "language", "zh-CN"))
                 .build();
 
-        request(put("/api/user-parameters", requestDTO))
+        request(put(url("/api/user-parameters/{application}", "admin-ui"), requestDTO))
                 .andExpect(status().isOk());
     }
 }

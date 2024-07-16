@@ -14,12 +14,12 @@ public class UserParameterController implements UserParameterApi {
 
 
     @Override
-    public UserSettingsDTO getUserSettings() {
-        return userParameterService.getUserSettings();
+    public UserSettingsDTO getUserSettings(String application) {
+        return userParameterService.getUserSettings(application);
     }
 
     @Override
-    public void updateUserParameters(UpdateUserParameterRequestDTO requestDTO) {
-        userParameterService.updateUserParameters(requestDTO);
+    public void updateUserParameters(String application, UpdateUserParameterRequestDTO requestDTO) {
+        userParameterService.updateUserParameters(application, requestDTO);
     }
 }

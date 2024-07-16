@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Tag(name = "UserParameterApi", description = "用户参数接口")
 @RequestMapping("/api/user-parameters")
 public interface UserParameterApi {
-    @GetMapping()
+    @GetMapping("/{application}")
     @Operation(summary = "获取用户当前所有配置参数")
-    UserSettingsDTO getUserSettings();
+    UserSettingsDTO getUserSettings(@PathVariable(name = "application") String application);
 
-    @PutMapping
+    @PutMapping("/{application}")
     @Operation(summary = "更新用户参数")
-    void updateUserParameters(@RequestBody @Valid UpdateUserParameterRequestDTO requestDTO);
+    void updateUserParameters(@PathVariable(name = "application") String application, @RequestBody @Valid UpdateUserParameterRequestDTO requestDTO);
 }

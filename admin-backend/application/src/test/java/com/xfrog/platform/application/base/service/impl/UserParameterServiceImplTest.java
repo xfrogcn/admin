@@ -37,7 +37,7 @@ class UserParameterServiceImplTest {
     @Test
     void getUserSettings_ShouldReturnEmptySettingsWhenNotHasCurrentUser() {
 
-        UserSettingsDTO userSettings = userParameterService.getUserSettings();
+        UserSettingsDTO userSettings = userParameterService.getUserSettings("admin");
 
         assertThat(userSettings).isNotNull();
         assertThat(userSettings.getLangs()).isEmpty();
@@ -53,10 +53,10 @@ class UserParameterServiceImplTest {
                 .thenReturn(List.of(
                         LangDTOFixtures.defaultLangDTO().code("zh-CN").build()
                 ));
-        when(userParameterRepository.queryUserParameters(1L))
+        when(userParameterRepository.queryUserParameters(1L, application))
                 .thenReturn(Map.of("lang", "zh-CN"));
 
-        UserSettingsDTO userSettings = userParameterService.getUserSettings();
+        UserSettingsDTO userSettings = userParameterService.getUserSettings(application);
         assertThat(userSettings).isNotNull();
         assertThat(userSettings.getLangs()).hasSize(1);
         assertThat(userSettings.getLangs().get(0).getCode()).isEqualTo("zh-CN");

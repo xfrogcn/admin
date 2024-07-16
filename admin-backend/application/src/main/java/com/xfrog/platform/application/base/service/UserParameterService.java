@@ -5,7 +5,7 @@ import com.xfrog.platform.application.base.dto.UserSettingsDTO;
 
 public interface UserParameterService {
 
-    UserSettingsDTO getUserSettings();
+    UserSettingsDTO getUserSettings(String application);
 
-    void updateUserParameters(UpdateUserParameterRequestDTO requestDTO);
+    void updateUserParameters(String application, UpdateUserParameterRequestDTO requestDTO);
 }
