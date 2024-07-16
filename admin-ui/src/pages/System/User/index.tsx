@@ -22,9 +22,9 @@ import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
 import { Access, FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { Button, Col, Dropdown, Flex, Popconfirm, Row, Typography, theme } from 'antd';
+import { Button, Col, ConfigProvider, Dropdown, Flex, Popconfirm, Row, Typography, theme } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import EditUserDialog from './components/EditForm';
 import UserRolesDialog from './components/UserRolesForm';
 import ViewUserDataScopeDialog from './components/ViewUserDataScopeDialog';
@@ -99,7 +99,8 @@ const UserList: React.FC = () => {
 
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
-  const {token} = theme.useToken();
+  const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
+  const linkButtonCls = getPrefixCls('link-button');
 
   const listUsers = useCallback(
     (params: queryCondition, sort: any, filter: any) => {
@@ -350,7 +351,7 @@ const UserList: React.FC = () => {
               getPopupContainer={() => document.body}
               menu={{ items: moreAction, onClick: (e) => moreActionClick(e, record) }}
             >
-              <LinkButton type='primary'>
+              <LinkButton className={`${linkButtonCls} ${linkButtonCls}-primary`} type='primary'>
                 <FormattedMessage id="admin.ui.public.label-more" /> <DownOutlined />
               </LinkButton>
             </Dropdown>,
