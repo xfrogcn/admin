@@ -16,6 +16,16 @@ public class LangDTOFixtures {
                 .name("中文");
     }
 
+    public static LangDTO.LangDTOBuilder defaultLangDTO() {
+        return LangDTO.builder()
+                .application(LangFixtures.DEFAULT_APPLICATION)
+                .code("zh-CN")
+                .enabled(true)
+                .id(1L)
+                .localName("中文")
+                .name("中文");
+    }
+
     public static UpdateLangRequestDTO.UpdateLangRequestDTOBuilder defaultUpdateLangRequestDTO() {
         return UpdateLangRequestDTO.builder()
                 .localName("中文")
