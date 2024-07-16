@@ -24,4 +24,6 @@ public interface LangCorpusService {
     LangCorpusDTO getLangCorpus(Long langCorpusId);
 
     void configLangLocal(Long langCorpusId, Map<String, String> langLocal);
+
+    Map<String, String> getLangLocal(String application, String langCode);
 }

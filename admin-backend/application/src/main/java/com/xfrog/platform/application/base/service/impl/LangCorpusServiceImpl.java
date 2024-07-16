@@ -149,6 +149,11 @@ public class LangCorpusServiceImpl implements LangCorpusService {
         fillLanguageCorpusLocal(langCorpus.getApplication(), List.of(langCorpus), Map.of(langCorpus.getCorpusCode(), langLocal));
     }
 
+    @Override
+    public Map<String, String> getLangLocal(String application, String langCode) {
+        return langLocalRepository.queryByApplicationAndLangCode(application, langCode);
+    }
+
     protected void fillLanguageCorpusLocal(String application, List<LangCorpus> langCorpus, Map<String, Map<String, String>> localMap) {
         if (CollectionUtils.isEmpty(langCorpus)) {
             return;

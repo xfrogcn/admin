@@ -50,4 +50,10 @@ public interface LangCorpusApi {
     @PutMapping("/{langCorpusId}/local")
     @Operation(summary = "配置语料本地化")
     void configLangLocal(@Valid @PathVariable("langCorpusId") Long langCorpusId, @RequestBody @Valid @NotNull Map<String, String> langLocal);
+
+    @GetMapping("/local/{application}/{langCode}")
+    @Operation(summary = "获取指定语种的本地化语言")
+    Map<String, String> getLangLocal(
+            @PathVariable(name = "application", required = true) String application,
+            @PathVariable(name = "langCode", required = true) String langCode);
 }

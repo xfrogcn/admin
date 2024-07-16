@@ -8,6 +8,7 @@ import com.xfrog.platform.application.base.dto.LangDTOFixtures;
 import com.xfrog.platform.application.base.dto.QueryLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.dto.UpdateLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.repository.LangCorpusRepository;
+import com.xfrog.platform.application.base.repository.LangLocalRepository;
 import com.xfrog.platform.domain.base.aggregate.Lang;
 import com.xfrog.platform.domain.base.aggregate.LangCorpus;
 import com.xfrog.platform.domain.base.aggregate.LangFixtures;
@@ -38,6 +39,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,6 +58,9 @@ class LangCorpusServiceImplTest {
 
     @Mock
     private LangCorpusRepository langCorpusRepository;
+
+    @Mock
+    private LangLocalRepository langLocalRepository;
 
 
     @InjectMocks
@@ -217,6 +222,19 @@ class LangCorpusServiceImplTest {
 
         verify(langCorpusDomainRepository, times(1))
                 .save(argThat(langCorpus -> !langCorpus.getEnabled()));
+    }
+
+    @Test
+    void getLangLocal_ShouldReturnSuccess() {
+        doReturn(Map.of("test", "test"))
+                .when(langLocalRepository)
+                .queryByApplicationAndLangCode("admin-ui", "zh-CN");
+
+        Map<String, String> result = langCorpusService.getLangLocal("admin-ui", "zh-CN");
+
+        assertThat(result).hasSize(1);
+        verify(langLocalRepository, timeout(1))
+                .queryByApplicationAndLangCode("admin-ui", "zh-CN");
     }
 
     @Test

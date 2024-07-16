@@ -60,4 +60,9 @@ public class LangCorpusController implements LangCorpusApi {
     public void configLangLocal(Long langCorpusId, Map<String, String> langLocal) {
         langCorpusService.configLangLocal(langCorpusId, langLocal);
     }
+
+    @Override
+    public Map<String, String> getLangLocal(String application, String langCode) {
+        return langCorpusService.getLangLocal(application, langCode);
+    }
 }

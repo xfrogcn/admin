@@ -116,5 +116,11 @@ public class LangCorpusApiTest extends BaseBaseApiTest {
                 .andExpect(status().isOk());
     }
 
-
+    @Test
+    @SneakyThrows
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_LANG_CORPUS, BaseApiFixtures.SQL_TRUNCATE_LANG})
+    void getLangLocal_should_success() {
+        request(get(url("/api/langcorpus/local/{application}/{langCode}", "admin-ui", "zh-CN")))
+                .andExpect(status().isOk());
+    }
 }
