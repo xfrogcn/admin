@@ -182,6 +182,26 @@ class TenantServiceImplTest {
     }
 
     @Test
-    void enableTenant() {
+    void enableTenant_ShouldThrowNotFoundExceptionWhenTenantNotFound() {
+        // Given
+        when(tenantDomainRepository.findById(1L)).thenReturn(null);
+
+        // When & Then
+        assertThrows(NotFoundException.class, () -> tenantService.enableTenant(1L, true));
+    }
+
+    @Test
+    void enableTenantShouldUpdateTenantStatusWhenFound() {
+        // Given
+        Tenant tenant = PermissionFixtures.createDefaultTenant().enabled(false).build();
+
+        when(tenantDomainRepository.findById(tenant.getId())).thenReturn(tenant);
+
+        // When
+        tenantService.enableTenant(tenant.getId(), true);
+
+        // Then
+        verify(tenantDomainRepository, times(1))
+                .save(argThat(Tenant::getEnabled));
     }
 }

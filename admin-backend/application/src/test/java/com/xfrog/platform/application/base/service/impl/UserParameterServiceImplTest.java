@@ -44,7 +44,7 @@ class UserParameterServiceImplTest {
 
     @Test
     void getUserSettings_ShouldReturnEmptySettingsWhenNotHasCurrentUser() {
-
+        CurrentPrincipalContext.clearCurrentPrincipal();
         UserSettingsDTO userSettings = userParameterService.getUserSettings("admin");
 
         assertThat(userSettings).isNotNull();
@@ -74,6 +74,7 @@ class UserParameterServiceImplTest {
 
     @Test
     void updateUserParameters_ShouldDirectReturnWhenNotHasCurrentUser() {
+        CurrentPrincipalContext.clearCurrentPrincipal();
         userParameterService.updateUserParameters("admin", new UpdateUserParameterRequestDTO());
         verify(userParameterDomainRepository, never())
                 .findByUserIdAndApplicationAndNames(anyLong(), anyString(), anyList());

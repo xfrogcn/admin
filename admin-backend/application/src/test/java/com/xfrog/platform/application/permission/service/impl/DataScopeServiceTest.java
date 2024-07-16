@@ -161,6 +161,12 @@ class DataScopeServiceTest {
     }
 
     @Test
+    void getUserDataScopes_ShouldReturnEmptyList() {
+        List<DataScopeDTO> dataScopes =  dataScopeService.getUserDataScopes(null);
+        assertThat(dataScopes).isEmpty();
+    }
+
+    @Test
     void fillOrganizationScopeInfo_WithNonEmptyDataScopesAndOrganizations_ShouldFillScopeInfo() {
         // Arrange
         DataScopeDTO dataScope = PermissionDTOFixtures.defaultDataScopeDTO()
