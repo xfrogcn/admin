@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-07-16-0001
+      author: hb
+      changes:
+        - createTable:
+            tableName: user_parameters
+            remarks: '用户参数表'
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_user_parameters_id
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    comments: '用户ID'
+              - column:
+                  name: application
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+                    comments: '所属应用'
+              - column:
+                  name: parameter_name
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+                    comments: '参数名称'
+              - column:
+                  name: parameter_value
+                  type: varchar(512)
+                  constraints:
+                    comments: '参数值'
+              - column:
+                  name: created_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_time
+                  type: timestamp
+              - column:
+                  name: updated_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_time
+                  type: timestamp
+              - column:
+                  name: deleted
+                  type: tinyint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted_by
+                  type: bigint
+              - column:
+                  name: deleted_time
+                  type: timestamp
+        - createIndex:
+            tableName: user_parameters
+            indexName: idx_user_parameters_user_id_application
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: application
