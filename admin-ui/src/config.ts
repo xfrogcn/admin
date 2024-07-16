@@ -18,6 +18,7 @@ declare global {
     authUrl?: string;
     apiUrl?: string;
     uiUrl?: string;
+    applicationCode?: string;
   }
 }
 
@@ -26,3 +27,7 @@ export const urls = {
   api: () => (window.apiUrl || isDev ? apiUrlMap.dev.api : apiUrlMap.prod.api),
   ui: () => (window.uiUrl || isDev ? apiUrlMap.dev.ui : apiUrlMap.prod.ui),
 };
+
+export function applicationCode() {
+  return window.applicationCode || 'admin-ui';
+}

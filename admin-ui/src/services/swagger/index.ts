@@ -11,8 +11,10 @@ import * as permissionItemApi from './permissionItemApi';
 import * as roleApi from './roleApi';
 import * as tenantApi from './tenantApi';
 import * as userApi from './userApi';
+import * as userParameterApi from './userParameterApi';
 export default {
   userApi,
+  userParameterApi,
   tenantApi,
   roleApi,
   langCorpusApi,

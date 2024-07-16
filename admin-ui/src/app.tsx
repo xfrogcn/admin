@@ -3,21 +3,20 @@ import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { ProConfigProvider, SettingDrawer } from '@ant-design/pro-components';
 import type { RequestOptions, RunTimeLayoutConfig } from '@umijs/max';
-import { Link, history, useIntl } from '@umijs/max';
+import { Link, addLocale, getLocale, history, setLocale, useIntl } from '@umijs/max';
+import { ConfigProvider } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 import { PageTabs } from './components/PageTabs';
 import { valueTypeMap } from './components/ValueTypes';
-import { urls } from './config';
+import { applicationCode, urls } from './config';
 import { signinRedirectCallbackPath, signoutRedirectCallbackPath, userManager } from './oauth2';
 import { errorConfig } from './requestErrorConfig';
 import services from './services/swagger';
+import { getLangLocal } from './services/swagger/langCorpusApi';
 import { getCurrentUserPermissionCodes } from './services/swagger/userApi';
+import { getUserSettings } from './services/swagger/userParameterApi';
 import { setIntl } from './utils/messageUtils';
-import { ConfigProvider, theme } from 'antd';
 const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/user/login';
-
-const shouldAuth = true; // process.env.NODE_ENV === 'production';
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -27,6 +26,8 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUserInfoDTO;
   permissions?: Record<string, true>;
   loading?: boolean;
+  langs?: API.LangDTO[];
+  userParameters?: Record<string, string>;
   fetchUserInfo?: () => Promise<any | undefined>;
 }> {
   // 动态载入多语言
@@ -96,11 +97,27 @@ export async function getInitialState(): Promise<{
     permissions.forEach((item) => {
       permissionMap[item] = true;
     });
+
+    const userSettings = await getUserSettings({ application: applicationCode() });
+    const userLang = userSettings.parameters?.lang || getLocale() || 'zh-CN';
+
+    const langLocale = await getLangLocal({ application: applicationCode(), langCode: userLang });
+    console.log(userLang, langLocale, getLocale());
+    addLocale(userLang, langLocale, {
+      momentLocale: userLang,
+      antd: { locale: userLang },
+    });
+    if (userLang !== getLocale()) {
+      setLocale(userLang, false);
+    }
+
     return {
       fetchUserInfo,
       currentUser,
       permissions: permissionMap,
       settings: defaultSettings as Partial<LayoutSettings>,
+      langs: userSettings.langs,
+      userParameters: userSettings.parameters,
     };
   }
 
@@ -124,7 +141,6 @@ export async function getInitialState(): Promise<{
   };
 }
 
-const contents = [];
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
@@ -162,12 +178,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
       return (
         <>
-        <ConfigProvider theme={{
-      
-        }}>
-          <ProConfigProvider valueTypeMap={valueTypeMap}>
-            <PageTabs />
-          </ProConfigProvider>
+          <ConfigProvider theme={{}}>
+            <ProConfigProvider valueTypeMap={valueTypeMap}>
+              <PageTabs />
+            </ProConfigProvider>
           </ConfigProvider>
           {isDev && (
             <SettingDrawer

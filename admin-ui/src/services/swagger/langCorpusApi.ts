@@ -111,3 +111,17 @@ export async function listLangCorpus(
     ...(options || {}),
   });
 }
+
+/** 获取指定语种的本地化语言 GET /api/langcorpus/local/${param0}/${param1} */
+export async function getLangLocal(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getLangLocalParams,
+  options?: { [key: string]: any },
+) {
+  const { application: param0, langCode: param1, ...queryParams } = params;
+  return request<Record<string, any>>(`/api/langcorpus/local/${param0}/${param1}`, {
+    method: 'GET',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}

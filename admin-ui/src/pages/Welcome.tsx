@@ -1,5 +1,5 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
+import { FormattedMessage, useModel } from '@umijs/max';
 import { Card, theme } from 'antd';
 import React from 'react';
 
@@ -32,6 +32,7 @@ const InfoCard: React.FC<{
         flex: 1,
       }}
     >
+      <FormattedMessage id="test" />
       <div
         style={{
           display: 'flex',

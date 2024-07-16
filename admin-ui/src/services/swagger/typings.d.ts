@@ -1,6 +1,6 @@
 declare namespace API {
   type changeCurrentUserPasswordParams = {
-    arg0: string;
+    newPassword: string;
   };
 
   type configLangLocalParams = {
@@ -322,6 +322,11 @@ declare namespace API {
     langCorpusId: number;
   };
 
+  type getLangLocalParams = {
+    application: string;
+    langCode: string;
+  };
+
   type getLanguageParams = {
     langId: number;
   };
@@ -340,6 +345,10 @@ declare namespace API {
 
   type getUserDetailParams = {
     userId: number;
+  };
+
+  type getUserSettingsParams = {
+    application: string;
   };
 
   type GrantDataScopeRequestDTO = {
@@ -603,6 +612,8 @@ declare namespace API {
     adminUserId?: number;
     /** 租户管理员登录账号 */
     adminUserName?: string;
+    /** 租户根组织ID */
+    organizationId?: number;
   };
 
   type updateDicItemParams = {
@@ -721,6 +732,15 @@ declare namespace API {
     memo?: string;
   };
 
+  type UpdateUserParameterRequestDTO = {
+    /** 用户参数 */
+    parameters?: Record<string, any>;
+  };
+
+  type updateUserParametersParams = {
+    application: string;
+  };
+
   type updateUserParams = {
     userId: number;
   };
@@ -769,6 +789,15 @@ declare namespace API {
     createdTime?: string;
     /** 角色列表 */
     roles?: RoleDTO[];
+  };
+
+  type UserSettingsDTO = {
+    /** 用户ID */
+    userId?: number;
+    /** 语种列表 */
+    langs?: LangDTO[];
+    /** 用户参数 */
+    parameters?: Record<string, any>;
   };
 
   type ValidationResultItem = {
