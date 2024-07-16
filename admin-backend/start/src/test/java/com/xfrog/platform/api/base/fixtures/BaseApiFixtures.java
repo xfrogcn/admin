@@ -12,6 +12,7 @@ import com.xfrog.platform.domain.base.repository.DicItemDomainRepository;
 import com.xfrog.platform.domain.base.repository.LangCorpusDomainRepository;
 import com.xfrog.platform.domain.base.repository.LangDomainRepository;
 import com.xfrog.platform.domain.base.repository.LangLocalDomainRepository;
+import com.xfrog.platform.domain.base.repository.UserParameterDomainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseApiFixtures {
@@ -20,6 +21,8 @@ public class BaseApiFixtures {
 
     public final static String SQL_TRUNCATE_LANG_CORPUS = "truncate table lang_corpus";
     public final static String SQL_TRUNCATE_LANG = "truncate table langs";
+
+    public final static String SQL_TRUNCATE_USER_PARAMTERS = "truncate table user_parameters";
 
     @Autowired
     private DicDomainRepository dicDomainRepository;
@@ -33,6 +36,9 @@ public class BaseApiFixtures {
     private LangDomainRepository langDomainRepository;
     @Autowired
     private LangLocalDomainRepository langLocalDomainRepository;
+
+    @Autowired
+    private UserParameterDomainRepository userParameterDomainRepository;
 
     public Dic createAndSaveDic() {
         Dic dic = DicFixtures.createDefaultDic().build();
