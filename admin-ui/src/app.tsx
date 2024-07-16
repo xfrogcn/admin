@@ -62,8 +62,6 @@ export async function getInitialState(): Promise<{
         user = await userManager.getUser();
       }
 
-      console.log(user);
-
       if (user) {
         // 获取当前用户信息
         const userInfo: API.UserDTO = await services.userApi.getCurrentUserDetail();
@@ -99,7 +97,7 @@ export async function getInitialState(): Promise<{
     });
 
     const userSettings = await getUserSettings({ application: applicationCode() });
-    const userLang = userSettings.parameters?.lang || getLocale() || 'zh-CN';
+    const userLang = userSettings.parameters?.language || getLocale() || 'zh-CN';
 
     const langLocale = await getLangLocal({ application: applicationCode(), langCode: userLang });
     console.log(userLang, langLocale, getLocale());
@@ -145,7 +143,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-    actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+    actionsRender: () => [<Question key="doc" />, <SelectLang langs={initialState?.langs} key="SelectLang" />],
     avatarProps: {
       // src: initialState?.currentUser?.avatar,
       title: <AvatarName />,

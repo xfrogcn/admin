@@ -1,4 +1,5 @@
 export default {
+  "admin.ui.public.language": "语言",
   "admin.ui.public.option-button": "操作",
   "admin.ui.public.processing-text": "操作中",
   "admin.ui.public.process-succeed-text": "操作成功",
