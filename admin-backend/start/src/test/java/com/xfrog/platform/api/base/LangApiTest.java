@@ -1,6 +1,6 @@
 package com.xfrog.platform.api.base;
 
-import com.xfrog.platform.api.base.fixtures.LangApiFixtures;
+import com.xfrog.platform.api.base.fixtures.BaseApiFixtures;
 import com.xfrog.platform.application.base.dto.CreateLangRequestDTO;
 import com.xfrog.platform.application.base.dto.LangDTOFixtures;
 import com.xfrog.platform.application.base.dto.QueryLangRequestDTO;
@@ -9,7 +9,6 @@ import com.xfrog.platform.domain.base.aggregate.Lang;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -24,7 +23,7 @@ public class LangApiTest extends BaseBaseApiTest {
 
     @Test
     @SneakyThrows
-    @Sql(statements = {LangApiFixtures.SQL_TRUNCATE_LANG_CORPUS, LangApiFixtures.SQL_TRUNCATE_LANG})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_LANG_CORPUS, BaseApiFixtures.SQL_TRUNCATE_LANG})
     void createLanguage_should_success() {
         CreateLangRequestDTO requestDTO = LangDTOFixtures.defaultCreateLangRequestDTO().build();
         request(post("/api/langs", requestDTO))
@@ -33,7 +32,7 @@ public class LangApiTest extends BaseBaseApiTest {
 
     @Test
     @SneakyThrows
-    @Sql(statements = {LangApiFixtures.SQL_TRUNCATE_LANG})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_LANG})
     void listLanguages_should_success() {
         QueryLangRequestDTO requestDTO = QueryLangRequestDTO.builder()
                 .pageNum(1)
@@ -46,16 +45,16 @@ public class LangApiTest extends BaseBaseApiTest {
 
     @Test
     @SneakyThrows
-    @Sql(statements = {LangApiFixtures.SQL_TRUNCATE_LANG})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_LANG})
     void getLanguage_should_success() {
         request(get("/api/langs/1"))
                 .andExpect(status().isOk());
     }
     @Test
     @SneakyThrows
-    @Sql(statements = LangApiFixtures.SQL_TRUNCATE_LANG)
+    @Sql(statements = BaseApiFixtures.SQL_TRUNCATE_LANG)
     void updateLanguage_should_success() {
-        Lang lang = langApiFixtures.createAndSaveLang();
+        Lang lang = baseApiFixtures.createAndSaveLang();
 
         UpdateLangRequestDTO updateLangRequestDTO = LangDTOFixtures.defaultUpdateLangRequestDTO()
                 .build();
@@ -66,9 +65,9 @@ public class LangApiTest extends BaseBaseApiTest {
 
     @Test
     @SneakyThrows
-    @Sql(statements = {LangApiFixtures.SQL_TRUNCATE_LANG_CORPUS, LangApiFixtures.SQL_TRUNCATE_LANG})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_LANG_CORPUS, BaseApiFixtures.SQL_TRUNCATE_LANG})
     void enableLanguage_should_success() {
-        Lang lang = langApiFixtures.createAndSaveLang();
+        Lang lang = baseApiFixtures.createAndSaveLang();
 
         request(post(url("/api/langs/{langId}/true", lang.getId()), null))
                 .andExpect(status().isOk());
@@ -79,9 +78,9 @@ public class LangApiTest extends BaseBaseApiTest {
 
     @Test
     @SneakyThrows
-    @Sql(statements = LangApiFixtures.SQL_TRUNCATE_LANG)
+    @Sql(statements = BaseApiFixtures.SQL_TRUNCATE_LANG)
     void deleteLanguage_should_success() {
-        Lang lang = langApiFixtures.createAndSaveLang();
+        Lang lang = baseApiFixtures.createAndSaveLang();
 
         request(delete(url("/api/langs/{langId}", lang.getId()), null))
                 .andExpect(status().isOk());

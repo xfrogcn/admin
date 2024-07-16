@@ -1,6 +1,6 @@
 package com.xfrog.platform.api.base;
 
-import com.xfrog.platform.api.base.fixtures.DicApiFixtures;
+import com.xfrog.platform.api.base.fixtures.BaseApiFixtures;
 import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.CreateDicRequestDTO;
 import com.xfrog.platform.application.base.dto.DicDTOFixtures;
@@ -30,7 +30,7 @@ public class DicApiTest extends BaseBaseApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {DicApiFixtures.SQL_TRUNCATE_DIC})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_DIC})
     void createDic_ShouldSuccessfully() {
         CreateDicRequestDTO requestDTO = DicDTOFixtures.defaultCreateDicRequestDTO().build();
         request(post("/api/dics", requestDTO))
@@ -39,7 +39,7 @@ public class DicApiTest extends BaseBaseApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {DicApiFixtures.SQL_TRUNCATE_DIC})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_DIC})
     void listDics_ShouldSuccessfully() {
         QueryDicRequestDTO requestDTO = QueryDicRequestDTO.builder()
                 .pageNum(1)
@@ -52,10 +52,10 @@ public class DicApiTest extends BaseBaseApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {DicApiFixtures.SQL_TRUNCATE_DIC, DicApiFixtures.SQL_TRUNCATE_DIC_ITEM})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_DIC, BaseApiFixtures.SQL_TRUNCATE_DIC_ITEM})
     void getDic_ShouldSuccessfully() {
-        Dic dic = dicApiFixtures.createAndSaveDic();
-        DicItem dicItem = dicApiFixtures.createAndSaveDicItem(dic.getId());
+        Dic dic = baseApiFixtures.createAndSaveDic();
+        DicItem dicItem = baseApiFixtures.createAndSaveDicItem(dic.getId());
         request(get(url("/api/dics/{dicId}", dic.getId())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.dicItems[0].value").value(dicItem.getValue()));
@@ -63,10 +63,10 @@ public class DicApiTest extends BaseBaseApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {DicApiFixtures.SQL_TRUNCATE_DIC, DicApiFixtures.SQL_TRUNCATE_DIC_ITEM})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_DIC, BaseApiFixtures.SQL_TRUNCATE_DIC_ITEM})
     void getDicByTypes_ShouldSuccessfully() {
-        Dic dic = dicApiFixtures.createAndSaveDic();
-        DicItem dicItem = dicApiFixtures.createAndSaveDicItem(dic.getId());
+        Dic dic = baseApiFixtures.createAndSaveDic();
+        DicItem dicItem = baseApiFixtures.createAndSaveDicItem(dic.getId());
         request(post("/api/dics/list/by-types", List.of(dic.getType())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].type").value(dic.getType()))
@@ -75,9 +75,9 @@ public class DicApiTest extends BaseBaseApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {DicApiFixtures.SQL_TRUNCATE_DIC})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_DIC})
     void updateDic_ShouldSuccessfully() {
-        Dic dic = dicApiFixtures.createAndSaveDic();
+        Dic dic = baseApiFixtures.createAndSaveDic();
         UpdateDicRequestDTO requestDTO = DicDTOFixtures.defaultUpdateDicRequestDTO().build();
         request(post(url("/api/dics/{dicId}", dic.getId()), requestDTO))
                 .andExpect(status().isOk());
@@ -85,18 +85,18 @@ public class DicApiTest extends BaseBaseApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {DicApiFixtures.SQL_TRUNCATE_DIC})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_DIC})
     void deleteDic_ShouldSuccessfully() {
-        Dic dic = dicApiFixtures.createAndSaveDic();
+        Dic dic = baseApiFixtures.createAndSaveDic();
         request(delete(url("/api/dics/{dicId}" , dic.getId()), null))
                 .andExpect(status().isOk());
     }
 
     @SneakyThrows
     @Test
-    @Sql(statements = {DicApiFixtures.SQL_TRUNCATE_DIC, DicApiFixtures.SQL_TRUNCATE_DIC_ITEM})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_DIC, BaseApiFixtures.SQL_TRUNCATE_DIC_ITEM})
     void createDicItem_ShouldSuccessfully() {
-        Dic dic = dicApiFixtures.createAndSaveDic();
+        Dic dic = baseApiFixtures.createAndSaveDic();
         CreateDicItemRequestDTO requestDTO = DicDTOFixtures.defaultCreateDicItemRequestDTO().build();
         request(post(url("/api/dics/{dicId}/items", dic.getId()), requestDTO))
                 .andExpect(status().isOk());
@@ -104,10 +104,10 @@ public class DicApiTest extends BaseBaseApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {DicApiFixtures.SQL_TRUNCATE_DIC, DicApiFixtures.SQL_TRUNCATE_DIC_ITEM})
+    @Sql(statements = {BaseApiFixtures.SQL_TRUNCATE_DIC, BaseApiFixtures.SQL_TRUNCATE_DIC_ITEM})
     void updateDicItem_ShouldSuccessfully() {
-        Dic dic = dicApiFixtures.createAndSaveDic();
-        DicItem dicItem = dicApiFixtures.createAndSaveDicItem(dic.getId());
+        Dic dic = baseApiFixtures.createAndSaveDic();
+        DicItem dicItem = baseApiFixtures.createAndSaveDicItem(dic.getId());
 
         UpdateDicItemRequestDTO requestDTO = DicDTOFixtures.defaultUpdateDicItemRequestDTO().build();
 
