@@ -2,6 +2,7 @@ import type { EditableProTableProps, ParamsType, ProTableProps } from '@ant-desi
 import { EditableProTable, ProTable } from '@ant-design/pro-components';
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer'
+import { useTableStyles } from '../ProTablePage';
 
 const useSize = (target: React.MutableRefObject<any>): {width: number, height: number} => {
   const [size, setSize] = React.useState<any>()
@@ -55,11 +56,14 @@ export default function EditableProTablePage<DataType extends Record<string, any
     
   }, [size])
 
+  const tabeClassName = useTableStyles();
+
   const {style, className, ...restProps} = props;
 
   return (
         <div className={`table-page-wrapper ${className}`} style={style} ref={wrapperRef as any}>
           <EditableProTable<DataType, ParamsType>
+            tableClassName={tabeClassName}
             {...restProps as any}
             options={{fullScreen: true, ...props.options}}
             scroll = {{y: scrollY, x: props.width}}

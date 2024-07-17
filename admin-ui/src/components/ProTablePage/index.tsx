@@ -1,7 +1,23 @@
 import type { ParamsType, ProTableProps } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
+import React, { CSSProperties, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer'
+import { unit } from '@ant-design/cssinjs';
+import { css } from '@emotion/css';
+import { theme } from 'antd';
+
+export const useTableStyles = () => {
+  const { token } = theme.useToken();
+  return css`
+    .ant-table-container {
+      border-bottom: ${unit(token.lineWidth)} solid ${token.colorBorderSecondary};
+      border-left: ${unit(token.lineWidth)} solid ${token.colorBorderSecondary};
+    }
+    .ant-table-tbody>tr.ant-table-placeholder>td {
+      border: none;
+    }
+  `;
+};
 
 const useSize = (target: React.MutableRefObject<any>): {width: number, height: number} => {
   const [size, setSize] = React.useState<any>()
@@ -55,6 +71,8 @@ export default function ProTablePage<DataType extends Record<string, any>, Param
     
   }, [size])
 
+  const tabeClassName = useTableStyles();
+
   const {style, className, ...restProps} = props;
   let pagination = props.pagination
   if (pagination === undefined 
@@ -66,6 +84,7 @@ export default function ProTablePage<DataType extends Record<string, any>, Param
         <div className={`table-page-wrapper ${className}`} style={style} ref={wrapperRef as any}>
           <ProTable<DataType, ParamsType>
             bordered
+            tableClassName={tabeClassName}
             {...restProps as any}
             options={{fullScreen: true, ...props.options}}
             scroll = {{y: scrollY, x: props.width}}

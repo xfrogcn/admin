@@ -2,7 +2,8 @@ import { findById, getAllFolderNodes } from '@/utils/treeItemUtils';
 import { useIntl } from '@umijs/max';
 import { Input, Tree, TreeDataNode, theme } from 'antd';
 import React, { Key, useCallback, useEffect, useMemo, useState } from 'react';
-import Panel, { SpaceSize } from '../Panel';
+import Panel from '../Panel';
+import { SpaceSize } from '../common';
 
 const { Search } = Input;
 

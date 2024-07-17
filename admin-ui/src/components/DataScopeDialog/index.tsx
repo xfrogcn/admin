@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import { useMemo, useState } from 'react';
 import DraggableModal, { DraggableModalProps } from '../DraggableModal';
+import LinkButton from '../LinkButton';
 import OrganizationDialog from '../OrganizationDialog';
 
 interface DataScopeDialogProps extends DraggableModalProps {
@@ -137,17 +138,18 @@ const DataScopeDialog: React.FC<DataScopeDialogProps> = (props: DataScopeDialogP
       }),
       dataIndex: 'operation',
       key: 'operation',
-      width: 80,
+      width: '6em',
       render: (value, record, index) => {
         return (
-          <a
+          <LinkButton
+            type="primary"
             key="delete"
             onClick={() => {
               setOrganizationDataScopes(organizationDataScopes.filter((item) => item !== record));
             }}
           >
             <FormattedMessage id="admin.ui.public.delete-button" />
-          </a>
+          </LinkButton>
         );
       },
     });
@@ -159,9 +161,9 @@ const DataScopeDialog: React.FC<DataScopeDialogProps> = (props: DataScopeDialogP
         maskClosable={false}
         {...props}
         onOk={async (e) => {
-            if (props.onSave) {
-              await props.onSave(organizationDataScopes);
-            }
+          if (props.onSave) {
+            await props.onSave(organizationDataScopes);
+          }
         }}
         onOpen={() => {
           if (props.dataScope) {
@@ -176,7 +178,7 @@ const DataScopeDialog: React.FC<DataScopeDialogProps> = (props: DataScopeDialogP
         title={tilte}
       >
         <Divider />
-        <Tabs tabPosition="left" style={{height: 300, marginTop: 20}}>
+        <Tabs tabPosition="left" style={{ height: 300, marginTop: 20 }}>
           <Tabs.TabPane
             key="organization"
             tab={<FormattedMessage id="admin.ui.components.datascope-dialog.tab-organization" />}

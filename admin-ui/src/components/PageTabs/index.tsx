@@ -199,7 +199,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
   const removeIcon = tabs.length == 1 ? false : <CloseOutlined />;
 
   return (
-    <Flex vertical style={{ height: '100%', position: 'relative' }}>
+    <Flex vertical style={{ height: '100%', position: 'relative', marginTop: 8 }}>
       <Tabs
         className="page-tabs"
         hideAdd

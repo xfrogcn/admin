@@ -1,3 +1,4 @@
+import { FormattedMessage } from '@umijs/max';
 import { Modal, ModalProps } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import type { DraggableData, DraggableEvent } from 'react-draggable';
@@ -37,6 +38,8 @@ const DraggableModal: React.FC<DraggableModalProps> = (props: DraggableModalProp
 
   return (
     <Modal
+      okText={<FormattedMessage id="admin.ui.public.ok-button" />}
+      cancelText={<FormattedMessage id="admin.ui.public.cancel-button" />}
       {...props}
       title={
         <div
