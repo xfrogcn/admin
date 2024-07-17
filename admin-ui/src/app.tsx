@@ -7,6 +7,7 @@ import { Link, addLocale, getLocale, history, setLocale, useIntl } from '@umijs/
 import { ConfigProvider } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 import { PageTabs } from './components/PageTabs';
+import SettingDropdown from './components/RightContent/SettingDropdown';
 import { valueTypeMap } from './components/ValueTypes';
 import { applicationCode, urls } from './config';
 import { signinRedirectCallbackPath, signoutRedirectCallbackPath, userManager } from './oauth2';
@@ -98,6 +99,13 @@ export async function getInitialState(): Promise<{
 
     const userSettings = await getUserSettings({ application: applicationCode() });
     const userLang = userSettings.parameters?.language || getLocale() || 'zh-CN';
+    const userLayoutSettings: Partial<LayoutSettings> = {};
+    if (userSettings.parameters?.navTheme) {
+      userLayoutSettings.navTheme = userSettings.parameters?.navTheme;
+    }
+    if (userSettings.parameters?.colorPrimary) {
+      userLayoutSettings.colorPrimary = userSettings.parameters?.colorPrimary;
+    }
 
     const langLocale = await getLangLocal({ application: applicationCode(), langCode: userLang });
     console.log(userLang, langLocale, getLocale());
@@ -113,7 +121,7 @@ export async function getInitialState(): Promise<{
       fetchUserInfo,
       currentUser,
       permissions: permissionMap,
-      settings: defaultSettings as Partial<LayoutSettings>,
+      settings: {...defaultSettings, ...userLayoutSettings} as Partial<LayoutSettings>,
       langs: userSettings.langs,
       userParameters: userSettings.parameters,
     };
@@ -139,11 +147,22 @@ export async function getInitialState(): Promise<{
   };
 }
 
-
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-    actionsRender: () => [<Question key="doc" />, <SelectLang langs={initialState?.langs} key="SelectLang" />],
+    actionsRender: () => [
+      <Question key="doc" />,
+      <SelectLang langs={initialState?.langs} key="SelectLang" />,
+      <SettingDropdown
+        settings={initialState?.settings}
+        onSettingChange={(settings) => {
+          setInitialState((preInitialState) => ({
+            ...preInitialState,
+            settings,
+          }));
+        }}
+      />,
+    ],
     avatarProps: {
       //src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
@@ -181,8 +200,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
               <PageTabs />
             </ProConfigProvider>
           </ConfigProvider>
-          {isDev && (
-            <SettingDrawer
+        
+            {/* <SettingDrawer
               disableUrlParams
               enableDarkTheme
               settings={initialState?.settings}
@@ -192,8 +211,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                   settings,
                 }));
               }}
-            />
-          )}
+            /> */}
+          
         </>
       );
     },

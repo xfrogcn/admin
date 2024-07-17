@@ -5,9 +5,9 @@ const apiUrlMap = {
     ui: 'http://localhost:8000',
   },
   prod: {
-    auth: 'http://localhost:8080',
-    api: 'http://localhost:8080',
-    ui: 'http://localhost:8000',
+    auth: 'http://192.168.3.244:8080',
+    api: 'http://192.168.3.244:8080',
+    ui: 'http://localhost:8001',
   },
 };
 
