@@ -1,4 +1,5 @@
 import EditableProTablePage from '@/components/EditableProTablePage';
+import FooterBar, { FooterBarAction } from '@/components/FooterBar';
 import { usePageTabContext } from '@/components/PageTabs';
 import { ExProColumnsType, ExProFormColumnsType } from '@/components/ValueTypes';
 import { listLanguages } from '@/services/swagger/langApi';
@@ -10,7 +11,6 @@ import type { ProFormInstance } from '@ant-design/pro-components';
 import {
   BetaSchemaForm,
   EditableFormInstance,
-  FooterToolbar,
   ListToolBar,
   PageContainer,
 } from '@ant-design/pro-components';
@@ -285,6 +285,8 @@ const CreateLangCorpusPage: React.FC = () => {
     [corpusLines],
   );
 
+  const footerRef = useRef<FooterBarAction>(null);
+
   return (
     <PageContainer pageHeaderRender={false} className="none-ending-space">
       <Card>
@@ -305,9 +307,18 @@ const CreateLangCorpusPage: React.FC = () => {
           layoutType="Form"
           columns={columns as any}
           onFinish={onSubmit}
+          
           submitter={{
-            resetButtonProps: { style: { display: 'none' } },
-            render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
+            resetButtonProps: false,
+            render: (_, dom) => {
+              footerRef.current?.right([
+                <Button key="close" type='default' onClick={() => pageTabContext.close('/platform/corpus', false)}>
+                  <span><FormattedMessage id="admin.ui.public.cancel-button" /></span>
+                </Button>,
+                dom,
+              ]);
+              return null;
+            },
           }}
         />
       </Card>
@@ -356,6 +367,8 @@ const CreateLangCorpusPage: React.FC = () => {
           ) : null,
         ]}
       />
+
+      <FooterBar containerRef={footerRef} spaceTop="md"></FooterBar>
 
       {
         <ImportForm
