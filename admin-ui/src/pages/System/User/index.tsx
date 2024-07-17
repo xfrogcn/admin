@@ -386,7 +386,7 @@ const UserList: React.FC = () => {
             />
           </Flex>
         </Col>
-        <Col xs={24} sm={18} md={18} lg={18} xl={18}>
+        <Col xs={24} sm={18} md={18} lg={18} xl={18} style={{display: 'flex'}}>
           <ProTablePage<API.UserDTO, API.PageParams>
             bordered
             headerTitle={intl.formatMessage({
