@@ -45,6 +45,8 @@ public class UserDTO {
     private LocalDateTime lastLoginTime;
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
+    @Schema(description = "所属租户")
+    private String tenantId;
     @Schema(description = "角色列表")
     private List<RoleDTO> roles;
 }

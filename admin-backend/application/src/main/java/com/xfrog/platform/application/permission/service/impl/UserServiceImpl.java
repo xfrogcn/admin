@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public CurrentUserInfoDTO getCurrentUserDetail() {
         Long userId = CurrentPrincipalContext.currentPrincipal().getUserId();
-        CurrentUserInfoDTO userDTO = UserDTOConverter.INSTANCE.toCurrentUser(userDomainRepository.findById(userId));
+        CurrentUserInfoDTO userDTO = UserDTOConverter.INSTANCE.toCurrentUser(userRepository.queryById(userId));
         if (userDTO != null) {
            TenantDTO tenant = tenantsRepository.queryByCode(userDTO.getTenantId());
            if (tenant == null ||Boolean.FALSE.equals(tenant.getEnabled())) {

@@ -334,12 +334,12 @@ class UserServiceImplTest {
     @Test
     void getCurrentUserDetail_Success() {
 
-        User user = PermissionFixtures.createDefaultUser().tenantId("tid").build();
+        UserDTO user = PermissionDTOFixtures.defaultUserDTO().tenantId("tid").build();
         TenantDTO tenant = PermissionDTOFixtures.defaultTenantDTO().code("tid").organizationId(1L).build();
         PrincipalInfo userPrincipal = PrincipalInfo.create(user.getId(), "testUser", 1L, "testClient", "testTenant");
         CurrentPrincipalContext.setCurrentPrincipal(userPrincipal);
 
-        when(userDomainRepository.findById(user.getId())).thenReturn(user);
+        when(userRepository.queryById(user.getId())).thenReturn(user);
         when(tenantRepository.queryByCode(user.getTenantId())).thenReturn(tenant);
 
         CurrentUserInfoDTO result = userService.getCurrentUserDetail();
@@ -351,12 +351,12 @@ class UserServiceImplTest {
 
     @Test
     void getCurrentUserDetail_TenantDisabled_ThrowsPermissionDeniedException() {
-        User user = PermissionFixtures.createDefaultUser().tenantId("tid").build();
+        UserDTO user = PermissionDTOFixtures.defaultUserDTO().tenantId("tid").build();
         TenantDTO tenant = PermissionDTOFixtures.defaultTenantDTO().code("tid").organizationId(1L).enabled(false).build();
         PrincipalInfo userPrincipal = PrincipalInfo.create(user.getId(), "testUser", 1L, "testClient", "testTenant");
         CurrentPrincipalContext.setCurrentPrincipal(userPrincipal);
 
-        when(userDomainRepository.findById(user.getId())).thenReturn(user);
+        when(userRepository.queryById(user.getId())).thenReturn(user);
         when(tenantRepository.queryByCode(user.getTenantId())).thenReturn(tenant);
 
         assertThrows(PermissionDeniedException.class, () -> userService.getCurrentUserDetail());
@@ -364,22 +364,22 @@ class UserServiceImplTest {
 
     @Test
     void getCurrentUserDetail_UserNotFound_ReturnsNull() {
-        User user = PermissionFixtures.createDefaultUser().tenantId("tid").build();
+        UserDTO user = PermissionDTOFixtures.defaultUserDTO().tenantId("tid").build();
         PrincipalInfo userPrincipal = PrincipalInfo.create(user.getId(), "testUser", 1L, "testClient", "testTenant");
         CurrentPrincipalContext.setCurrentPrincipal(userPrincipal);
 
-        when(userDomainRepository.findById(user.getId())).thenReturn(null);
+        when(userRepository.queryById(user.getId())).thenReturn(null);
 
         assertNull(userService.getCurrentUserDetail(), "Expected null when user is not found");
     }
 
     @Test
     void getCurrentUserDetail_TenantNotFound_ThrowsPermissionDeniedException() {
-        User user = PermissionFixtures.createDefaultUser().tenantId("tid").build();
+        UserDTO user = PermissionDTOFixtures.defaultUserDTO().tenantId("tid").build();
         PrincipalInfo userPrincipal = PrincipalInfo.create(user.getId(), "testUser", 1L, "testClient", "testTenant");
         CurrentPrincipalContext.setCurrentPrincipal(userPrincipal);
 
-        when(userDomainRepository.findById(user.getId())).thenReturn(user);
+        when(userRepository.queryById(user.getId())).thenReturn(user);
         when(tenantRepository.queryByCode(user.getTenantId())).thenReturn(null);
 
         assertThrows(PermissionDeniedException.class, () -> userService.getCurrentUserDetail(), "Expected PermissionDeniedException when tenant is not found");

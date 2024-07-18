@@ -12,5 +12,5 @@ import org.mapstruct.factory.Mappers;
 public interface UserDTOConverter extends DomainToDTOConverter<User, UserDTO> {
     UserDTOConverter INSTANCE = Mappers.getMapper(UserDTOConverter.class);
 
-    CurrentUserInfoDTO toCurrentUser(User user);
+    CurrentUserInfoDTO toCurrentUser(UserDTO user);
 }

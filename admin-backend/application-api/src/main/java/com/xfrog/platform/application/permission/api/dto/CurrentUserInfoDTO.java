@@ -16,6 +16,4 @@ import lombok.experimental.SuperBuilder;
 public class CurrentUserInfoDTO extends UserDTO {
     @Schema(description = "根组织ID")
     private Long rootOrganizationId;
-    @Schema(description = "所属租户")
-    private String tenantId;
 }
