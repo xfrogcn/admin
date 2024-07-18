@@ -30,8 +30,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 @AutoConfigureMockMvc
 @WithUserDetails("admin")
 @TestPropertySource(properties = {
-        "admin.api-server.validOperatePermission=false",
-        "admin.api-server.validExpiredToken=false"
+        "admin.api-server.validOperatePermission=true",
+        "admin.api-server.validExpiredToken=false",
+        "spring.cache.type=SIMPLE"
 })
 public abstract class BaseApiTest {
 

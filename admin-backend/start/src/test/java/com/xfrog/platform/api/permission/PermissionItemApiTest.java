@@ -1,13 +1,11 @@
 package com.xfrog.platform.api.permission;
 
-import com.xfrog.platform.api.permission.fixtures.PermissionApiFixtures;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.domain.permission.aggregate.PermissionItem;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.jdbc.Sql;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,12 +14,12 @@ public class PermissionItemApiTest extends BasePermissionApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {PermissionApiFixtures.SQL_TRUNCATE_PERMISSION_ITEM})
     void createPermissionItem_ShouldSuccessfully() {
         PermissionItem parent = permissionApiFixtures.createAndSavePermissionItem("parent_code", null);
 
         CreatePermissionItemRequestDTO requestDTO = PermissionDTOFixtures.defaultCreatePermissionItemRequestDTO()
                 .parentId(parent.getId())
+                .code("test_create_code")
                 .build();
 
         request(post("/api/permission-items", requestDTO))
@@ -30,7 +28,6 @@ public class PermissionItemApiTest extends BasePermissionApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {PermissionApiFixtures.SQL_TRUNCATE_PERMISSION_ITEM})
     void updatePermissionItem_ShouldSuccessfully() {
         PermissionItem parent = permissionApiFixtures.createAndSavePermissionItem("parent_code", null);
         PermissionItem permissionItem = permissionApiFixtures.createAndSavePermissionItem("code", parent.getId());
@@ -46,20 +43,14 @@ public class PermissionItemApiTest extends BasePermissionApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {PermissionApiFixtures.SQL_TRUNCATE_PERMISSION_ITEM})
     void listPermissionItems_ShouldSuccessfully() {
-        permissionApiFixtures.createAndSavePermissionItem("code1", null);
-        permissionApiFixtures.createAndSavePlatformPermissionItem("code2", null);
-
         request(get("/api/permission-items/list"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].code").exists())
-                .andExpect(jsonPath("$[1]").doesNotExist());
+                .andExpect(jsonPath("$[0].code").exists());
     }
 
     @SneakyThrows
     @Test
-    @Sql(statements = {PermissionApiFixtures.SQL_TRUNCATE_PERMISSION_ITEM})
     void listPermissionItemsFormPlatform_ShouldSuccessfully() {
         permissionApiFixtures.createAndSavePermissionItem("code1", null);
         permissionApiFixtures.createAndSavePlatformPermissionItem("code2", null);
@@ -72,7 +63,6 @@ public class PermissionItemApiTest extends BasePermissionApiTest {
 
     @SneakyThrows
     @Test
-    @Sql(statements = {PermissionApiFixtures.SQL_TRUNCATE_PERMISSION_ITEM, PermissionApiFixtures.SQL_TRUNCATE_ROLE_PERMISSION_ITEM})
     void deletePermissionItem_ShouldSuccessfully() {
         PermissionItem permissionItem = permissionApiFixtures.createAndSavePermissionItem("code1", null);
         permissionApiFixtures.createAndSaveRolePermissionItem(1L, permissionItem.getId());

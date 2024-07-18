@@ -29,8 +29,10 @@ public class EmbeddedMariaDbConfig {
         // 设置字符编码
         mariaDB4jSpringService.getDB().run(String.format("create database if not exists `%s` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';", dbName));
 
+        String url = mariaDB4jSpringService.getConfiguration().getURL(dbName) + "?useUnicode=true&characterEncoding=utf-8";
+        log.info("test mariaDb url: {}", url);
         DataSource dataSource = DataSourceBuilder.create()
-                .url(mariaDB4jSpringService.getConfiguration().getURL(dbName) + "?useUnicode=true&characterEncoding=utf-8")
+                .url(url)
                 .build();
 
         return dataSource;
