@@ -1,6 +1,6 @@
 spring:
   application:
-    name: app
+    name: admin-platform
 
   flyway:
     locations: classpath:/db/migration
