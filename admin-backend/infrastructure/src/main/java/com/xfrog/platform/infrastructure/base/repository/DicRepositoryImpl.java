@@ -42,19 +42,6 @@ public class DicRepositoryImpl extends BasePageableApplicationRepository<DicDTO,
         return ORDER_FIELD_MAP;
     }
 
-    //    @Override
-//    public PageDTO<DicDTO> queryAll(QueryDicRequestDTO queryDTO) {
-//        Page<DicDTO> page = PageUtils.page(queryDTO, ORDER_FIELD_MAP);
-//        List<DicDTO> dicDTOS = dicMapper.queryAll(queryDTO, page);
-//        return PageUtils.result(page, dicDTOS);
-//    }
-
-//    @Override
-//    public DicDTO queryById(Long id) {
-//        DicPO dicPO = dicMapper.selectById(id);
-//        return DicPOConverter.INSTANCE.toDTO(dicPO);
-//    }
-
     @Override
     public List<DicDTO> queryByTypes(List<String> types) {
         if (CollectionUtils.isEmpty(types)) {
