@@ -1,5 +1,6 @@
 package com.xfrog.platform.application.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.xfrog.framework.repository.CacheableRepository;
@@ -92,7 +93,7 @@ public class CacheConfig {
     @Bean
     public AdminRedisCacheManagerBuilderCustomizer adminRedisCacheManagerBuilderCustomizer(ObjectMapper objectMapper) {
         ObjectMapper cacheObjectMapper = objectMapper.copy();
-        cacheObjectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
+        cacheObjectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         return new AdminRedisCacheManagerBuilderCustomizer(cacheObjectMapper);
     }
 
