@@ -2,6 +2,7 @@ package com.xfrog.platform.application.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.xfrog.framework.repository.CacheableRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.cache.CacheManager;
@@ -59,10 +60,18 @@ public class CacheConfig {
 
         @Override
         protected Collection<String> getCacheNames(CacheOperationInvocationContext<?> context) {
-            if (!useGlobalPrefix || !StringUtils.hasText(globalPrefix)) {
-                return context.getOperation().getCacheNames();
-            }
             Set<String> cacheNames = context.getOperation().getCacheNames();
+            if (CollectionUtils.isEmpty(cacheNames) && context.getTarget() instanceof CacheableRepository cacheableRepository) {
+                String name = cacheableRepository.getCacheName();
+                if (StringUtils.hasText(name)) {
+                    cacheNames = Set.of(name);
+                }
+            }
+
+            if (!useGlobalPrefix || !StringUtils.hasText(globalPrefix)) {
+                return cacheNames;
+            }
+
             if (CollectionUtils.isEmpty(cacheNames)) {
                 return Set.of(globalPrefix);
             }
