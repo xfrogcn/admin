@@ -9,15 +9,18 @@ import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
 import com.xfrog.platform.application.permission.api.dto.RoleDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateRoleRequestDTO;
 import com.xfrog.platform.application.permission.repository.RoleRepository;
+import com.xfrog.platform.application.permission.repository.UserRepository;
 import com.xfrog.platform.application.permission.service.RoleService;
 import com.xfrog.platform.domain.permission.aggregate.Role;
 import com.xfrog.platform.domain.permission.aggregate.RolePermissionItem;
+import com.xfrog.platform.domain.permission.aggregate.UserRole;
 import com.xfrog.platform.domain.permission.repository.RoleDomainRepository;
 import com.xfrog.platform.domain.permission.repository.RolePermissionItemDomainRepository;
 import com.xfrog.platform.domain.permission.repository.UserRoleDomainRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +34,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final UserRoleDomainRepository userRoleDomainRepository;
     private final RolePermissionItemDomainRepository rolePermissionItemDomainRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -112,5 +116,15 @@ public class RoleServiceImpl implements RoleService {
                 .collect(Collectors.toList());
         rolePermissionItemDomainRepository.saveAll(added);
         rolePermissionItemDomainRepository.logicDeleteAll(compareResult.getRemoved());
+
+        if (!added.isEmpty() || !compareResult.getRemoved().isEmpty()) {
+            // 清除对应用户权限缓存
+            List<UserRole> userRoles = userRoleDomainRepository.getByRoleId(roleId);
+            if (!CollectionUtils.isEmpty(userRoles)) {
+                userRoles.forEach(userRole -> {
+                    userRepository.removeUserPermissionCodesCache(userRole.getUserId());
+                });
+            }
+        }
     }
 }

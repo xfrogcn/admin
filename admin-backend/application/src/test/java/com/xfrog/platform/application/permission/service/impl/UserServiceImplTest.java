@@ -172,6 +172,8 @@ class UserServiceImplTest {
                         && domain.getOrganizationId().equals(requestDTO.getOrganizationId())
                         && domain.getName().equals(requestDTO.getName())
                 ));
+        verify(userRepository, times(1))
+                .removeCache(user.getId());
     }
 
     @Test
@@ -224,6 +226,8 @@ class UserServiceImplTest {
         // Assert
         verify(userDomainRepository, times(1))
                 .save(argThat(domain -> !domain.isEnabled()));
+        verify(userRepository, times(1))
+                .removeCache(user.getId());
     }
 
     @Test
@@ -238,6 +242,8 @@ class UserServiceImplTest {
         // Assert
         verify(userDomainRepository, times(1))
                 .save(argThat(User::isEnabled));
+        verify(userRepository, times(1))
+                .removeCache(user.getId());
     }
 
     @Test
@@ -310,6 +316,10 @@ class UserServiceImplTest {
                 .saveAll(argThat(list-> list.size()==1 && Objects.equals(list.get(0).getRoleId(), role2.getId())));
         verify(userRoleDomainRepository, times(1))
                 .logicDeleteAll(argThat(List::isEmpty));
+        verify(userRepository, times(1))
+                .removeUserPermissionCodesCache(user.getId());
+        verify(userRepository, times(1))
+                .removeUserRoleIdsCache(user.getId());
     }
 
     @Test
@@ -328,6 +338,10 @@ class UserServiceImplTest {
                 .saveAll(argThat(List::isEmpty));
         verify(userRoleDomainRepository, times(1))
                 .logicDeleteAll(argThat(list -> list.size() == 1 && list.get(0).getRoleId().equals(role.getId())));
+        verify(userRepository, times(1))
+                .removeUserPermissionCodesCache(user.getId());
+        verify(userRepository, times(1))
+                .removeUserRoleIdsCache(user.getId());
     }
 
 

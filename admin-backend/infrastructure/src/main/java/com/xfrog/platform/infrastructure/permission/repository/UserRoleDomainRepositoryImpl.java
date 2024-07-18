@@ -46,4 +46,12 @@ public class UserRoleDomainRepositoryImpl extends BaseDomainRepository<UserRole,
                 .in(UserRolePO::getUserId, userIds));
         return converter.toDomainList(pos);
     }
+
+    @Override
+    public List<UserRole> getByRoleId(Long roleId) {
+        LambdaQueryWrapper<UserRolePO> queryWrapper = new LambdaQueryWrapper<UserRolePO>()
+                .eq(UserRolePO::getDeleted, false)
+                .eq(UserRolePO::getRoleId, roleId);
+        return converter.toDomainList(mapper.selectList(queryWrapper));
+    }
 }

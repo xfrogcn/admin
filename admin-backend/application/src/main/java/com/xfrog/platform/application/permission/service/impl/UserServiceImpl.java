@@ -105,6 +105,7 @@ public class UserServiceImpl implements UserService {
         }
         user.update(userDTO.getOrganizationId(), userDTO.getName(), userDTO.getSex(), userDTO.getMobilePhone(), userDTO.getEmail());
         userDomainRepository.save(user);
+        userRepository.removeCache(userId);
     }
 
     @Override
@@ -137,6 +138,7 @@ public class UserServiceImpl implements UserService {
         }
         user.changeEnabled(false);
         userDomainRepository.save(user);
+        userRepository.removeCache(userId);
     }
 
     @Override
@@ -148,6 +150,7 @@ public class UserServiceImpl implements UserService {
         }
         user.changeEnabled(true);
         userDomainRepository.save(user);
+        userRepository.removeCache(userId);
     }
 
     @Override
@@ -175,6 +178,9 @@ public class UserServiceImpl implements UserService {
                         .userId(userId).build()).collect(Collectors.toList());
         userRoleDomainRepository.saveAll(added);
         userRoleDomainRepository.logicDeleteAll(compareResult.getRemoved());
+
+        userRepository.removeUserRoleIdsCache(userId);
+        userRepository.removeUserPermissionCodesCache(userId);
     }
 
     @Override

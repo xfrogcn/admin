@@ -7,6 +7,7 @@ import com.xfrog.platform.application.permission.api.dto.CreateRoleRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdateRoleRequestDTO;
 import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.application.permission.repository.RoleRepository;
+import com.xfrog.platform.application.permission.repository.UserRepository;
 import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
 import com.xfrog.platform.domain.permission.aggregate.Role;
 import com.xfrog.platform.domain.permission.aggregate.RolePermissionItem;
@@ -42,6 +43,8 @@ class RoleServiceImplTest {
     private UserRoleDomainRepository userRoleDomainRepository;
     @Mock
     private RolePermissionItemDomainRepository rolePermissionItemDomainRepository;
+    @Mock
+    private UserRepository userRepository;
     @InjectMocks
     private RoleServiceImpl roleService;
 
@@ -193,6 +196,8 @@ class RoleServiceImplTest {
                 .build();
         // Setup
         when(rolePermissionItemDomainRepository.getByRoleId(role.getId())).thenReturn(List.of(rolePermissionItem));
+        when(userRoleDomainRepository.getByRoleId(role.getId()))
+                .thenReturn(List.of(PermissionFixtures.createDefaultUserRole(1L, role.getId()).build()));
 
         // Exercise
         roleService.grantPermissionItems(role.getId(), List.of(1L, 2L));
@@ -203,6 +208,9 @@ class RoleServiceImplTest {
 
         verify(rolePermissionItemDomainRepository, times(1))
                 .logicDeleteAll(argThat(List::isEmpty));
+
+        verify(userRepository, times(1))
+                .removeUserPermissionCodesCache(1L);
     }
 
     @Test

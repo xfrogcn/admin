@@ -11,4 +11,6 @@ public interface UserRoleDomainRepository extends DomainRepository<UserRole> {
     List<UserRole> getByUserId(Long userId);
 
     List<UserRole> getByUserIds(List<Long> userIds);
+
+    List<UserRole> getByRoleId(Long roleId);
 }
