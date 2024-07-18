@@ -10,6 +10,13 @@ spring:
     username: root
 #    schema-username: root
 #    data-username: root
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      username:
+      database: 0
 
 logging:
   level:

@@ -5,6 +5,10 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-authorization-server"
 
+    // redis 缓存
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.apache.commons:commons-pool2"
+
     implementation project(':common')
     implementation project(':application')
     implementation project(':infrastructure')

@@ -9,6 +9,8 @@ dependencies {
     // MyBatis
     implementation('com.baomidou:mybatis-plus-boot-starter')
     implementation('org.mybatis.spring.boot:mybatis-spring-boot-starter')
+    // Cache
+    implementation('org.springframework.boot:spring-boot-starter-cache')
 
     implementation('org.springframework.security:spring-security-core')
 
