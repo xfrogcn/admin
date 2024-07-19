@@ -167,6 +167,10 @@ class TenantServiceImplTest {
                 .save(argThat(domain -> domain.getName().equals(updateTenantRequestDTO.getName())
                         && domain.getMemo().equals(updateTenantRequestDTO.getMemo())
                 ));
+        verify(tenantRepository, times(1))
+                .removeCache(tenant.getId());
+        verify(tenantRepository, times(1))
+                .removeCacheByCode(tenant.getCode());
     }
 
     @Test
@@ -203,5 +207,9 @@ class TenantServiceImplTest {
         // Then
         verify(tenantDomainRepository, times(1))
                 .save(argThat(Tenant::getEnabled));
+        verify(tenantRepository, times(1))
+                .removeCache(tenant.getId());
+        verify(tenantRepository, times(1))
+                .removeCacheByCode(tenant.getCode());
     }
 }

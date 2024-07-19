@@ -132,6 +132,8 @@ public class TenantServiceImpl implements TenantService {
         tenant.update(tenantDTO.getName(), tenantDTO.getMemo());
 
         tenantDomainRepository.save(tenant);
+        tenantRepository.removeCache(tenantId);
+        tenantRepository.removeCacheByCode(tenant.getCode());
     }
 
     @Override
@@ -143,5 +145,7 @@ public class TenantServiceImpl implements TenantService {
         tenant.updateEnabled(enabled);
 
         tenantDomainRepository.save(tenant);
+        tenantRepository.removeCache(tenantId);
+        tenantRepository.removeCacheByCode(tenant.getCode());
     }
 }
