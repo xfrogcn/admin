@@ -68,6 +68,8 @@ class DataScopeServiceTest {
                 .saveAll(argThat(domain -> domain.size() == 2));
         verify(dataScopeDomainRepository, times(1))
                 .logicDeleteAll(argThat(List::isEmpty));
+        verify(dataScopeRepository, times(1))
+                .removeCacheByTargetTypeAndTargetId(requestDTO.getTargetType(), requestDTO.getTargetId());
     }
 
     @Test

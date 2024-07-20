@@ -3,12 +3,15 @@ package com.xfrog.platform.application.biz.service.impl;
 import com.xfrog.platform.application.biz.dto.CacheDTO;
 import com.xfrog.platform.application.biz.repository.CacheRepository;
 import com.xfrog.platform.application.biz.service.CacheManagerService;
+import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +22,9 @@ public class CacheManagerServiceImpl implements CacheManagerService {
     private final Map<String, List<String>> cacheNameMap = Map.of(
             "user:detail", List.of("user:detail", "tenant:by-code"),
             "user:permission", List.of("user:permission-codes", "user:role-ids"),
-            "user:data-scope", List.of("user:permission-codes", "user:role-ids"),
+            "user:data-scope", Stream.concat(
+                    Arrays.stream(DataScopeTargetType.values()).map(it -> "data-scope:" + it.name()),
+                    Stream.of("user:role-ids")).toList(),
             "organization:detail", List.of("organization:detail"),
             "dic:detail", List.of("dic:detail", "dic:by-type", "dic-item:by-dic-id")
     );

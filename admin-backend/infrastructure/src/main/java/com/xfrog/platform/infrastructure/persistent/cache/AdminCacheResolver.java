@@ -43,8 +43,8 @@ public class AdminCacheResolver extends AbstractCacheResolver {
         return cacheNames.stream()
                 .map(name -> {
                     // 注意：此处仅支持 #p0 参数，其它参数需要自行实现
-                    if (name.equalsIgnoreCase("#p0") && context.getArgs().length > 0) {
-                        return String.valueOf(context.getArgs()[0]);
+                    if (name.contains("#p0") && context.getArgs().length > 0) {
+                        return name.replace("#p0", String.valueOf(context.getArgs()[0]));
                     }
                     return name;
                 })

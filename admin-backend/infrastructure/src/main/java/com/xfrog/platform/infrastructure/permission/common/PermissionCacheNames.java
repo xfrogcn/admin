@@ -7,4 +7,7 @@ public class PermissionCacheNames {
 
     public static final String ORGANIZATION_DETAIL = "organization:detail";
     public static final String TENANT_DETAIL_BY_CODE = "tenant:by-code";
+
+    public static final String DATA_SCOPE = "data-scope:";
+
 }

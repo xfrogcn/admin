@@ -3,7 +3,7 @@ package com.xfrog.platform.infrastructure.persistent.handler.datascope;
 import com.xfrog.framework.principal.CurrentPrincipalContext;
 import com.xfrog.framework.principal.PrincipalInfo;
 import com.xfrog.platform.application.common.RequestThreadMarkContext;
-import com.xfrog.platform.domain.permission.repository.OrganizationDomainRepository;
+import com.xfrog.platform.application.permission.repository.OrganizationRepository;
 import com.xfrog.platform.domain.share.permission.DataScopeType;
 import com.xfrog.platform.infrastructure.persistent.config.DataScopeColumn;
 import com.xfrog.platform.infrastructure.persistent.config.DataScopeTable;
@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 @Slf4j
 public class OrganizationDataScopeHandler implements IDataScopeHandler {
-    private final ObjectProvider<OrganizationDomainRepository> organizationDomainRepository;
+    private final ObjectProvider<OrganizationRepository> organizationRepository;
     public static final String ORGANIZATION_DATA_SCOPE_HANDLER_NAME = "organization";
     private final ConcurrentHashMap<Long, String> organizationCache = new ConcurrentHashMap<>();
     private final List<String> organizationScopeTypes = List.of(DataScopeType.ORGANIZATION.name(), DataScopeType.USER_ORGANIZATION.name());
@@ -72,7 +72,7 @@ public class OrganizationDataScopeHandler implements IDataScopeHandler {
                 .toList();
         if (!CollectionUtils.isEmpty(noCachedIds)) {
             RequestThreadMarkContext.threadMark().setIgnoreDataScope(true);
-            organizationDomainRepository.getIfAvailable().findByIds(noCachedIds).forEach(org -> organizationCache.put(org.getId(), org.getCode()));
+            organizationRepository.getIfAvailable().queryByIds(noCachedIds).forEach(org -> organizationCache.put(org.getId(), org.getCode()));
             RequestThreadMarkContext.threadMark().setIgnoreDataScope(false);
         }
 

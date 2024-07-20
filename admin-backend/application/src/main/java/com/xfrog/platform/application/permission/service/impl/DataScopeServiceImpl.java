@@ -54,6 +54,7 @@ public class DataScopeServiceImpl implements DataScopeService {
 
         dataScopeDomainRepository.saveAll(added);
         dataScopeDomainRepository.logicDeleteAll(compareResult.getRemoved());
+        dataScopeRepository.removeCacheByTargetTypeAndTargetId(requestDTO.getTargetType(), requestDTO.getTargetId());
     }
 
     @Override
