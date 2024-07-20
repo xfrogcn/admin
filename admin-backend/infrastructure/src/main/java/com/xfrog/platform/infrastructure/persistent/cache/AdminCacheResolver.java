@@ -51,4 +51,16 @@ public class AdminCacheResolver extends AbstractCacheResolver {
                 .map(name -> String.join(":", globalPrefix, name))
                 .collect(Collectors.toSet());
     }
+
+    public String getCahceName(String cacheName) {
+        if (!useGlobalPrefix || !StringUtils.hasText(globalPrefix)) {
+            return cacheName;
+        }
+
+        if (!StringUtils.hasText(cacheName)) {
+            return globalPrefix;
+        }
+
+        return String.join(":", globalPrefix, cacheName);
+    }
 }

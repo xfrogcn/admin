@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.xfrog.platform.infrastructure.persistent.cache.AdminCacheResolver;
+import com.xfrog.platform.infrastructure.persistent.cache.BatchKeysCache;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.cache.CacheManager;
@@ -13,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.util.StringUtils;
@@ -42,18 +45,30 @@ public class CacheConfig {
     }
 
     @Bean
-    public CachingConfigurer adminCacheConfigurer(CacheManager cacheManager, ApplicationContext applicationContext) {
+    public AdminCacheResolver adminCacheResolver(CacheManager cacheManager, ApplicationContext applicationContext) {
+        String prefix = globalPrefix;
+        if (!StringUtils.hasText(prefix)) {
+            prefix = applicationContext.getId();
+        }
+
+        return new AdminCacheResolver(cacheManager, useGlobalCachePrefix, prefix);
+    }
+
+    @Bean
+    public CachingConfigurer adminCacheConfigurer(AdminCacheResolver adminCacheResolver) {
         return new CachingConfigurer() {
             @Override
             public CacheResolver cacheResolver() {
-                String prefix = globalPrefix;
-                if (!StringUtils.hasText(prefix)) {
-                    prefix = applicationContext.getId();
-                }
-
-                return new AdminCacheResolver(cacheManager, useGlobalCachePrefix, prefix);
+                return adminCacheResolver;
             }
         };
+    }
+
+    @Bean
+    public BatchKeysCache batchKeysCache(ObjectProvider<CacheManager> cacheManagerProvider,
+                                         ObjectProvider<RedisConnectionFactory> redisConnectionFactoryProvider,
+                                         AdminCacheResolver cacheResolver) {
+        return new BatchKeysCache(cacheManagerProvider, redisConnectionFactoryProvider, cacheResolver);
     }
 
 }

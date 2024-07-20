@@ -1,15 +1,24 @@
 package com.xfrog.platform.infrastructure.persistent.repository;
 
 import com.xfrog.framework.converter.POToDTOConverter;
+import com.xfrog.framework.dto.IdDTO;
 import com.xfrog.framework.po.AuditPO;
 import com.xfrog.framework.repository.CacheableApplicationRepository;
+import com.xfrog.platform.infrastructure.persistent.cache.BatchKeysCache;
 import com.xfrog.platform.infrastructure.persistent.mapper.BaseMapperEx;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-public abstract class BaseCacheableApplicationRepository<DTO, PO extends AuditPO, M extends BaseMapperEx<PO>>
+import java.util.List;
+import java.util.function.Function;
+
+public abstract class BaseCacheableApplicationRepository<DTO extends IdDTO, PO extends AuditPO, M extends BaseMapperEx<PO>>
         extends BaseApplicationRepository<DTO, PO, M>
         implements CacheableApplicationRepository<DTO> {
+
+    @Autowired
+    protected BatchKeysCache batchKeysCache;
 
     public BaseCacheableApplicationRepository(M mapper, POToDTOConverter<PO, DTO> converter) {
         super(mapper, converter);
@@ -22,8 +31,19 @@ public abstract class BaseCacheableApplicationRepository<DTO, PO extends AuditPO
     }
 
     @Override
+    public List<DTO> queryByIds(List<Long> ids) {
+        return runWithBatchKeyCache(super::queryByIds, ids, IdDTO::getId);
+    }
+
+    @Override
     @CacheEvict(key = "#p0")
     public void removeCache(Long id) {
         // nothing
+    }
+
+    protected  <R, KEY> List<R> runWithBatchKeyCache(Function<List<KEY>, List<R>> dbQuery,
+                                                 List<KEY> keys,
+                                                 Function<R, KEY> keyGetter) {
+        return batchKeysCache.runWithBatchKeyCache(getCacheName(), dbQuery, keys, keyGetter);
     }
 }
