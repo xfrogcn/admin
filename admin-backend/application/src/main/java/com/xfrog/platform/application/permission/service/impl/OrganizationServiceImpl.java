@@ -84,6 +84,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         organization.update(command);
 
         organizationDomainRepository.save(organization);
+        organizationRepository.removeCache(organizationId);
     }
 
     @Override
@@ -103,6 +104,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new FailedPreconditionException("organization has children");
         }
         organizationDomainRepository.logicDelete(organizationId);
+        organizationRepository.removeCache(organizationId);
     }
 
     @Override

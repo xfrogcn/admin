@@ -3,16 +3,17 @@ package com.xfrog.platform.infrastructure.permission.repository;
 import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
 import com.xfrog.platform.application.permission.api.dto.QueryOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.repository.OrganizationRepository;
+import com.xfrog.platform.infrastructure.permission.common.PermissionCacheNames;
 import com.xfrog.platform.infrastructure.permission.converter.OrganizationPOConverter;
 import com.xfrog.platform.infrastructure.permission.dataobject.OrganizationPO;
 import com.xfrog.platform.infrastructure.permission.mapper.OrganizationMapper;
-import com.xfrog.platform.infrastructure.persistent.repository.BaseApplicationRepository;
+import com.xfrog.platform.infrastructure.persistent.repository.BaseCacheableApplicationRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class OrganizationRepositoryImpl extends BaseApplicationRepository<OrganizationDTO, OrganizationPO, OrganizationMapper>
+public class OrganizationRepositoryImpl extends BaseCacheableApplicationRepository<OrganizationDTO, OrganizationPO, OrganizationMapper>
         implements OrganizationRepository {
 
     public OrganizationRepositoryImpl(OrganizationMapper mapper) {
@@ -23,5 +24,10 @@ public class OrganizationRepositoryImpl extends BaseApplicationRepository<Organi
     @Override
     public List<OrganizationDTO> queryBy(QueryOrganizationRequestDTO queryDTO) {
         return mapper.queryBy(queryDTO);
+    }
+
+    @Override
+    public String getCacheName() {
+        return PermissionCacheNames.ORGANIZATION_DETAIL;
     }
 }

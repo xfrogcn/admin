@@ -135,6 +135,7 @@ class OrganizationServiceImplTest {
                         && domain.getPrincipal().equals(updateOrganizationRequestDTO.getPrincipal())
                         && domain.getTelephone().equals(updateOrganizationRequestDTO.getTelephone())
                 ));
+        verify(organizationRepository, times(1)).removeCache(organization.getId());
     }
 
 
@@ -175,6 +176,7 @@ class OrganizationServiceImplTest {
 
         organizationService.deleteOrganization(organization.getId());
         verify(organizationDomainRepository, times(1)).logicDelete(organization.getId());
+        verify(organizationRepository, times(1)).removeCache(organization.getId());
     }
 
     @Test

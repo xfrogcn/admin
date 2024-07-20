@@ -20,6 +20,7 @@ public class CacheManagerServiceImpl implements CacheManagerService {
             "user:detail", List.of("user:detail", "tenant:by-code"),
             "user:permission", List.of("user:permission-codes", "user:role-ids"),
             "user:data-scope", List.of("user:permission-codes", "user:role-ids"),
+            "organization:detail", List.of("organization:detail"),
             "dic:detail", List.of("dic:detail", "dic:by-type", "dic-item:by-dic-id")
     );
 
@@ -36,6 +37,10 @@ public class CacheManagerServiceImpl implements CacheManagerService {
                     .cacheName("user:data-scope")
                     .displayText("用户数据权限")
                     .displayCorpusCode("admin.ui.pages.cache-user-data-scope").build(),
+            CacheDTO.builder()
+                    .cacheName("organization:detail")
+                    .displayText("组织数据")
+                    .displayCorpusCode("admin.ui.pages.cache-organization-detail").build(),
             CacheDTO.builder()
                     .cacheName("dic:detail")
                     .displayText("数据字典")

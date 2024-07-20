@@ -29,7 +29,7 @@ class CacheManagerServiceImplTest {
     void listCaches_ShouldReturnAllCaches() {
         List<CacheDTO> caches = cacheManagerService.listCaches();
 
-        assertThat(caches).hasSize(4);
+        assertThat(caches).hasSize(5);
     }
 
     @Test
