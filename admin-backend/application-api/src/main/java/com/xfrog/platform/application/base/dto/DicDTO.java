@@ -1,24 +1,23 @@
 package com.xfrog.platform.application.base.dto;
 
+import com.xfrog.framework.dto.IdDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "字典信息")
-public class DicDTO {
-    @Schema(description = "字典ID")
-    private Long id;
+public class DicDTO extends IdDTO {
     @Schema(description = "字典类型")
     private String type;
     @Schema(description = "字典名称")

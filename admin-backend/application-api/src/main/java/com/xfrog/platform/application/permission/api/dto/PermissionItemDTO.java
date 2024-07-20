@@ -1,21 +1,20 @@
 package com.xfrog.platform.application.permission.api.dto;
 
+import com.xfrog.framework.dto.IdDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "权限项")
-public class PermissionItemDTO {
-    @Schema(description = "权限项ID")
-    private Long id;
+public class PermissionItemDTO extends IdDTO {
     @Schema(description = "权限项编码")
     private String code;
     @Schema(description = "权限项名称")

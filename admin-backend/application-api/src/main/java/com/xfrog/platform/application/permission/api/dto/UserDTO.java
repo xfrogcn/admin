@@ -1,5 +1,6 @@
 package com.xfrog.platform.application.permission.api.dto;
 
+import com.xfrog.framework.dto.IdDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,9 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "用户信息")
-public class UserDTO {
-    @Schema(description = "用户ID")
-    private Long id;
+public class UserDTO extends IdDTO {
     @Schema(description = "用户账户名")
     private String userName;
     @Schema(description = "所属组织机构ID")

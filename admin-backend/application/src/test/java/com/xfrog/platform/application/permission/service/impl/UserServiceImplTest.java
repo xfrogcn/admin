@@ -82,8 +82,8 @@ class UserServiceImplTest {
                 .pageNum(1)
                 .pageSize(10)
                 .build();
-        UserDTO user = PermissionDTOFixtures.defaultUserDTO().id(1L).build();
-        RoleDTO role = PermissionDTOFixtures.defaultRoleDTO().id(1L).build();
+        UserDTO user = PermissionDTOFixtures.defaultUserDTO(1L).build();
+        RoleDTO role = PermissionDTOFixtures.defaultRoleDTO(1L).build();
         UserRole userRole = PermissionFixtures.createDefaultUserRole(user.getId(), role.getId()).build();
 
         when(userRepository.queryBy(requestDTO)).thenReturn(new PageDTO<>(1L, 10L, 1L, 1L, List.of(user)));

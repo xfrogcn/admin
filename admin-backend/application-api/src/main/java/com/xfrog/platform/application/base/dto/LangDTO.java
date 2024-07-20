@@ -1,23 +1,22 @@
 package com.xfrog.platform.application.base.dto;
 
+import com.xfrog.framework.dto.IdDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "语种信息")
-public class LangDTO {
-    @Schema(description = "语言 ID")
-    private Long id;
+public class LangDTO extends IdDTO {
     @Schema(description = "所属应用")
     private String application;
     @Schema(description = "语言代码")

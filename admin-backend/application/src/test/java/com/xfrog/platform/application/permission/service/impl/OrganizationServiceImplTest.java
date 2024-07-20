@@ -189,14 +189,12 @@ class OrganizationServiceImplTest {
 
     @Test
     void getOrganization_ShouldSucceed() {
-        OrganizationDTO parent = PermissionDTOFixtures.defaultOrganizationDTO()
-                .id(1L)
+        OrganizationDTO parent = PermissionDTOFixtures.defaultOrganizationDTO(1L)
                 .parentIds(null)
                 .parentId(null)
                 .name("parent")
                         .build();
-        OrganizationDTO organization = PermissionDTOFixtures.defaultOrganizationDTO()
-                .id(2L)
+        OrganizationDTO organization = PermissionDTOFixtures.defaultOrganizationDTO(2L)
                 .parentIds(List.of(1L))
                 .parentId(1L)
                 .name("organization")

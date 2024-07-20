@@ -1,5 +1,6 @@
 package com.xfrog.platform.application.permission.api.dto;
 
+import com.xfrog.framework.dto.IdDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,9 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "租户信息")
-public class TenantDTO {
-    @Schema(description = "租户ID")
-    private Long id;
+public class TenantDTO extends IdDTO {
     @Schema(description = "租户编码")
     private String code;
     @Schema(description = "租户名称")

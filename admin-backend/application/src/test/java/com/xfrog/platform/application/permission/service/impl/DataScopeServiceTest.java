@@ -112,8 +112,7 @@ class DataScopeServiceTest {
                 .scopeType(DataScopeType.ORGANIZATION)
                 .scopeId(1L)
                 .build();
-        OrganizationDTO organization = PermissionDTOFixtures.defaultOrganizationDTO()
-                .id(1L)
+        OrganizationDTO organization = PermissionDTOFixtures.defaultOrganizationDTO(1L)
                 .parentId(null)
                 .parentIds(null)
                 .build();
@@ -175,13 +174,11 @@ class DataScopeServiceTest {
                 .scopeType(DataScopeType.ORGANIZATION)
                 .scopeId(2L)
                 .build();
-        OrganizationDTO organization = PermissionDTOFixtures.defaultOrganizationDTO()
-                .id(2L)
+        OrganizationDTO organization = PermissionDTOFixtures.defaultOrganizationDTO(2l)
                 .parentId(1L)
                 .parentIds(List.of(1L))
                 .build();
-        OrganizationDTO parent =  PermissionDTOFixtures.defaultOrganizationDTO()
-                .id(1L)
+        OrganizationDTO parent =  PermissionDTOFixtures.defaultOrganizationDTO(1l)
                 .parentId(null)
                 .parentIds(null)
                 .name("parent")

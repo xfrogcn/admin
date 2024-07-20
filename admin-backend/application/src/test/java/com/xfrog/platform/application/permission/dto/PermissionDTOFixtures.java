@@ -70,6 +70,12 @@ public class PermissionDTOFixtures {
                 .telephone("telephone");
     }
 
+    public static OrganizationDTO.OrganizationDTOBuilder defaultOrganizationDTO(Long id) {
+        OrganizationDTO.OrganizationDTOBuilder builder = defaultOrganizationDTO();
+        builder.id(id);
+        return builder;
+    }
+
     public static CreateRoleRequestDTO.CreateRoleRequestDTOBuilder defaultCreateRoleRequestDTO() {
         return CreateRoleRequestDTO.builder()
                 .name("name")
@@ -117,6 +123,12 @@ public class PermissionDTOFixtures {
                 .userName("userName");
     }
 
+    public static UserDTO.UserDTOBuilder defaultUserDTO(Long id){
+        UserDTO.UserDTOBuilder builder = defaultUserDTO();
+        builder.id(id);
+        return builder;
+    }
+
     public static RoleDTO.RoleDTOBuilder defaultRoleDTO(){
         return RoleDTO.builder()
                 .createdTime(null)
@@ -124,6 +136,12 @@ public class PermissionDTOFixtures {
                 .id(1L)
                 .memo("memo")
                 .name("name");
+    }
+
+    public static RoleDTO.RoleDTOBuilder defaultRoleDTO(Long id){
+        RoleDTO.RoleDTOBuilder builder = defaultRoleDTO();
+        builder.id(id);
+        return builder;
     }
 
     public static DataScopeDTO.DataScopeDTOBuilder defaultDataScopeDTO(){

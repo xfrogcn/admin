@@ -1,23 +1,22 @@
 package com.xfrog.platform.application.permission.api.dto;
 
+import com.xfrog.framework.dto.IdDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "角色信息")
-public class RoleDTO {
-    @Schema(description = "角色ID")
-    private Long id;
+public class RoleDTO extends IdDTO {
     @Schema(description = "角色名称")
     private String name;
     @Schema(description = "角色说明")
