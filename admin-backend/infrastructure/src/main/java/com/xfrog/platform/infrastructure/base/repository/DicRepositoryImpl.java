@@ -19,9 +19,11 @@ import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class DicRepositoryImpl extends BaseCacheablePageableApplicationRepository<DicDTO, DicPO, DicMapper, QueryDicRequestDTO>
@@ -72,13 +74,17 @@ public class DicRepositoryImpl extends BaseCacheablePageableApplicationRepositor
         if (CollectionUtils.isEmpty(dicIds)) {
             return new LinkedList<>();
         }
-        return batchKeysCache.runWithBatchKeyCache(BaseCacheNames.DIC_ITEM_BY_DIC_ID, (keys) -> {
+        Map<Long, List<DicItemDTO>> resultMap = batchKeysCache.runWithBatchKeyCache(BaseCacheNames.DIC_ITEM_BY_DIC_ID, (keys) -> {
             LambdaQueryWrapper<DicItemPO> queryWrapper = new LambdaQueryWrapper<DicItemPO>()
                     .in(DicItemPO::getDicId, dicIds)
                     .eq(DicItemPO::getDeleted, false);
 
-            return DicItemPOConverter.INSTANCE.toDTOList(dicItemMapper.selectList(queryWrapper));
-        }, dicIds, DicItemDTO::getId);
+            return DicItemPOConverter.INSTANCE.toDTOList(dicItemMapper.selectList(queryWrapper))
+                    .stream()
+                    .collect(Collectors.groupingBy(DicItemDTO::getDicId));
+        }, dicIds);
+
+        return resultMap.values().stream().flatMap(Collection::stream).toList();
     }
 
     @Override
