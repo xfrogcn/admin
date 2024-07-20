@@ -1,4 +1,6 @@
 package com.xfrog.framework.repository;
 
-public interface CacheableApplicationRepository<DTO> extends ApplicationRepository<DTO>, CacheableRepository {
+import com.xfrog.framework.dto.IdDTO;
+
+public interface CacheableApplicationRepository<DTO extends IdDTO> extends ApplicationRepository<DTO>, CacheableRepository {
 }

@@ -2,6 +2,7 @@ package com.xfrog.platform.infrastructure.persistent.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xfrog.framework.converter.POToDTOConverter;
+import com.xfrog.framework.dto.IdDTO;
 import com.xfrog.framework.po.AuditPO;
 import com.xfrog.framework.repository.ApplicationRepository;
 import com.xfrog.platform.infrastructure.persistent.mapper.BaseMapperEx;
@@ -10,7 +11,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class BaseApplicationRepository <DTO, PO extends AuditPO, M extends BaseMapperEx<PO>>
+public abstract class BaseApplicationRepository <DTO extends IdDTO, PO extends AuditPO, M extends BaseMapperEx<PO>>
         implements ApplicationRepository<DTO> {
 
     protected POToDTOConverter<PO, DTO> converter;
