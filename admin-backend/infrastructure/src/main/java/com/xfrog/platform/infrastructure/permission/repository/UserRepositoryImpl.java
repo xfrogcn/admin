@@ -79,13 +79,15 @@ public class UserRepositoryImpl extends BaseCacheablePageableApplicationReposito
 
     @Override
     public Map<Long, List<Long>> queryUserRoleIds(List<Long> userIds) {
-        LambdaQueryWrapper<UserRolePO> queryWrapper = new LambdaQueryWrapper<UserRolePO>()
-                .eq(UserRolePO::getDeleted, false)
-                .in(UserRolePO::getUserId, userIds);
-        List<UserRolePO> userRolePOS = userRoleMapper.selectList(queryWrapper);
+        return batchKeysCache.runWithBatchKeyCache(PermissionCacheNames.USER_ROLE_IDS, (keys) -> {
+            LambdaQueryWrapper<UserRolePO> queryWrapper = new LambdaQueryWrapper<UserRolePO>()
+                    .eq(UserRolePO::getDeleted, false)
+                    .in(UserRolePO::getUserId, userIds);
+            List<UserRolePO> userRolePOS = userRoleMapper.selectList(queryWrapper);
 
-        return userRolePOS.stream()
-                .collect(Collectors.groupingBy(UserRolePO::getUserId,
-                        Collectors.mapping(UserRolePO::getRoleId, Collectors.toList())));
+            return userRolePOS.stream()
+                    .collect(Collectors.groupingBy(UserRolePO::getUserId,
+                            Collectors.mapping(UserRolePO::getRoleId, Collectors.toList())));
+        }, userIds);
     }
 }
