@@ -122,6 +122,8 @@ class RoleServiceImplTest {
                 .save(argThat(domain -> domain.getName().equals(requestDTO.getName())
                         && domain.getMemo().equals(requestDTO.getMemo())
                 ));
+        verify(roleRepository, times(1))
+                .removeCache(role.getId());
     }
 
     @Test
@@ -146,6 +148,8 @@ class RoleServiceImplTest {
 
         // Then
         verify(roleDomainRepository).logicDelete(1L);
+        verify(roleRepository, times(1))
+                .removeCache(1L);
     }
 
     @Test
@@ -174,6 +178,8 @@ class RoleServiceImplTest {
         // Assert
         verify(roleDomainRepository, times(1))
                 .save(argThat(domain -> domain.getEnabled().equals(true)));
+        verify(roleRepository, times(1))
+                .removeCache(role.getId());
     }
 
     @Test

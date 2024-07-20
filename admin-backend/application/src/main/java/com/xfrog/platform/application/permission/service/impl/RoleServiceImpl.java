@@ -77,6 +77,7 @@ public class RoleServiceImpl implements RoleService {
         oldRole.update(updateRoleRequestDTO.getName(), updateRoleRequestDTO.getMemo());
 
         roleDomainRepository.save(oldRole);
+        roleRepository.removeCache(roleId);
     }
 
     @Override
@@ -86,6 +87,7 @@ public class RoleServiceImpl implements RoleService {
             throw new FailedPreconditionException("This role has been used");
         }
         roleDomainRepository.logicDelete(roleId);
+        roleRepository.removeCache(roleId);
     }
 
     @Override
@@ -98,6 +100,7 @@ public class RoleServiceImpl implements RoleService {
         oldRole.updateEnabled(enabled);
 
         roleDomainRepository.save(oldRole);
+        roleRepository.removeCache(roleId);
     }
 
     @Override

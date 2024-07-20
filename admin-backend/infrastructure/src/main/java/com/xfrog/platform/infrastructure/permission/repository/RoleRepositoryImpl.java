@@ -4,16 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
 import com.xfrog.platform.application.permission.api.dto.RoleDTO;
 import com.xfrog.platform.application.permission.repository.RoleRepository;
+import com.xfrog.platform.infrastructure.permission.common.PermissionCacheNames;
 import com.xfrog.platform.infrastructure.permission.converter.RolePOConverter;
 import com.xfrog.platform.infrastructure.permission.dataobject.RolePO;
 import com.xfrog.platform.infrastructure.permission.mapper.RoleMapper;
-import com.xfrog.platform.infrastructure.persistent.repository.BaseApplicationRepository;
+import com.xfrog.platform.infrastructure.persistent.repository.BaseCacheableApplicationRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class RoleRepositoryImpl extends BaseApplicationRepository<RoleDTO, RolePO, RoleMapper>
+public class RoleRepositoryImpl extends BaseCacheableApplicationRepository<RoleDTO, RolePO, RoleMapper>
         implements RoleRepository {
 
     public RoleRepositoryImpl(RoleMapper roleMapper) {
@@ -31,5 +32,10 @@ public class RoleRepositoryImpl extends BaseApplicationRepository<RoleDTO, RoleP
     @Override
     public List<PermissionItemDTO> queryRolePermissions(Long roleId) {
         return mapper.queryRolePermissions(roleId);
+    }
+
+    @Override
+    public String getCacheName() {
+        return PermissionCacheNames.ROLE_DETAIL;
     }
 }
