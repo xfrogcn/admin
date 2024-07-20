@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public abstract class BaseCacheablePageableApplicationRepository<DTO extends IdDTO, PO extends AuditPO, M extends PageableMapper<PO, DTO, QueryDTO>, QueryDTO extends PageQueryDTO>
@@ -42,7 +43,12 @@ public abstract class BaseCacheablePageableApplicationRepository<DTO extends IdD
         // nothing
     }
 
-    protected  <R, KEY> List<R> runWithBatchKeyCache(Function<List<KEY>, List<R>> dbQuery,
+    protected  <KEY, R> Map<KEY, R> runWithBatchKeyCache(Function<List<KEY>, Map<KEY, R>> dbQuery,
+                                                     List<KEY> keys) {
+        return batchKeysCache.runWithBatchKeyCache(getCacheName(), dbQuery, keys);
+    }
+
+    protected  <KEY, R> List<R> runWithBatchKeyCache(Function<List<KEY>, List<R>> dbQuery,
                                                      List<KEY> keys,
                                                      Function<R, KEY> keyGetter) {
         return batchKeysCache.runWithBatchKeyCache(getCacheName(), dbQuery, keys, keyGetter);

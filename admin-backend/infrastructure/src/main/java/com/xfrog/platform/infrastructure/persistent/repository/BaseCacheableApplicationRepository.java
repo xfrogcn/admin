@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public abstract class BaseCacheableApplicationRepository<DTO extends IdDTO, PO extends AuditPO, M extends BaseMapperEx<PO>>
@@ -41,9 +42,14 @@ public abstract class BaseCacheableApplicationRepository<DTO extends IdDTO, PO e
         // nothing
     }
 
-    protected  <R, KEY> List<R> runWithBatchKeyCache(Function<List<KEY>, List<R>> dbQuery,
-                                                 List<KEY> keys,
-                                                 Function<R, KEY> keyGetter) {
+    protected  <KEY, R> Map<KEY, R> runWithBatchKeyCache(Function<List<KEY>, Map<KEY, R>> dbQuery,
+                                                 List<KEY> keys) {
+        return batchKeysCache.runWithBatchKeyCache(getCacheName(), dbQuery, keys);
+    }
+
+    protected  <KEY, R> List<R> runWithBatchKeyCache(Function<List<KEY>, List<R>> dbQuery,
+                                                     List<KEY> keys,
+                                                     Function<R, KEY> keyGetter) {
         return batchKeysCache.runWithBatchKeyCache(getCacheName(), dbQuery, keys, keyGetter);
     }
 }
