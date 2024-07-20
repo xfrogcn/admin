@@ -112,13 +112,33 @@ class DicServiceTest {
         verify(dicDomainRepository, times(1))
                 .save(argThat(domain -> domain.getType().equals("updated_type")
                         && domain.getName().equals("updated_name")));
+        verify(dicRepository, times(1))
+                .removeCache(dic.getId());
+        verify(dicRepository, times(1))
+                .removeDicCacheByType(dic.getType());
     }
 
     @Test
     void deleteDic_ShouldSuccessfully() {
-        dicService.deleteDic(1L);
+        Dic dic = DicFixtures.createDefaultDic().build();
+        when(dicDomainRepository.findById(dic.getId())).thenReturn(dic);
+
+        dicService.deleteDic(dic.getId());
         verify(dicDomainRepository, times(1))
-                .logicDelete(1L);
+                .logicDelete(dic.getId());
+
+        verify(dicRepository, times(1))
+                .removeCache(dic.getId());
+        verify(dicRepository, times(1))
+                .removeDicCacheByType(dic.getType());
+    }
+
+    @Test
+    void deleteDic_ShouldThrowNotFoundExceptionWhenDicDoesNotExist() {
+
+        when(dicDomainRepository.findById(1L)).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> dicService.deleteDic(1L));
     }
 
     @Test
@@ -179,6 +199,8 @@ class DicServiceTest {
                         && domain.getValue().equals(createDicItemRequestDTO.getValue())
                         && domain.getDicId().equals(dic.getId())
                 ));
+        verify(dicRepository, times(1))
+                .removeDicItemsCacheByDicId(dic.getId());
     }
 
     @Test
@@ -245,6 +267,8 @@ class DicServiceTest {
                         && domain.getDicId().equals(dic.getId())
                         &&domain.getId().equals(dicItem.getId())
                 ));
+        verify(dicRepository, times(1))
+                .removeDicItemsCacheByDicId(dic.getId());
     }
 
 }

@@ -66,12 +66,21 @@ public class DicServiceImpl implements DicService {
         oldDic.update(updateDicCommand);
 
         dicDomainRepository.save(oldDic);
+        dicRepository.removeCache(dicId);
+        dicRepository.removeDicCacheByType(oldDic.getType());
     }
 
     @Override
     @Transactional
     public void deleteDic(Long dicId) {
+        Dic oldDic = dicDomainRepository.findById(dicId);
+        if (oldDic == null) {
+            throw new NotFoundException("dic not found");
+        }
+
         dicDomainRepository.logicDelete(dicId);
+        dicRepository.removeCache(dicId);
+        dicRepository.removeDicCacheByType(oldDic.getType());
     }
 
     @Override
@@ -129,7 +138,11 @@ public class DicServiceImpl implements DicService {
 
         DicItem dicItem = DicItem.create(createDicItemCommand);
 
-        return dicItemDomainRepository.save(dicItem).getDicId();
+        Long dicItemId = dicItemDomainRepository.save(dicItem).getId();
+
+        dicRepository.removeDicItemsCacheByDicId(dic.getId());
+
+        return dicItemId;
     }
 
     @Override
@@ -153,5 +166,7 @@ public class DicServiceImpl implements DicService {
         dicItem.update(updateDicItemCommand);
 
         dicItemDomainRepository.save(dicItem);
+
+        dicRepository.removeDicItemsCacheByDicId(dic.getId());
     }
 }
