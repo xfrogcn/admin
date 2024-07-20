@@ -11,6 +11,8 @@ dependencies {
     implementation('org.mybatis.spring.boot:mybatis-spring-boot-starter')
     // Cache
     implementation('org.springframework.boot:spring-boot-starter-cache')
+    implementation('org.springframework.boot:spring-boot-starter-data-redis')
+    implementation('com.fasterxml.jackson.core:jackson-databind')
 
     implementation('org.springframework.security:spring-security-core')
 
