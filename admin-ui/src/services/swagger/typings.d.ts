@@ -1,6 +1,23 @@
 declare namespace API {
+  type CacheDTO = {
+    /** 缓存名称 */
+    cacheName?: string;
+    /** 缓存显示名称 */
+    displayText?: string;
+    /** 缓存显示名称对应语料编码 */
+    displayCorpusCode?: string;
+    /** 缓存说明 */
+    description?: string;
+    /** 缓存说明对应语料编码 */
+    descriptionCorpusCode?: string;
+  };
+
   type changeCurrentUserPasswordParams = {
     newPassword: string;
+  };
+
+  type clearCachesParams = {
+    cacheName: string;
   };
 
   type configLangLocalParams = {
@@ -141,7 +158,6 @@ declare namespace API {
   };
 
   type CurrentUserInfoDTO = {
-    /** 用户ID */
     id?: number;
     /** 用户账户名 */
     userName?: string;
@@ -169,12 +185,12 @@ declare namespace API {
     lastLoginTime?: string;
     /** 创建时间 */
     createdTime?: string;
+    /** 所属租户 */
+    tenantId?: string;
     /** 角色列表 */
     roles?: RoleDTO[];
     /** 根组织ID */
     rootOrganizationId?: number;
-    /** 所属租户 */
-    tenantId?: string;
   };
 
   type DataScopeDTO = {
@@ -227,7 +243,6 @@ declare namespace API {
   };
 
   type DicDTO = {
-    /** 字典ID */
     id?: number;
     /** 字典类型 */
     type?: string;
@@ -248,7 +263,6 @@ declare namespace API {
   };
 
   type DicItemDTO = {
-    /** 字典项ID */
     id?: number;
     /** 关联的字典 ID */
     dicId?: number;
@@ -369,7 +383,6 @@ declare namespace API {
   };
 
   type LangCorpusDTO = {
-    /** 语料库 ID */
     id?: number;
     /** 所属应用 */
     application?: string;
@@ -403,7 +416,6 @@ declare namespace API {
   };
 
   type LangDTO = {
-    /** 语言 ID */
     id?: number;
     /** 所属应用 */
     application?: string;
@@ -424,7 +436,6 @@ declare namespace API {
   };
 
   type OrganizationDTO = {
-    /** 组织ID */
     id?: number;
     /** 组织名称 */
     name?: string;
@@ -491,7 +502,6 @@ declare namespace API {
   };
 
   type PermissionItemDTO = {
-    /** 权限项ID */
     id?: number;
     /** 权限项编码 */
     code?: string;
@@ -578,7 +588,6 @@ declare namespace API {
   };
 
   type RoleDTO = {
-    /** 角色ID */
     id?: number;
     /** 角色名称 */
     name?: string;
@@ -596,7 +605,6 @@ declare namespace API {
   };
 
   type TenantDTO = {
-    /** 租户ID */
     id?: number;
     /** 租户编码 */
     code?: string;
@@ -759,7 +767,6 @@ declare namespace API {
   };
 
   type UserDTO = {
-    /** 用户ID */
     id?: number;
     /** 用户账户名 */
     userName?: string;
@@ -787,6 +794,8 @@ declare namespace API {
     lastLoginTime?: string;
     /** 创建时间 */
     createdTime?: string;
+    /** 所属租户 */
+    tenantId?: string;
     /** 角色列表 */
     roles?: RoleDTO[];
   };
