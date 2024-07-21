@@ -16,13 +16,13 @@ public class MaintenanceController implements MaintenanceApi {
     private final CacheManagerService cacheManagerService;
 
     @Override
-    @Authorization("admin:platform:cache")
+    @Authorization("admin:maintenance:cache")
     public List<CacheDTO> listCaches() {
         return cacheManagerService.listCaches();
     }
 
     @Override
-    @Authorization("admin:platform:cache:clear")
+    @Authorization("admin:maintenance:cache:clear")
     public void clearCaches(String cacheName) {
         cacheManagerService.clearCaches(cacheName);
     }
