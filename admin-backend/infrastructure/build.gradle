@@ -21,7 +21,7 @@ dependencies {
     implementation('com.fasterxml.jackson.core:jackson-annotations')
 
 
-    implementation('mysql:mysql-connector-java')
+    implementation('com.mysql:mysql-connector-j')
 
     implementation('org.liquibase:liquibase-core')
 

@@ -83,9 +83,9 @@ subprojects {
             dependency "io.swagger.core.v3:swagger-annotations:${swagger_annotation_version}"
             dependency "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapi_version}"
 
-            dependency "com.alibaba:transmittable-thread-local:${ttl_version}"
 
-            dependency "mysql:mysql-connector-java:${mysql_connector_version}"
+
+            dependency "com.mysql:mysql-connector-j:${mysql_connector_version}"
         }
     }
 
@@ -114,13 +114,13 @@ subprojects {
 
     tasks.register('sourcesJar', Jar) {
         dependsOn classes
-        classifier = 'sources'
+        archiveClassifier = 'sources'
         from sourceSets.main.allSource
     }
 
     tasks.register('javadocJar', Jar) {
         dependsOn javadoc
-        classifier = 'javadoc'
+        archiveClassifier = 'javadoc'
         from javadoc.destinationDir
     }
 

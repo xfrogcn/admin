@@ -36,8 +36,9 @@ task jacocoAllTestReport(type: JacocoReport) {
     executionData.setFrom(subprojects.jacocoTestReport.executionData)
 
     reports {
-        xml.enabled true
-        html.enabled true
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
     }
     afterEvaluate {
         classDirectories.from = files(classDirectories.files.collect {
