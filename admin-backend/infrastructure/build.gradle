@@ -13,6 +13,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-cache')
     implementation('org.springframework.boot:spring-boot-starter-data-redis')
     implementation('com.fasterxml.jackson.core:jackson-databind')
+    implementation('com.google.guava:guava:33.2.1-jre')
 
     implementation('org.springframework.security:spring-security-core')
 

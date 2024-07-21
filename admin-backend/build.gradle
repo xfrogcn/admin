@@ -63,6 +63,7 @@ subprojects {
             dependency "org.mybatis:mybatis:${mybatis_version}"
             dependency "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatis_starter_version}"
             dependency "com.github.pagehelper:pagehelper-spring-boot-starter:${pagehelper_version}"
+            dependency "com.google.guava:guava:${guava_version}"
 
             dependency "org.springframework.boot:spring-boot-starter-oauth2-authorization-server:${authorization_server_version}"
 

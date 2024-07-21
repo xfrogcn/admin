@@ -101,6 +101,7 @@ public class BatchKeysCache {
      *
      * @author wHaibo
      */
+    @SuppressWarnings("unchecked")
      public <KEY, R> Map<KEY, R> runWithBatchKeyCache(String cacheName,
                                                   Function<KEY, String> cacheKeyGetter,
                                                   Function<List<KEY>, Map<KEY, R>> dbQuery,
