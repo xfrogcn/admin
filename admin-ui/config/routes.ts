@@ -112,19 +112,18 @@ export default [
     ],
   },
   {
-    path: '/admin',
-    name: 'admin',
+    path: '/maintenance',
+    name: 'maintenance',
     icon: 'crown',
-    access: 'canAdmin',
+    access: 'canRoute',
+    permissionCode: 'admin:maintenance',
     routes: [
       {
-        path: '/admin',
-        redirect: '/admin/sub-page',
-      },
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
+        name: 'cache',
+        path: '/maintenance/cache',
+        component: './Maintenance/Cache',
+        access: 'canRoute',
+        permissionCode: 'admin:maintenance:cache',
       },
     ],
   },

@@ -280,6 +280,18 @@ export default {
   "admin.ui.pages.langcorpus.rule-require-import-json": "请输入待导入的JSON",
   "admin.ui.pages.langcorpus.invalid-import-json": "非法的JSON内容",
 
+  "admin.ui.pages.cache.cache-list": "缓存列表",
+  "admin.ui.pages.cache.clear-confirm-desc": "你确定要清除所有缓存么？",
+  "admin.ui.pages.cache.label-display-text": "缓存名称",
+  "admin.ui.pages.cache.label-cache-name": "缓存类别",
+  "admin.ui.pages.cache.clear-button": "清除缓存",
+
+  "admin.ui.pages.cache-user-detail": "用户信息",
+  "admin.ui.pages.cache-user-permission": "用户功能权限",
+  "admin.ui.pages.cache-user-data-scope": "用户数据权限",
+  "admin.ui.pages.cache-organization-detail": "组织数据",
+  "admin.ui.pages.cache-dic-detail": "数据字典",
+
   "pages.layouts.userLayout.title": "Ant Design 是西湖区最具影响力的 Web 设计规范",
   "pages.login.accountLogin.tab": "账户密码登录",
   "pages.login.accountLogin.errorMessage": "错误的用户名和密码(admin/ant.design)",

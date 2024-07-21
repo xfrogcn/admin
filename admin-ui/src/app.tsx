@@ -111,7 +111,11 @@ export async function getInitialState(): Promise<{
     console.log(userLang, langLocale, getLocale());
     addLocale(userLang, langLocale, {
       momentLocale: userLang,
-      antd: { locale: userLang },
+      antd: { locale: userLang,    
+        Popconfirm: {
+          cancelText: '取消',
+          okText: '确定'
+      }},
     });
     if (userLang !== getLocale()) {
       setLocale(userLang, false);

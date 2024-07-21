@@ -13,6 +13,9 @@ export default {
   "menu.platform.lang-corpus": "语料管理",
   "menu.platform.create-lang-corpus": "新建语料",
   
+  "menu.maintenance": "运维管理",
+  "menu.maintenance.cache": "缓存管理",
+
 
   "menu.welcome": "欢迎",
   "menu.more-blocks": "更多区块",
