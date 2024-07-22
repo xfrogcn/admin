@@ -25,6 +25,15 @@ logging:
     root: DEBUG
     org.springframework.jdbc.core: TRACE
     com.xfrog: DEBUG
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
 
 #springdoc:
 #  api-docs:

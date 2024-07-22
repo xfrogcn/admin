@@ -5,7 +5,6 @@ plugins {
     id 'application'
 }
 
-
 allprojects {
     apply plugin: 'jacoco'
 
@@ -83,13 +82,16 @@ subprojects {
             dependency "io.swagger.core.v3:swagger-annotations:${swagger_annotation_version}"
             dependency "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapi_version}"
 
-
-
             dependency "com.mysql:mysql-connector-j:${mysql_connector_version}"
+
+            dependency "io.micrometer:micrometer-registry-prometheus:${micrometer_version}"
         }
     }
 
     dependencies {
+        implementation(platform("io.micrometer:micrometer-registry-prometheus:${micrometer_version}"))
+        implementation(platform("io.micrometer:micrometer-tracing-bom:$tracing_version"))
+
         annotationProcessor 'org.projectlombok:lombok'
         annotationProcessor 'org.mapstruct:mapstruct-processor'
 
