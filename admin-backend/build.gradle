@@ -89,8 +89,8 @@ subprojects {
     }
 
     dependencies {
-        implementation(platform("io.micrometer:micrometer-registry-prometheus:${micrometer_version}"))
-        implementation(platform("io.micrometer:micrometer-tracing-bom:$tracing_version"))
+//        implementation(platform("io.micrometer:micrometer-registry-prometheus:${micrometer_version}"))
+        implementation(platform("io.micrometer:micrometer-bom:$micrometer_version"))
 
         annotationProcessor 'org.projectlombok:lombok'
         annotationProcessor 'org.mapstruct:mapstruct-processor'

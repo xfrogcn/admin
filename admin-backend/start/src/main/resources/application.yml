@@ -32,8 +32,6 @@ management:
       exposure:
         include: '*'
 
-
-#springdoc:
 #  api-docs:
 #    enabled: true
 mybatis-plus:
