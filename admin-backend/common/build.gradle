@@ -1,4 +1,5 @@
 dependencies {
+    implementation('com.google.guava:guava:33.2.1-jre')
     implementation('org.mapstruct:mapstruct')
     implementation('org.springframework.data:spring-data-commons')
     implementation('com.baomidou:mybatis-plus-annotation')

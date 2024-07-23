@@ -10,7 +10,7 @@ final class OperationLogPointcut extends AnnotationMethodMatcher implements Poin
 
     private ClassFilter classFilter = ClassFilter.TRUE;
 
-    public OperationLogPointcut() {
+    OperationLogPointcut() {
         super(OperationLog.class);
     }
 
