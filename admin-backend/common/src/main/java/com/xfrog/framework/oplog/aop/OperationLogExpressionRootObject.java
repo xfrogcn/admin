@@ -1,5 +1,7 @@
 package com.xfrog.framework.oplog.aop;
 
+import com.xfrog.framework.common.JsonHelper;
+
 import java.lang.reflect.Method;
 
 class OperationLogExpressionRootObject {
@@ -39,5 +41,13 @@ class OperationLogExpressionRootObject {
 
     public Class<?> getTargetClass() {
         return this.targetClass;
+    }
+
+    public String json(Object obj) {
+         return JsonHelper.serialize(obj);
+    }
+
+    public String format(String format, Object... args) {
+        return String.format(format, args);
     }
 }
