@@ -1,5 +1,6 @@
 package com.xfrog.framework.oplog.aop;
 
+import org.slf4j.MDC;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.lang.Nullable;
@@ -33,6 +34,12 @@ class OperationLogEvaluationContext extends MethodBasedEvaluationContext {
         if (this.unavailableVariables.contains(name)) {
             throw new VariableNotAvailableException(name);
         }
+        // 先从MDC获取变量值，如果不存在则从上下文中获取
+        String mdcValue =  MDC.get(name);
+        if (mdcValue != null) {
+            return mdcValue;
+        }
+
         return super.lookupVariable(name);
     }
 }
