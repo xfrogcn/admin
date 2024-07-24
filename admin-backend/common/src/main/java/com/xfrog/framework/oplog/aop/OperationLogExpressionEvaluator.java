@@ -17,17 +17,17 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
 
     public static final String RESULT_VARIABLE = "result";
 
-    private final Map<ExpressionKey, Expression> bizIdCache = new ConcurrentHashMap<>(64);
+    protected final Map<ExpressionKey, Expression> bizIdCache = new ConcurrentHashMap<>(64);
 
-    private final Map<ExpressionKey, Expression> bizCodeCache = new ConcurrentHashMap<>(64);
+    protected final Map<ExpressionKey, Expression> bizCodeCache = new ConcurrentHashMap<>(64);
 
-    private final Map<ExpressionKey, Expression> bizExtraCache = new ConcurrentHashMap<>(64);
+    protected final Map<ExpressionKey, Expression> bizExtraCache = new ConcurrentHashMap<>(64);
 
-    private final Map<ExpressionKey, Expression> conditionCache = new ConcurrentHashMap<>(64);
+    protected final Map<ExpressionKey, Expression> conditionCache = new ConcurrentHashMap<>(64);
 
-    private final Map<ExpressionKey, Expression> msgCache = new ConcurrentHashMap<>(64);
+    protected final Map<ExpressionKey, Expression> msgCache = new ConcurrentHashMap<>(64);
 
-    private final Map<ExpressionKey, Expression> successCache = new ConcurrentHashMap<>(64);
+    protected final Map<ExpressionKey, Expression> successCache = new ConcurrentHashMap<>(64);
 
     private final OperationLogEvaluationContextFactory evaluationContextFactory;
 

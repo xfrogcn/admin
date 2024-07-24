@@ -65,8 +65,7 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
         Assert.state(target != null, "Target must not be null");
 
         Class<?> targetClass = AopProxyUtils.ultimateTargetClass(target);
-        Method targetMethod = !Proxy.isProxyClass(targetClass) ?
-                AopUtils.getMostSpecificMethod(method, targetClass) : method;
+        Method targetMethod = Proxy.isProxyClass(targetClass) ? method : AopUtils.getMostSpecificMethod(method, targetClass);
 
         Long operatorId = operatorIdProvider.getOperatorId();
 

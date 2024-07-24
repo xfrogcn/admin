@@ -11,4 +11,6 @@ dependencies {
     implementation("org.springframework:spring-context")
     implementation "jakarta.validation:jakarta.validation-api"
     implementation 'org.mybatis:mybatis'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
