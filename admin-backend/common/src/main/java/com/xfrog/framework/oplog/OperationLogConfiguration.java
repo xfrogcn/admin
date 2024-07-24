@@ -15,7 +15,12 @@ public class OperationLogConfiguration {
     }
 
     @Bean
-    public OperationLogInterceptor operationLogInterceptor() {
-        return new OperationLogInterceptor();
+    public OperationLogInterceptor operationLogInterceptor(OperatorIdProvider operatorIdProvider) {
+        return new OperationLogInterceptor(operatorIdProvider);
+    }
+
+    @Bean
+    public OperatorIdProvider operationIdProvider() {
+        return new DefaultOperatorIdProvider();
     }
 }

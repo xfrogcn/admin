@@ -1,8 +1,10 @@
 package com.xfrog.framework.oplog.aop;
 
 import com.xfrog.framework.oplog.OperationLogEvent;
+import com.xfrog.framework.oplog.OperatorIdProvider;
 import com.xfrog.framework.oplog.annotation.OperationLog;
 import com.xfrog.framework.oplog.domain.OpLog;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@RequiredArgsConstructor
 public class OperationLogInterceptor implements ApplicationEventPublisherAware,  MethodInterceptor, Serializable {
 
     private final ConversionService conversionService = new DefaultFormattingConversionService();
@@ -39,6 +42,8 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
             new OperationLogEvaluationContextFactory(this.originalEvaluationContext));
 
     private ApplicationEventPublisher eventPublisher;
+
+    private final OperatorIdProvider operatorIdProvider;
 
 
     @Override
@@ -63,7 +68,8 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
         Method targetMethod = !Proxy.isProxyClass(targetClass) ?
                 AopUtils.getMostSpecificMethod(method, targetClass) : method;
 
-        Long operatorId = 1L;
+        Long operatorId = operatorIdProvider.getOperatorId();
+
         OperationLogEvaluationContext evaluationContext = evaluator.createEvaluationContext(
                 method,
                 invocation.getArguments(),
@@ -146,7 +152,7 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
             builder.bizId(conversionService.convert(evaluator.bizId(opLog.bizId(), elementKey, evaluationContext), String.class));
         }
         if (StringUtils.hasText(opLog.bizCode())) {
-            builder.bizAction(conversionService.convert(evaluator.bizCode(opLog.bizCode(), elementKey, evaluationContext), String.class));
+            builder.bizCode(conversionService.convert(evaluator.bizCode(opLog.bizCode(), elementKey, evaluationContext), String.class));
         }
 
         builder.bizType(opLog.bizType());
@@ -159,7 +165,7 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
         }
 
         if (StringUtils.hasText(opLog.extra())) {
-            builder.bizType(conversionService.convert(evaluator.extra(opLog.extra(), elementKey, evaluationContext), String.class));
+            builder.extra(conversionService.convert(evaluator.extra(opLog.extra(), elementKey, evaluationContext), String.class));
         }
         if (StringUtils.hasText(opLog.msg())) {
             builder.message(evaluator.msg(opLog.msg(), elementKey, evaluationContext));
