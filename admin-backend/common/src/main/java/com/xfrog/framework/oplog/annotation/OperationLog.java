@@ -14,17 +14,26 @@ import java.lang.annotation.Target;
 public @interface OperationLog {
     /**
      * 业务ID
-     * 必填
      * SpEL表达式
      */
     String bizId();
 
     /**
-     * 业务类型
-     * 必填
+     * 业务编码
+     * 可选
      * SpEL表达式
      */
+    String bizCode() default "#bizCode";
+
+    /**
+     * 业务类型
+     */
     String bizType();
+
+    /**
+     * 业务动作
+     */
+    String bizAction();
 
     /**
      * 日志内容
@@ -35,8 +44,6 @@ public @interface OperationLog {
 
     /**
      * 日志标签
-     * 可选
-     * SpEL表达式
      */
     String tag() default "'operation'";
 
@@ -55,22 +62,22 @@ public @interface OperationLog {
     String operatorId() default "";
 
     /**
-     * 切面执行时机
-     * true: 执行方法前解析切面逻辑
-     * false: 执行方法后解析切面逻辑
+     * 执行时机
+     * true: 执行方法前
+     * false: 执行方法后
      */
     boolean executeBeforeFunc() default false;
 
 
     /**
-     * 日志记录条件
+     * 记录条件
      * 可选
      * SpEL表达式
      */
     String condition() default "'true'";
 
     /**
-     * 自定义方法执行是否成功 用于根据返回体或其他情况下自定义日志实体中的success字段
+     * 是否成功
      * 可选
      * SpEL表达式
      */

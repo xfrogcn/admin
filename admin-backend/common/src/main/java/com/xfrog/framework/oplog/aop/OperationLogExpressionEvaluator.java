@@ -17,11 +17,17 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
 
     public static final String RESULT_VARIABLE = "result";
 
-    private final Map<ExpressionKey, Expression> keyCache = new ConcurrentHashMap<>(64);
+    private final Map<ExpressionKey, Expression> bizIdCache = new ConcurrentHashMap<>(64);
+
+    private final Map<ExpressionKey, Expression> bizCodeCache = new ConcurrentHashMap<>(64);
+
+    private final Map<ExpressionKey, Expression> bizExtraCache = new ConcurrentHashMap<>(64);
 
     private final Map<ExpressionKey, Expression> conditionCache = new ConcurrentHashMap<>(64);
 
-    private final Map<ExpressionKey, Expression> unlessCache = new ConcurrentHashMap<>(64);
+    private final Map<ExpressionKey, Expression> msgCache = new ConcurrentHashMap<>(64);
+
+    private final Map<ExpressionKey, Expression> successCache = new ConcurrentHashMap<>(64);
 
     private final OperationLogEvaluationContextFactory evaluationContextFactory;
 
@@ -31,35 +37,40 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
         this.evaluationContextFactory.setParameterNameDiscoverer(this::getParameterNameDiscoverer);
     }
 
-    /**
-     * Create an {@link EvaluationContext}.
-     * @param method the method
-     * @param args the method arguments
-     * @param target the target object
-     * @param targetClass the target class
-     * @param result the return value (can be {@code null}) or
-     * {@link #NO_RESULT} if there is no return at this time
-     * @return the evaluation context
-     */
-    public EvaluationContext createEvaluationContext(Method method, Object[] args, Object target, Class<?> targetClass, Method targetMethod,
+    public OperationLogEvaluationContext createEvaluationContext(Method method, Object[] args, Object target, Class<?> targetClass, Method targetMethod,
                                                      @Nullable Object result) {
 
         OperationLogExpressionRootObject rootObject = new OperationLogExpressionRootObject(
                 method, args, target, targetClass);
         OperationLogEvaluationContext evaluationContext = this.evaluationContextFactory
                 .forOperation(rootObject, targetMethod, args);
+       updateResult(evaluationContext, result);
+        return evaluationContext;
+    }
+
+    public void updateResult(OperationLogEvaluationContext evaluationContext, Object result) {
+        evaluationContext.removeUnavailableVariable(RESULT_VARIABLE);
         if (result == RESULT_UNAVAILABLE) {
             evaluationContext.addUnavailableVariable(RESULT_VARIABLE);
         }
         else if (result != NO_RESULT) {
             evaluationContext.setVariable(RESULT_VARIABLE, result);
         }
-        return evaluationContext;
     }
 
     @Nullable
-    public Object key(String keyExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
-        return getExpression(this.keyCache, methodKey, keyExpression).getValue(evalContext);
+    public Object bizId(String bizIdExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return getExpression(this.bizIdCache, methodKey, bizIdExpression).getValue(evalContext);
+    }
+
+    @Nullable
+    public Object bizCode(String bizTypeExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return getExpression(this.bizCodeCache, methodKey, bizTypeExpression).getValue(evalContext);
+    }
+
+    @Nullable
+    public Object extra(String bizActionExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return getExpression(this.bizExtraCache, methodKey, bizActionExpression).getValue(evalContext);
     }
 
     public boolean condition(String conditionExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
@@ -67,8 +78,12 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
                 evalContext, Boolean.class)));
     }
 
-    public boolean unless(String unlessExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
-        return (Boolean.TRUE.equals(getExpression(this.unlessCache, methodKey, unlessExpression).getValue(
+    public String msg(String msgExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return getExpression(this.msgCache, methodKey, msgExpression).getValue(evalContext, String.class);
+    }
+
+    public boolean success(String unlessExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return (Boolean.TRUE.equals(getExpression(this.successCache, methodKey, unlessExpression).getValue(
                 evalContext, Boolean.class)));
     }
 
@@ -76,8 +91,11 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
      * Clear all caches.
      */
     void clear() {
-        this.keyCache.clear();
+        this.bizIdCache.clear();
+        this.bizCodeCache.clear();
+        this.bizExtraCache.clear();
+        this.msgCache.clear();
         this.conditionCache.clear();
-        this.unlessCache.clear();
+        this.successCache.clear();
     }
 }

@@ -21,6 +21,10 @@ class OperationLogEvaluationContext extends MethodBasedEvaluationContext {
     public void addUnavailableVariable(String name) {
         this.unavailableVariables.add(name);
     }
+    public void removeUnavailableVariable(String name) {
+        this.unavailableVariables.remove(name);
+    }
+
 
 
     @Override
