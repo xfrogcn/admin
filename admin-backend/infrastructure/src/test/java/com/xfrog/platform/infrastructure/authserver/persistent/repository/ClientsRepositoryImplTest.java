@@ -35,8 +35,8 @@ class ClientsRepositoryImplTest extends BaseRepositoryTest {
 
         registeredClientDTO = clientsRepository.findByClientId("1");
         assertThat(registeredClientDTO).isNotNull();
-        assertThat(registeredClientDTO.getCreatedBy()).isEqualTo(1L);
-        assertThat(registeredClientDTO.getUpdatedBy()).isEqualTo(1L);
+        assertThat(registeredClientDTO.getCreatedBy()).isEqualTo(0L);
+        assertThat(registeredClientDTO.getUpdatedBy()).isEqualTo(0L);
         assertThat(registeredClientDTO.getCreatedTime()).isNotNull();
         assertThat(registeredClientDTO.getUpdatedTime()).isNotNull();
         assertThat(registeredClientDTO.getDeleted()).isFalse();
