@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 public final class PrincipalInfo {
 
-    private static final PrincipalInfo SYSTEM_USER = new PrincipalInfo(1L, "system", 1L, "", true, "GLOBAL");
+    private static final PrincipalInfo SYSTEM_USER = new PrincipalInfo(0L, "system", 0L, "", true, "GLOBAL");
 
     private final Long userId;
     private final Long organizationId;
