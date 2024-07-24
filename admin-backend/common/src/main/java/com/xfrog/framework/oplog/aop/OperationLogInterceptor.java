@@ -6,6 +6,7 @@ import com.xfrog.framework.oplog.domain.OpLog;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.slf4j.MDC;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationEventPublisher;
@@ -151,6 +152,11 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
         builder.bizType(opLog.bizType());
         builder.bizAction(opLog.bizAction());
         builder.tag(opLog.tag());
+        // 请求ID
+        String traceId = MDC.get("traceId");
+        if (StringUtils.hasText(traceId)) {
+            builder.requestId(traceId);
+        }
 
         if (StringUtils.hasText(opLog.extra())) {
             builder.bizType(conversionService.convert(evaluator.extra(opLog.extra(), elementKey, evaluationContext), String.class));
