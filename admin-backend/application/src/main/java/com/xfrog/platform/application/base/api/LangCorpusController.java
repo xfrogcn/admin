@@ -51,7 +51,7 @@ public class LangCorpusController implements LangCorpusApi {
     @Authorization("admin:platform:langcorpus:enable")
     @Override
     @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG_CORPUS,
-            bizAction = "#p1 ? '" + OperationActionConstants.ENABLE + "': '" +OperationActionConstants.DISABLE + "'")
+            bizActionSpel = "#p1 ? '" + OperationActionConstants.ENABLE + "': '" +OperationActionConstants.DISABLE + "'")
     public void enableLangCorpus(Long langCorpusId, Boolean enabled) {
         langCorpusService.enableLangCorpus(langCorpusId, enabled);
     }

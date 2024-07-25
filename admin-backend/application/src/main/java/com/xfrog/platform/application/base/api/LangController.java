@@ -40,7 +40,7 @@ public class LangController implements LangApi {
 
     @Authorization("admin:platform:lang:edit")
     @Override
-    @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG, bizActionSpel = OperationActionConstants.UPDATE)
+    @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG, bizAction = OperationActionConstants.UPDATE)
     public void updateLanguage(Long languageId, UpdateLangRequestDTO language) {
         languageService.updateLanguage(languageId, language);
     }
@@ -48,14 +48,14 @@ public class LangController implements LangApi {
     @Override
     @Authorization("admin:platform:lang:enable")
     @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG,
-            bizAction = "#p1 ? '" + OperationActionConstants.ENABLE + "': '" +OperationActionConstants.DISABLE + "'")
+            bizActionSpel = "#p1 ? '" + OperationActionConstants.ENABLE + "': '" +OperationActionConstants.DISABLE + "'")
     public void enableLanguage(Long langId, Boolean enabled, Long referenceLangId) {
         languageService.enableLanguage(langId, enabled, referenceLangId);
     }
 
     @Authorization("admin:platform:lang:delete")
     @Override
-    @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG, bizActionSpel = OperationActionConstants.DELETE)
+    @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG, bizAction = OperationActionConstants.DELETE)
     public void deleteLanguage(Long languageId) {
         languageService.deleteLanguage(languageId);
     }
