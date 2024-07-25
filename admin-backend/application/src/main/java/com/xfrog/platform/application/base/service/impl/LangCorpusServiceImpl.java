@@ -5,6 +5,7 @@ import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.framework.exception.business.AlreadyExistsException;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
+import com.xfrog.framework.oplog.OpLogMDC;
 import com.xfrog.platform.application.base.converter.LangCorpusDTOConverter;
 import com.xfrog.platform.application.base.dto.CreateLangCorpusRequestDTO;
 import com.xfrog.platform.application.base.dto.LangCorpusDTO;
@@ -57,7 +58,7 @@ public class LangCorpusServiceImpl implements LangCorpusService {
         if (langCorpusDomainRepository.existsByApplicationAndCodes(langCorpusRequestDTO.getApplication(), corpusCodes)) {
             throw new AlreadyExistsException("corpus code exists");
         }
-        
+        OpLogMDC.putBizCode(String.join(",", corpusCodes));
         // 保存语言定义
         List<CreateLangCorpusCommand> createCommands = langCorpusRequestDTO.getCorpusItems().stream()
                 .map(it -> LangCorpusDTOConverter.INSTANCE.toCreateCommand(langCorpusRequestDTO, it))
@@ -79,6 +80,7 @@ public class LangCorpusServiceImpl implements LangCorpusService {
         if (langCorpus == null) {
             throw new NotFoundException("corpus not found");
         }
+        OpLogMDC.putBizCode(langCorpus.getCorpusCode());
         UpdateLangCorpusCommand updateLangCorpusCommand = LangCorpusDTOConverter.INSTANCE.toUpdateCommand(updateLangCorpusRequestDTO);
         langCorpus.update(updateLangCorpusCommand);
 
@@ -92,7 +94,7 @@ public class LangCorpusServiceImpl implements LangCorpusService {
         if (langCorpus == null) {
             throw new NotFoundException("lang corpus not exists");
         }
-
+        OpLogMDC.putBizCode(langCorpus.getCorpusCode());
         langCorpusDomainRepository.logicDelete(langCorpusId);
 
         List<LangLocal> langsLocal = langLocalDomainRepository.findAllByApplicationAndCorpusIds(langCorpus.getApplication(), List.of(langCorpus.getId()));
@@ -110,7 +112,7 @@ public class LangCorpusServiceImpl implements LangCorpusService {
         if (langCorpus == null) {
             throw new NotFoundException("corpus not found");
         }
-
+        OpLogMDC.putBizCode(langCorpus.getCorpusCode());
         if (enabled) {
             langCorpus.enable();
         } else {
@@ -145,7 +147,7 @@ public class LangCorpusServiceImpl implements LangCorpusService {
         if (langCorpus == null) {
             throw new NotFoundException("corpus not found");
         }
-
+        OpLogMDC.putBizCode(langCorpus.getCorpusCode());
         fillLanguageCorpusLocal(langCorpus.getApplication(), List.of(langCorpus), Map.of(langCorpus.getCorpusCode(), langLocal));
     }
 
