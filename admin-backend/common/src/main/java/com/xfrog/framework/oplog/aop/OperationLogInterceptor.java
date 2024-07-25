@@ -148,10 +148,10 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
 
         OpLog.OpLogBuilder<?, ?> builder = OpLog.builder();
         if (StringUtils.hasText(opLog.bizId())) {
-            builder.bizId(conversionService.convert(evaluator.bizId(opLog.bizId(), elementKey, evaluationContext), String.class));
+            builder.bizId(truncateString(conversionService.convert(evaluator.bizId(opLog.bizId(), elementKey, evaluationContext), String.class), 64));
         }
         if (StringUtils.hasText(opLog.bizCode())) {
-            builder.bizCode(conversionService.convert(evaluator.bizCode(opLog.bizCode(), elementKey, evaluationContext), String.class));
+            builder.bizCode(truncateString(conversionService.convert(evaluator.bizCode(opLog.bizCode(), elementKey, evaluationContext), String.class), 128));
         }
 
         if (StringUtils.hasText(opLog.bizActionSpel())) {
@@ -185,5 +185,17 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
         return Optional.of(builder);
     }
 
+    protected String truncateString(String input, int maxLength) {
+        if (input == null || input.length() <= maxLength) {
+            return input;
+        } else {
+            int end = maxLength - 3; // 减去省略号的长度
+            if (end > 0) {
+                return input.substring(0, end) + "...";
+            } else {
+                return "";
+            }
+        }
+    }
 
 }

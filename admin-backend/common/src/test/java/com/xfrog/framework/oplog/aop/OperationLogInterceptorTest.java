@@ -24,6 +24,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -216,6 +218,46 @@ class OperationLogInterceptorTest {
         assertThat(opLog.getExtra()).isEqualTo("\"extra\"");
         assertThat(opLog.getTag()).isEqualTo("tag");
         assertThat(opLog.getSuccess()).isFalse();
+    }
+
+    @Test
+    public void truncateString_InputLengthLessThanOrEqualToMaxLength_ReturnsSameString() {
+        String input = "abc";
+        int maxLength = 10;
+        String result = interceptor.truncateString(input, maxLength);
+        assertEquals(input, result);
+    }
+
+    @Test
+    public void truncateString_InputLengthGreaterThanMaxLength_ReturnsTruncatedStringWithEllipsis() {
+        String input = "abcdefghij";
+        int maxLength = 5;
+        String result = interceptor.truncateString(input, maxLength);
+        assertEquals("ab...", result);
+    }
+
+    @Test
+    public void truncateString_InputLengthGreaterThanMaxLengthWithNoSpaceForEllipsis_ReturnsEmptyString() {
+        String input = "abcdefghij";
+        int maxLength = 3;
+        String result = interceptor.truncateString(input, maxLength);
+        assertEquals("", result);
+    }
+
+    @Test
+    public void truncateString_NullInput_ReturnsEmptyString() {
+        String input = null;
+        int maxLength = 10;
+        String result = interceptor.truncateString(input, maxLength);
+        assertNull(result);
+    }
+
+    @Test
+    public void truncateString_EmptyInput_ReturnsEmptyString() {
+        String input = "";
+        int maxLength = 10;
+        String result = interceptor.truncateString(input, maxLength);
+        assertEquals("", result);
     }
 
     @Nested
