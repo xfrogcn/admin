@@ -1,5 +1,6 @@
 package com.xfrog.platform.application.base.service.impl;
 
+import com.xfrog.framework.oplog.OpLogMDC;
 import com.xfrog.framework.principal.CurrentPrincipalContext;
 import com.xfrog.framework.principal.PrincipalInfo;
 import com.xfrog.platform.application.base.dto.LangDTO;
@@ -61,6 +62,8 @@ public class UserParameterServiceImpl implements UserParameterService {
         if (requestDTO == null || requestDTO.getParameters() == null || requestDTO.getParameters().isEmpty()) {
             return;
         }
+
+        OpLogMDC.putBizCode(String.join(",", requestDTO.getParameters().keySet()));
 
         Map<String, UserParameter> originalParameters = userParameterDomainRepository.findByUserIdAndApplicationAndNames(
                 principalInfo.getUserId(), application, requestDTO.getParameters().keySet().stream().toList()).stream()

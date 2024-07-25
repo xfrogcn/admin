@@ -1,6 +1,9 @@
 package com.xfrog.platform.application.base.api;
 
+import com.xfrog.framework.oplog.OperationActionConstants;
+import com.xfrog.framework.oplog.annotation.OperationLog;
 import com.xfrog.platform.application.base.UserParameterApi;
+import com.xfrog.platform.application.base.constant.BaseOperationLogConstants;
 import com.xfrog.platform.application.base.dto.UpdateUserParameterRequestDTO;
 import com.xfrog.platform.application.base.dto.UserSettingsDTO;
 import com.xfrog.platform.application.base.service.UserParameterService;
@@ -19,6 +22,7 @@ public class UserParameterController implements UserParameterApi {
     }
 
     @Override
+    @OperationLog(bizId = "", bizType = BaseOperationLogConstants.BIZ_TYPE_USER_PARAMETER, bizAction = OperationActionConstants.UPDATE)
     public void updateUserParameters(String application, UpdateUserParameterRequestDTO requestDTO) {
         userParameterService.updateUserParameters(application, requestDTO);
     }
