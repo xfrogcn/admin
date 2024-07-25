@@ -1,7 +1,10 @@
 package com.xfrog.platform.application.base.api;
 
 import com.xfrog.framework.dto.PageDTO;
+import com.xfrog.framework.oplog.OperationActionConstants;
+import com.xfrog.framework.oplog.annotation.OperationLog;
 import com.xfrog.platform.application.base.LangApi;
+import com.xfrog.platform.application.base.constant.BaseOperationLogConstants;
 import com.xfrog.platform.application.base.dto.CreateLangRequestDTO;
 import com.xfrog.platform.application.base.dto.LangDTO;
 import com.xfrog.platform.application.base.dto.QueryLangRequestDTO;
@@ -18,6 +21,7 @@ public class LangController implements LangApi {
 
     @Authorization("admin:platform:lang:create")
     @Override
+    @OperationLog(bizId = "#return", bizCode = "#p0.application + '-' + #p0.code", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG, bizAction = OperationActionConstants.CREATE)
     public Long createLanguage(CreateLangRequestDTO language) {
         return languageService.createLanguage(language);
     }
@@ -36,18 +40,22 @@ public class LangController implements LangApi {
 
     @Authorization("admin:platform:lang:edit")
     @Override
+    @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG, bizActionSpel = OperationActionConstants.UPDATE)
     public void updateLanguage(Long languageId, UpdateLangRequestDTO language) {
         languageService.updateLanguage(languageId, language);
     }
 
     @Override
     @Authorization("admin:platform:lang:enable")
+    @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG,
+            bizAction = "#p1 ? '" + OperationActionConstants.ENABLE + "': '" +OperationActionConstants.DISABLE + "'")
     public void enableLanguage(Long langId, Boolean enabled, Long referenceLangId) {
         languageService.enableLanguage(langId, enabled, referenceLangId);
     }
 
     @Authorization("admin:platform:lang:delete")
     @Override
+    @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG, bizActionSpel = OperationActionConstants.DELETE)
     public void deleteLanguage(Long languageId) {
         languageService.deleteLanguage(languageId);
     }

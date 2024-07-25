@@ -3,6 +3,7 @@ package com.xfrog.platform.application.base.service.impl;
 import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
+import com.xfrog.framework.oplog.OpLogMDC;
 import com.xfrog.platform.application.base.converter.LangDTOConverter;
 import com.xfrog.platform.application.base.dto.CreateLangRequestDTO;
 import com.xfrog.platform.application.base.dto.LangDTO;
@@ -62,6 +63,7 @@ public class LangServiceImpl implements LangService {
         if (lang == null) {
             throw new NotFoundException("lang not found");
         }
+        OpLogMDC.putBizCode(lang.getCode());
         UpdateLangCommand updateLangCommand = LangDTOConverter.INSTANCE.toUpdateCommand(updateLanguageRequestDTO);
         lang.update(updateLangCommand);
 
@@ -71,6 +73,11 @@ public class LangServiceImpl implements LangService {
     @Override
     @Transactional
     public void deleteLanguage(Long languageId) {
+        Lang lang = languageDomainRepository.findById(languageId);
+        if (lang == null) {
+            throw new NotFoundException("lang not found");
+        }
+        OpLogMDC.putBizCode(lang.getCode());
         languageDomainRepository.logicDelete(languageId);
     }
 
@@ -91,7 +98,7 @@ public class LangServiceImpl implements LangService {
         if (lang == null) {
             throw new NotFoundException("lang not found");
         }
-
+        OpLogMDC.putBizCode(lang.getCode());
         if (enabled) {
             lang.enable();
         } else {

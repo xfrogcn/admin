@@ -119,8 +119,18 @@ class LangServiceImplTest {
 
     @Test
     void deleteLanguage_ShouldSuccessfully() {
-        langService.deleteLanguage(1L);
-        verify(langDomainRepository, times(1)).logicDelete(1L);
+        Lang lang = LangFixtures.createDefaultLang().build();
+
+        when(langDomainRepository.findById(lang.getId())).thenReturn(lang);
+
+        langService.deleteLanguage(lang.getId());
+        verify(langDomainRepository, times(1)).logicDelete(lang.getId());
+    }
+
+    @Test
+    void deleteLanguage_ShouldThrowNotFoundExceptionWhenNotFound() {
+        when(langDomainRepository.findById(1L)).thenReturn(null);
+        assertThrows(NotFoundException.class, () -> langService.deleteLanguage(1L));
     }
 
     @Test
