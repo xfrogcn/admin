@@ -4,6 +4,7 @@ import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.framework.exception.business.AlreadyExistsException;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
+import com.xfrog.framework.oplog.OpLogMDC;
 import com.xfrog.platform.application.common.RequestThreadMarkContext;
 import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.CreateRoleRequestDTO;
@@ -129,6 +130,8 @@ public class TenantServiceImpl implements TenantService {
         if (tenant == null) {
             throw new NotFoundException("tenant not found");
         }
+        OpLogMDC.putBizCode(tenant.getCode());
+
         tenant.update(tenantDTO.getName(), tenantDTO.getMemo());
 
         tenantDomainRepository.save(tenant);
@@ -142,6 +145,8 @@ public class TenantServiceImpl implements TenantService {
         if (tenant == null) {
             throw new NotFoundException("tenant not found");
         }
+        OpLogMDC.putBizCode(tenant.getCode());
+
         tenant.updateEnabled(enabled);
 
         tenantDomainRepository.save(tenant);
