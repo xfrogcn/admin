@@ -3,6 +3,7 @@ package com.xfrog.platform.application.config;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import com.xfrog.framework.oplog.EnableOperationLog;
 import com.xfrog.platform.application.base.event.OperationLogEventListener;
+import com.xfrog.platform.application.base.service.OpLogService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -36,7 +37,7 @@ public class OperationLogConfig {
     }
 
     @Bean
-    public OperationLogEventListener operationLogEventListener() {
-        return new OperationLogEventListener();
+    public OperationLogEventListener operationLogEventListener(OpLogService opLogService) {
+        return new OperationLogEventListener(opLogService);
     }
 }
