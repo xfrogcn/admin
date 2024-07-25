@@ -7,6 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static com.xfrog.framework.oplog.OpLogMDC.BIZ_CODE_KEY;
+
 @Documented
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -23,7 +25,7 @@ public @interface OperationLog {
      * 可选
      * SpEL表达式
      */
-    String bizCode() default "#bizCode";
+    String bizCode() default "#" + BIZ_CODE_KEY;
 
     /**
      * 业务类型
