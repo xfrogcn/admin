@@ -62,7 +62,9 @@ public class RoleApiTest extends BasePermissionApiTest {
     @Test
     @Sql(statements = {PermissionApiFixtures.SQL_TRUNCATE_ROLES})
     void deleteRole_ShouldSuccessfully() {
-        request(delete(url("/api/roles/{id}", 2L), null))
+        Role role = permissionApiFixtures.saveRole(PermissionFixtures.createDefaultRole().build());
+
+        request(delete(url("/api/roles/{id}", role.getId()), null))
                 .andExpect(status().isOk());
     }
 

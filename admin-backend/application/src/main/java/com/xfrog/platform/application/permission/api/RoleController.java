@@ -62,7 +62,7 @@ public class RoleController implements RoleApi {
 
     @Authorization("admin:system:role:grant")
     @Override
-    @OperationLog(bizId = "#p0", bizType = PermissionOperationLogConstants.BIZ_TYPE_ROLE, bizAction = OperationActionConstants.PERMISSION_CHANGE)
+    @OperationLog(bizId = "#p0", bizType = PermissionOperationLogConstants.BIZ_TYPE_ROLE, bizAction = OperationActionConstants.PERMISSION_CHANGE, extra = "json(#p1)")
     public void grantPermissionItems(Long roleId, List<Long> permissionItemIds) {
         roleService.grantPermissionItems(roleId, permissionItemIds);
     }

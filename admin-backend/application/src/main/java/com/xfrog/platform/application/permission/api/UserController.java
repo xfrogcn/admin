@@ -78,7 +78,7 @@ public class UserController implements UserApi {
 
     @Authorization("admin:system:user:grantrole")
     @Override
-    @OperationLog(bizId = "#p0", bizType = PermissionOperationLogConstants.BIZ_TYPE_USER, bizAction = OperationActionConstants.PERMISSION_CHANGE)
+    @OperationLog(bizId = "#p0", bizType = PermissionOperationLogConstants.BIZ_TYPE_USER, bizAction = OperationActionConstants.PERMISSION_CHANGE, extra = "json(#p1)")
     public void grantRoles(Long userId, List<Long> roleIds) {
         userService.grantRoles(userId, roleIds);
     }

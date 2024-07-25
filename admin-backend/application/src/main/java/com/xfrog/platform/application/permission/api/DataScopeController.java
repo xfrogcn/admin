@@ -1,5 +1,8 @@
 package com.xfrog.platform.application.permission.api;
 
+import com.xfrog.framework.oplog.OperationActionConstants;
+import com.xfrog.framework.oplog.annotation.OperationLog;
+import com.xfrog.platform.application.permission.api.constant.PermissionOperationLogConstants;
 import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
 import com.xfrog.platform.application.permission.api.dto.GrantDataScopeRequestDTO;
 import com.xfrog.platform.application.permission.service.DataScopeService;
@@ -18,6 +21,11 @@ public class DataScopeController implements DataScopeApi {
 
     @Override
     @Authorization("admin:system:user:grantdatascope|admin:system:role:grantdatascope")
+    @OperationLog(bizId = "format('%s-%s', #p0.targetType, #p0.targetId)",
+            bizCode = "format('%s-%s', #p0.targetType, #p0.targetId)",
+            bizType = PermissionOperationLogConstants.BIZ_TYPE_DATA_SCOPE,
+            bizAction = OperationActionConstants.UPDATE,
+            extra = "json(#p0)")
     public void grantDataScope(GrantDataScopeRequestDTO requestDTO) {
         dataScopeService.grantDataScope(requestDTO);
     }
