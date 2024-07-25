@@ -1,6 +1,6 @@
 package com.xfrog.framework.oplog.aop;
 
-import com.xfrog.framework.oplog.OperationLogEvent;
+import com.xfrog.framework.oplog.OperationLogPublisher;
 import com.xfrog.framework.oplog.OperatorIdProvider;
 import com.xfrog.framework.oplog.annotation.OperationLog;
 import com.xfrog.framework.oplog.domain.OpLog;
@@ -11,8 +11,6 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.MDC;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.support.AopUtils;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.expression.AnnotatedElementKey;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.expression.EvaluationContext;
@@ -32,7 +30,7 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OperationLogInterceptor implements ApplicationEventPublisherAware,  MethodInterceptor, Serializable {
+public class OperationLogInterceptor implements MethodInterceptor, Serializable {
 
     private final ConversionService conversionService = new DefaultFormattingConversionService();
 
@@ -41,15 +39,9 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
     private final OperationLogExpressionEvaluator evaluator = new OperationLogExpressionEvaluator(
             new OperationLogEvaluationContextFactory(this.originalEvaluationContext));
 
-    private ApplicationEventPublisher eventPublisher;
+    private final OperationLogPublisher eventPublisher;
 
     private final OperatorIdProvider operatorIdProvider;
-
-
-    @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-        this.eventPublisher = applicationEventPublisher;
-    }
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -135,10 +127,7 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
         if (CollectionUtils.isEmpty(logs)) {
             return;
         }
-        if (eventPublisher == null) {
-            return;
-        }
-        eventPublisher.publishEvent(OperationLogEvent.of(logs));
+        eventPublisher.publish(logs);
     }
 
     protected Optional<OpLog.OpLogBuilder<?, ?>> log(AnnotatedElementKey elementKey, OperationLog opLog, EvaluationContext evaluationContext, boolean processResult) {

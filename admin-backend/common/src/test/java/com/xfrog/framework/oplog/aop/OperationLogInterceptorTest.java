@@ -1,7 +1,7 @@
 package com.xfrog.framework.oplog.aop;
 
 import com.xfrog.framework.exception.business.NotFoundException;
-import com.xfrog.framework.oplog.OperationLogEvent;
+import com.xfrog.framework.oplog.OperationLogPublisher;
 import com.xfrog.framework.oplog.OperatorIdProvider;
 import com.xfrog.framework.oplog.annotation.OperationLog;
 import com.xfrog.framework.oplog.domain.OpLog;
@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.expression.AnnotatedElementKey;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -27,7 +26,7 @@ import static org.assertj.core.api.Fail.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -39,7 +38,7 @@ import static org.mockito.Mockito.when;
 class OperationLogInterceptorTest {
 
     @Mock
-    private ApplicationEventPublisher eventPublisher;
+    private OperationLogPublisher publisher;
 
     @Mock
     private OperatorIdProvider operatorIdProvider;
@@ -49,7 +48,7 @@ class OperationLogInterceptorTest {
 
     @BeforeEach
     public void setUp() {
-        interceptor.setApplicationEventPublisher(eventPublisher);
+
     }
 
     private static class OperationLogTestTarget {
@@ -91,7 +90,7 @@ class OperationLogInterceptorTest {
 
         // Assert
         verify(invocation, times(1)).proceed();
-        verifyNoMoreInteractions(eventPublisher);
+        verifyNoMoreInteractions(publisher);
     }
 
     @Test
@@ -109,13 +108,13 @@ class OperationLogInterceptorTest {
 
         // Assert
         verify(invocation, times(1)).proceed();
-        ArgumentCaptor<OperationLogEvent> captor = ArgumentCaptor.forClass(OperationLogEvent.class);
-        verify(eventPublisher, times(1)).publishEvent(captor.capture());
-        List<OperationLogEvent> events = captor.getAllValues();
+        ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
+        verify(publisher, times(1)).publish(captor.capture());
+        List<List<OpLog>> logs = captor.getAllValues();
 
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).getLogs()).hasSize(1);
-        OpLog opLog = events.get(0).getLogs().get(0);
+        assertThat(logs).hasSize(1);
+        assertThat(logs.get(0)).hasSize(1);
+        OpLog opLog = logs.get(0).get(0);
         assertThat(opLog).isNotNull();
         assertThat(opLog.getOperatorId()).isEqualTo(1);
         assertThat(opLog.getBizId()).isEqualTo("1");
@@ -143,13 +142,13 @@ class OperationLogInterceptorTest {
 
         // Assert
         verify(invocation, times(1)).proceed();
-        ArgumentCaptor<OperationLogEvent> captor = ArgumentCaptor.forClass(OperationLogEvent.class);
-        verify(eventPublisher, times(1)).publishEvent(captor.capture());
-        List<OperationLogEvent> events = captor.getAllValues();
+        ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
+        verify(publisher, times(1)).publish(captor.capture());
+        List<List<OpLog>> logs = captor.getAllValues();
 
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).getLogs()).hasSize(1);
-        OpLog opLog = events.get(0).getLogs().get(0);
+        assertThat(logs).hasSize(1);
+        assertThat(logs.get(0)).hasSize(1);
+        OpLog opLog = logs.get(0).get(0);
         assertThat(opLog).isNotNull();
         assertThat(opLog.getOperatorId()).isEqualTo(1);
         assertThat(opLog.getBizId()).isEqualTo("1");
@@ -177,7 +176,7 @@ class OperationLogInterceptorTest {
 
         // Assert
         verify(invocation, times(1)).proceed();
-        verify(eventPublisher, never()).publishEvent(any());
+        verify(publisher, never()).publish(anyList());
     }
 
 
@@ -202,13 +201,13 @@ class OperationLogInterceptorTest {
 
         // Assert
         verify(invocation, times(1)).proceed();
-        ArgumentCaptor<OperationLogEvent> captor = ArgumentCaptor.forClass(OperationLogEvent.class);
-        verify(eventPublisher, times(1)).publishEvent(captor.capture());
-        List<OperationLogEvent> events = captor.getAllValues();
+        ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
+        verify(publisher, times(1)).publish(captor.capture());
+        List<List<OpLog>> logs = captor.getAllValues();
 
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).getLogs()).hasSize(1);
-        OpLog opLog = events.get(0).getLogs().get(0);
+        assertThat(logs).hasSize(1);
+        assertThat(logs.get(0)).hasSize(1);
+        OpLog opLog = logs.get(0).get(0);
         assertThat(opLog).isNotNull();
         assertThat(opLog.getOperatorId()).isEqualTo(1);
         assertThat(opLog.getBizId()).isEqualTo("1");
