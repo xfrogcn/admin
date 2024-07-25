@@ -3,6 +3,7 @@ package com.xfrog.platform.application.permission.service.impl;
 import com.xfrog.framework.exception.business.AlreadyExistsException;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
+import com.xfrog.framework.oplog.OpLogMDC;
 import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
 import com.xfrog.platform.application.permission.api.dto.QueryOrganizationRequestDTO;
@@ -103,6 +104,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (organizationDomainRepository.existsChildren(organizationId)) {
             throw new FailedPreconditionException("organization has children");
         }
+
+        OpLogMDC.putBizCode(organization.getName());
+
         organizationDomainRepository.logicDelete(organizationId);
         organizationRepository.removeCache(organizationId);
     }
