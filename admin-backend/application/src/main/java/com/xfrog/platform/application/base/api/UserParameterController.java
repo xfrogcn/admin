@@ -22,7 +22,7 @@ public class UserParameterController implements UserParameterApi {
     }
 
     @Override
-    @OperationLog(bizId = "", bizType = BaseOperationLogConstants.BIZ_TYPE_USER_PARAMETER, bizAction = OperationActionConstants.UPDATE)
+    @OperationLog(bizId = "#userId", bizType = BaseOperationLogConstants.BIZ_TYPE_USER_PARAMETER, bizAction = OperationActionConstants.UPDATE)
     public void updateUserParameters(String application, UpdateUserParameterRequestDTO requestDTO) {
         userParameterService.updateUserParameters(application, requestDTO);
     }

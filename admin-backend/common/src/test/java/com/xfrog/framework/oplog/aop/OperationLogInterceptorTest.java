@@ -290,7 +290,7 @@ class OperationLogInterceptorTest {
             OperationLogTestTarget target = new OperationLogTestTarget();
             Method method = target.getClass().getMethod("annotatedAfterMethod", Long.class);
 
-            OperationLogEvaluationContext context = evaluator.createEvaluationContext(method, new Object[]{1L}, target, target.getClass(), method, null);
+            OperationLogEvaluationContext context = evaluator.createEvaluationContext(method, new Object[]{1L}, target, target.getClass(), method, null, 1L);
             evaluator.bizId("'bizId'",
                     new AnnotatedElementKey(method, target.getClass()),
                     context);
@@ -307,7 +307,7 @@ class OperationLogInterceptorTest {
         OperationLogTestTarget target = new OperationLogTestTarget();
         Method method = target.getClass().getMethod("annotatedAfterMethod", Long.class);
 
-        return evaluator.createEvaluationContext(method, new Object[]{1L}, target, target.getClass(), method, null);
+        return evaluator.createEvaluationContext(method, new Object[]{1L}, target, target.getClass(), method, null, 1L);
     }
 
     private OperationLogExpressionEvaluator createEvaluator() {

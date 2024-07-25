@@ -75,7 +75,7 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
                 target,
                 targetClass,
                 targetMethod,
-                OperationLogExpressionEvaluator.RESULT_UNAVAILABLE);
+                OperationLogExpressionEvaluator.RESULT_UNAVAILABLE, operatorId);
         AnnotatedElementKey elementKey = new AnnotatedElementKey(targetMethod, targetClass);
 
         List<OperationLog> afterLogs = new ArrayList<>(annotations.length);

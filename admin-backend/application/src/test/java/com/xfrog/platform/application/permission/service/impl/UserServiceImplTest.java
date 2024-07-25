@@ -300,6 +300,14 @@ class UserServiceImplTest {
     }
 
     @Test
+    void grantRoles_ShouldThrowUserNotFound() {
+
+        when(userDomainRepository.findById(1L)).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> userService.grantRoles(1L, List.of(1L)));
+    }
+
+    @Test
     void grantRoles_ShouldAddNewRoles() {
         User user = PermissionFixtures.createDefaultUser().build();
         Role role = PermissionFixtures.createDefaultRole().build();
@@ -307,6 +315,7 @@ class UserServiceImplTest {
         UserRole existingRole = PermissionFixtures.createDefaultUserRole(user.getId(), role.getId()).build();
         // Given
         when(userRoleDomainRepository.getByUserId(user.getId())).thenReturn(List.of(existingRole));
+        when(userDomainRepository.findById(user.getId())).thenReturn(user);
 
         // When
         userService.grantRoles(user.getId(), List.of(existingRole.getRoleId(), role2.getId()));
@@ -328,6 +337,7 @@ class UserServiceImplTest {
         Role role = PermissionFixtures.createDefaultRole().build();
         UserRole existingRole = PermissionFixtures.createDefaultUserRole(user.getId(), role.getId()).build();
         // Given
+        when(userDomainRepository.findById(user.getId())).thenReturn(user);
         when(userRoleDomainRepository.getByUserId(user.getId())).thenReturn(List.of(existingRole));
 
         // When

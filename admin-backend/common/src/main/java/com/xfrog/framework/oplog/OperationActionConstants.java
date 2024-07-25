@@ -13,4 +13,5 @@ public class OperationActionConstants {
     public static final String LOGOUT = "logout";
     public static final String PASSWORD_RESET = "password_reset";
     public static final String PASSWORD_CHANGE = "password_change";
+    public static final String PERMISSION_CHANGE = "permission_change";
 }

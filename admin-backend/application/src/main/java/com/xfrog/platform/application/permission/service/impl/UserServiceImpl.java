@@ -5,6 +5,7 @@ import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.framework.exception.business.AlreadyExistsException;
 import com.xfrog.framework.exception.business.NotFoundException;
 import com.xfrog.framework.exception.business.PermissionDeniedException;
+import com.xfrog.framework.oplog.OpLogMDC;
 import com.xfrog.framework.principal.CurrentPrincipalContext;
 import com.xfrog.framework.principal.PrincipalInfo;
 import com.xfrog.platform.application.permission.api.dto.CreateUserRequestDTO;
@@ -103,6 +104,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new NotFoundException("user not found");
         }
+        OpLogMDC.putBizCode(user.getUserName());
         user.update(userDTO.getOrganizationId(), userDTO.getName(), userDTO.getSex(), userDTO.getMobilePhone(), userDTO.getEmail());
         userDomainRepository.save(user);
         userRepository.removeCache(userId);
@@ -124,6 +126,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new NotFoundException("user not found");
         }
+        OpLogMDC.putBizCode(user.getUserName());
         String encodedPassword = passwordEncoder.encode(password);
         user.changePassword("{bcrypt}"+encodedPassword);
         userDomainRepository.save(user);
@@ -136,6 +139,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new NotFoundException("user not found");
         }
+        OpLogMDC.putBizCode(user.getUserName());
         user.changeEnabled(false);
         userDomainRepository.save(user);
         userRepository.removeCache(userId);
@@ -148,6 +152,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new NotFoundException("user not found");
         }
+        OpLogMDC.putBizCode(user.getUserName());
         user.changeEnabled(true);
         userDomainRepository.save(user);
         userRepository.removeCache(userId);
@@ -166,6 +171,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void grantRoles(Long userId, List<Long> roleIds) {
+        User user = userDomainRepository.findById(userId);
+        if (user == null) {
+            throw new NotFoundException("user not found");
+        }
+        OpLogMDC.putBizCode(user.getUserName());
         List<UserRole> userRoles = userRoleDomainRepository.getByUserId(userId);
         ListComparator.CompareResult<UserRole, Long> compareResult = ListComparator.compare(
                 userRoles,
