@@ -129,10 +129,22 @@ class PermissionItemServiceImplTest {
     }
 
     @Test
-    void deletePermissionItem_ShouldThrowExceptionWhenItemHasChildren() {
-        when(permissionItemDomainRepository.existsChildren(1L)).thenReturn(true);
+    void deletePermissionItem_NotFoundException() {
+        // Arrange
+        when(permissionItemDomainRepository.findById(1L)).thenReturn(null);
 
-        assertThrows(FailedPreconditionException.class, () -> permissionItemService.deletePermissionItem(1L));
+        // Act & Assert
+        assertThrows(NotFoundException.class, () -> permissionItemService.deletePermissionItem(1L));
+    }
+
+    @Test
+    void deletePermissionItem_ShouldThrowExceptionWhenItemHasChildren() {
+        PermissionItem permissionItem = PermissionFixtures.createDefaultPermissionItem().build();
+
+        when(permissionItemDomainRepository.findById(permissionItem.getId())).thenReturn(permissionItem);
+        when(permissionItemDomainRepository.existsChildren(permissionItem.getId())).thenReturn(true);
+
+        assertThrows(FailedPreconditionException.class, () -> permissionItemService.deletePermissionItem(permissionItem.getId()));
     }
 
     @Test
@@ -141,6 +153,7 @@ class PermissionItemServiceImplTest {
         RolePermissionItem rolePermissionItem = PermissionFixtures.createDefaultRolePermissionItem()
                         .permissionItemId(permissionItem.getId()).roleId(1L).build();
 
+        when(permissionItemDomainRepository.findById(permissionItem.getId())).thenReturn(permissionItem);
         when(permissionItemDomainRepository.existsChildren(permissionItem.getId())).thenReturn(false);
         when(rolePermissionItemDomainRepository.getByPermissionItemId(permissionItem.getId())).thenReturn(List.of(rolePermissionItem));
 

@@ -1,5 +1,8 @@
 package com.xfrog.platform.application.permission.api;
 
+import com.xfrog.framework.oplog.OperationActionConstants;
+import com.xfrog.framework.oplog.annotation.OperationLog;
+import com.xfrog.platform.application.permission.api.constant.PermissionOperationLogConstants;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
@@ -18,12 +21,14 @@ public class PermissionItemController implements PermissionItemApi {
 
     @Authorization("admin:platform:permissionitem:create")
     @Override
+    @OperationLog(bizId = "#return", bizCode = "#p0.code", bizType = PermissionOperationLogConstants.BIZ_TYPE_PERMISSION_ITEM, bizAction = OperationActionConstants.CREATE)
     public Long createPermissionItem(CreatePermissionItemRequestDTO permissionItemRequestDTO) {
         return permissionItemService.createPermissionItem(permissionItemRequestDTO);
     }
 
     @Authorization("admin:platform:permissionitem:edit")
     @Override
+    @OperationLog(bizId = "#p0", bizType = PermissionOperationLogConstants.BIZ_TYPE_PERMISSION_ITEM, bizAction = OperationActionConstants.UPDATE)
     public void updatePermissionItem(Long permissionItemId, UpdatePermissionItemRequestDTO permissionItem) {
         permissionItemService.updatePermissionItem(permissionItemId, permissionItem);
     }
@@ -42,6 +47,7 @@ public class PermissionItemController implements PermissionItemApi {
 
     @Authorization("admin:platform:permissionitem:delete")
     @Override
+    @OperationLog(bizId = "#p0", bizType = PermissionOperationLogConstants.BIZ_TYPE_PERMISSION_ITEM, bizAction = OperationActionConstants.DELETE)
     public void deletePermissionItem(Long permissionItemId) {
         permissionItemService.deletePermissionItem(permissionItemId);
     }

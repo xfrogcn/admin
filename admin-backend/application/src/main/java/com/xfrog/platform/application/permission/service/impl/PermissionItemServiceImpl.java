@@ -3,6 +3,7 @@ package com.xfrog.platform.application.permission.service.impl;
 import com.xfrog.framework.exception.business.AlreadyExistsException;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
+import com.xfrog.framework.oplog.OpLogMDC;
 import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
 import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
@@ -62,6 +63,7 @@ public class PermissionItemServiceImpl implements PermissionItemService {
         if (permissionItem == null) {
             throw new NotFoundException("permission item not found");
         }
+        OpLogMDC.putBizCode(permissionItem.getCode());
 
         permissionItem.update(updatePermissionItemRequestDTO.getName(), updatePermissionItemRequestDTO.getType());
 
@@ -76,10 +78,15 @@ public class PermissionItemServiceImpl implements PermissionItemService {
     @Override
     @Transactional
     public void deletePermissionItem(Long permissionItemId) {
+        PermissionItem permissionItem = permissionItemDomainRepository.findById(permissionItemId);
+        if (permissionItem == null) {
+            throw new NotFoundException("permission item not found");
+        }
 
         if (permissionItemDomainRepository.existsChildren(permissionItemId)) {
             throw new FailedPreconditionException("permission item has children, can not delete");
         }
+        OpLogMDC.putBizCode(permissionItem.getCode());
 
         // 删除所有关联的角色权限
         List<RolePermissionItem> rolePermissionItems = rolePermissionItemDomainRepository.getByPermissionItemId(permissionItemId);
