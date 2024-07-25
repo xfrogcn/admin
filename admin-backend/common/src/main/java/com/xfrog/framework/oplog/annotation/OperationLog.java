@@ -30,12 +30,23 @@ public @interface OperationLog {
     /**
      * 业务类型
      */
-    String bizType();
+    String bizType() default "";
+
+    /**
+     * 业务类型Spel
+     */
+    String bizTypeSpel() default "";
 
     /**
      * 业务动作
      */
-    String bizAction();
+    String bizAction() default "";
+
+    /**
+     * 业务动作Spel
+     * @return
+     */
+    String bizActionSpel() default "";
 
     /**
      * 日志内容
@@ -48,6 +59,7 @@ public @interface OperationLog {
      * 日志标签
      */
     String tag() default "operation";
+
 
     /**
      * 额外信息

@@ -40,6 +40,8 @@ class OperationLogEvaluationContext extends MethodBasedEvaluationContext {
             return mdcValue;
         }
 
-        return super.lookupVariable(name);
+        Object value =  super.lookupVariable(name);
+
+        return value;
     }
 }

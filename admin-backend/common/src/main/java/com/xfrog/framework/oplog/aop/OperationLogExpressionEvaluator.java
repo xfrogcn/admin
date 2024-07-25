@@ -21,6 +21,10 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
 
     protected final Map<ExpressionKey, Expression> bizCodeCache = new ConcurrentHashMap<>(64);
 
+    protected final Map<ExpressionKey, Expression> bizActionCache = new ConcurrentHashMap<>(64);
+
+    protected final Map<ExpressionKey, Expression> bizTypeCache = new ConcurrentHashMap<>(64);
+
     protected final Map<ExpressionKey, Expression> bizExtraCache = new ConcurrentHashMap<>(64);
 
     protected final Map<ExpressionKey, Expression> conditionCache = new ConcurrentHashMap<>(64);
@@ -64,13 +68,23 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
     }
 
     @Nullable
-    public Object bizCode(String bizTypeExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
-        return getExpression(this.bizCodeCache, methodKey, bizTypeExpression).getValue(evalContext);
+    public Object bizCode(String bizCodeExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return getExpression(this.bizCodeCache, methodKey, bizCodeExpression).getValue(evalContext);
     }
 
     @Nullable
-    public Object extra(String bizActionExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
-        return getExpression(this.bizExtraCache, methodKey, bizActionExpression).getValue(evalContext);
+    public Object bizType(String bizTypeExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return getExpression(this.bizTypeCache, methodKey, bizTypeExpression).getValue(evalContext);
+    }
+
+    @Nullable
+    public Object bizAction(String bizActionExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return getExpression(this.bizActionCache, methodKey, bizActionExpression).getValue(evalContext);
+    }
+
+    @Nullable
+    public Object extra(String bizExtraExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return getExpression(this.bizExtraCache, methodKey, bizExtraExpression).getValue(evalContext);
     }
 
     public boolean condition(String conditionExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
@@ -82,8 +96,8 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
         return getExpression(this.msgCache, methodKey, msgExpression).getValue(evalContext, String.class);
     }
 
-    public boolean success(String unlessExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
-        return (Boolean.TRUE.equals(getExpression(this.successCache, methodKey, unlessExpression).getValue(
+    public boolean success(String successExpression, AnnotatedElementKey methodKey, EvaluationContext evalContext) {
+        return (Boolean.TRUE.equals(getExpression(this.successCache, methodKey, successExpression).getValue(
                 evalContext, Boolean.class)));
     }
 
@@ -93,6 +107,8 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
     void clear() {
         this.bizIdCache.clear();
         this.bizCodeCache.clear();
+        this.bizActionCache.clear();
+        this.bizTypeCache.clear();
         this.bizExtraCache.clear();
         this.msgCache.clear();
         this.conditionCache.clear();

@@ -65,7 +65,7 @@ class OperationLogInterceptorTest {
             throw new NotFoundException("not found");
         }
 
-        @OperationLog(bizId = "#p0", bizType = "type", bizAction = "action", msg = "format('msg %s',1)", extra = "json('extra')", success = "#return", tag = "tag")
+        @OperationLog(bizId = "#p0", bizTypeSpel = "'type'", bizActionSpel = "'action'", msg = "format('msg %s',1)", extra = "json('extra')", success = "#return", tag = "tag")
         public boolean annotatedAfterMethod(Long id) {
              return false;
         }

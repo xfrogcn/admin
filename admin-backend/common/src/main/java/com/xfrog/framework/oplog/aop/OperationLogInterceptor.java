@@ -154,8 +154,17 @@ public class OperationLogInterceptor implements ApplicationEventPublisherAware, 
             builder.bizCode(conversionService.convert(evaluator.bizCode(opLog.bizCode(), elementKey, evaluationContext), String.class));
         }
 
-        builder.bizType(opLog.bizType());
-        builder.bizAction(opLog.bizAction());
+        if (StringUtils.hasText(opLog.bizActionSpel())) {
+            builder.bizAction(conversionService.convert(evaluator.bizAction(opLog.bizActionSpel(), elementKey, evaluationContext), String.class));
+        }else {
+            builder.bizAction(opLog.bizAction());
+        }
+        if (StringUtils.hasText(opLog.bizTypeSpel())) {
+            builder.bizType(conversionService.convert(evaluator.bizType(opLog.bizTypeSpel(), elementKey, evaluationContext), String.class));
+        }else {
+            builder.bizType(opLog.bizType());
+        }
+
         builder.tag(opLog.tag());
         // 请求ID
         String traceId = MDC.get("traceId");
