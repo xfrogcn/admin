@@ -4,6 +4,7 @@ import com.xfrog.framework.common.ListComparator;
 import com.xfrog.framework.exception.business.AlreadyExistsException;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
+import com.xfrog.framework.oplog.OpLogMDC;
 import com.xfrog.platform.application.permission.api.dto.CreateRoleRequestDTO;
 import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
 import com.xfrog.platform.application.permission.api.dto.RoleDTO;
@@ -69,6 +70,7 @@ public class RoleServiceImpl implements RoleService {
         if (oldRole == null) {
             throw new NotFoundException("role not found");
         }
+        OpLogMDC.putBizCode(oldRole.getName());
 
         if (roleDomainRepository.existsByName(updateRoleRequestDTO.getName(), List.of(roleId))) {
             throw new AlreadyExistsException("role name already exists");
@@ -83,9 +85,16 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public void deleteRole(Long roleId) {
+        Role oldRole = roleDomainRepository.findById(roleId);
+        if (oldRole == null) {
+            throw new NotFoundException("role not found");
+        }
+
         if (userRoleDomainRepository.existsByRoleId(roleId)) {
             throw new FailedPreconditionException("This role has been used");
         }
+        OpLogMDC.putBizCode(oldRole.getName());
+
         roleDomainRepository.logicDelete(roleId);
         roleRepository.removeCache(roleId);
     }
@@ -97,6 +106,8 @@ public class RoleServiceImpl implements RoleService {
         if (oldRole == null) {
             throw new NotFoundException("role not found");
         }
+        OpLogMDC.putBizCode(oldRole.getName());
+
         oldRole.updateEnabled(enabled);
 
         roleDomainRepository.save(oldRole);

@@ -125,31 +125,44 @@ class RoleServiceImplTest {
         verify(roleRepository, times(1))
                 .removeCache(role.getId());
     }
+    @Test
+    void deleteRole_ShouldThrowNotFoundExceptionWhenRoleNotFound() {
+        when(roleDomainRepository.findById(1L)).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> roleService.deleteRole(1L));
+    }
+
 
     @Test
     void deleteRole_failedPrecondition() {
         // Given
-        when(userRoleDomainRepository.existsByRoleId(1L)).thenReturn(true);
+        Role role = PermissionFixtures.createDefaultRole().build();
+
+        when(roleDomainRepository.findById(role.getId())).thenReturn(role);
+        when(userRoleDomainRepository.existsByRoleId(role.getId())).thenReturn(true);
 
         // Then
-        assertThrows(FailedPreconditionException.class, () -> roleService.deleteRole(1L));
+        assertThrows(FailedPreconditionException.class, () -> roleService.deleteRole(role.getId()));
 
         // Verify
-        verify(roleDomainRepository, never()).logicDelete(1L);
+        verify(roleDomainRepository, never()).logicDelete(role.getId());
     }
 
     @Test
     void deleteRole_success() {
         // Given
-        when(userRoleDomainRepository.existsByRoleId(1L)).thenReturn(false);
+        Role role = PermissionFixtures.createDefaultRole().build();
+
+        when(roleDomainRepository.findById(role.getId())).thenReturn(role);
+        when(userRoleDomainRepository.existsByRoleId(role.getId())).thenReturn(false);
 
         // When
-        roleService.deleteRole(1L);
+        roleService.deleteRole(role.getId());
 
         // Then
-        verify(roleDomainRepository).logicDelete(1L);
+        verify(roleDomainRepository).logicDelete(role.getId());
         verify(roleRepository, times(1))
-                .removeCache(1L);
+                .removeCache(role.getId());
     }
 
     @Test
