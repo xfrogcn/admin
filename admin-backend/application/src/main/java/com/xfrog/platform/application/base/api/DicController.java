@@ -1,7 +1,10 @@
 package com.xfrog.platform.application.base.api;
 
 import com.xfrog.framework.dto.PageDTO;
+import com.xfrog.framework.oplog.OperationActionConstants;
+import com.xfrog.framework.oplog.annotation.OperationLog;
 import com.xfrog.platform.application.base.DicApi;
+import com.xfrog.platform.application.base.constant.BaseOperationLogConstants;
 import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
 import com.xfrog.platform.application.base.dto.CreateDicRequestDTO;
 import com.xfrog.platform.application.base.dto.DicDTO;
@@ -25,6 +28,7 @@ public class DicController implements DicApi {
 
     @Override
     @Authorization("admin:platform:dic:create")
+    @OperationLog(bizId = "#return", bizCode = "#p0.type", bizType = BaseOperationLogConstants.BIZ_TYPE_DIC, bizAction = OperationActionConstants.CREATE)
     public Long createDic(CreateDicRequestDTO dic) {
         return dicService.createDic(dic);
     }
@@ -48,24 +52,28 @@ public class DicController implements DicApi {
 
     @Override
     @Authorization("admin:platform:dic:edit")
+    @OperationLog(bizId = "#p0", bizCode = "#p1.type", bizType = BaseOperationLogConstants.BIZ_TYPE_DIC, bizAction = OperationActionConstants.UPDATE)
     public void updateDic(Long dicId, UpdateDicRequestDTO dic) {
         dicService.updateDic(dicId, dic);
     }
 
     @Override
     @Authorization("admin:platform:dic:delete")
+    @OperationLog(bizId = "#p0", bizType = BaseOperationLogConstants.BIZ_TYPE_DIC, bizAction = OperationActionConstants.DELETE)
     public void deleteDic(Long dicId) {
         dicService.deleteDic(dicId);
     }
 
     @Override
     @Authorization("admin:platform:dic:createitem")
+    @OperationLog(bizId = "#return", bizCode = "#p1.displayText", bizType = BaseOperationLogConstants.BIZ_TYPE_DIC_ITEM, bizAction = OperationActionConstants.CREATE)
     public Long createDicItem(Long dicId, CreateDicItemRequestDTO requestDTO) {
         return dicService.createDicItem(dicId, requestDTO);
     }
 
     @Override
     @Authorization("admin:platform:dic:edititem")
+    @OperationLog(bizId = "#p1", bizCode = "#p2.displayText", bizType = BaseOperationLogConstants.BIZ_TYPE_DIC_ITEM, bizAction = OperationActionConstants.UPDATE)
     public void updateDicItem(Long dicId, Long itemId, UpdateDicItemRequestDTO requestDTO) {
         dicService.updateDicItem(dicId, itemId, requestDTO);
     }

@@ -3,6 +3,7 @@ package com.xfrog.platform.application.base.service.impl;
 import com.xfrog.framework.dto.PageDTO;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
+import com.xfrog.framework.oplog.OpLogMDC;
 import com.xfrog.platform.application.base.converter.DicDTOToCommandConverter;
 import com.xfrog.platform.application.base.converter.DicItemDTOToCommandConverter;
 import com.xfrog.platform.application.base.dto.CreateDicItemRequestDTO;
@@ -77,6 +78,7 @@ public class DicServiceImpl implements DicService {
         if (oldDic == null) {
             throw new NotFoundException("dic not found");
         }
+        OpLogMDC.putBizCode(oldDic.getType());
 
         dicDomainRepository.logicDelete(dicId);
         dicRepository.removeCache(dicId);
