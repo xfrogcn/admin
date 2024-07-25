@@ -42,13 +42,16 @@ class OperationLogExpressionEvaluator  extends CachedExpressionEvaluator {
     }
 
     public OperationLogEvaluationContext createEvaluationContext(Method method, Object[] args, Object target, Class<?> targetClass, Method targetMethod,
-                                                     @Nullable Object result) {
+                                                     @Nullable Object result, Long operatorId) {
 
         OperationLogExpressionRootObject rootObject = new OperationLogExpressionRootObject(
                 method, args, target, targetClass);
         OperationLogEvaluationContext evaluationContext = this.evaluationContextFactory
                 .forOperation(rootObject, targetMethod, args);
        updateResult(evaluationContext, result);
+       evaluationContext.setVariable("operatorId", operatorId);
+       evaluationContext.setVariable("userId", operatorId);
+
         return evaluationContext;
     }
 
