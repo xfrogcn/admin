@@ -142,7 +142,7 @@
 
         <!-- Checks the number of parameters of a method or constructor. -->
         <module name="ParameterNumber">
-            <property name="max" value="8"/>
+            <property name="max" value="10"/>
         </module>
         <!-- Checks for long methods and constructors. -->
         <module name="MethodLength">

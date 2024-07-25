@@ -29,4 +29,9 @@ public class OperationLogConfiguration {
     public OperationLogPublisher operationLogPublisher(ApplicationEventPublisher publisher) {
         return new EventOperationLogPublisher(publisher);
     }
+
+    @Bean
+    public OpLogger opLogger(OperationLogPublisher publisher) {
+        return new OpLogger(publisher);
+    }
 }
