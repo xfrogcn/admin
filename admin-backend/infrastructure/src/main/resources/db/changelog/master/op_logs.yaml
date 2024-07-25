@@ -1,0 +1,124 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-07-25-0001
+      author: hb
+      changes:
+        - createTable:
+            tableName: op_logs
+            remarks: '操作日志'
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    comment: '日志ID'
+              - column:
+                  name: operator_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    comment: '操作人ID'
+              - column:
+                  name: biz_id
+                  type: varchar(64)
+                  constraints:
+                    nullable: true
+                    comment: '业务对象ID'
+              - column:
+                  name: biz_code
+                  type: varchar(128)
+                  constraints:
+                    nullable: true
+                    comment: '业务对象编码'
+              - column:
+                  name: biz_type
+                  type: varchar(64)
+                  constraints:
+                    nullable: true
+                    comment: '业务类型'
+              - column:
+                  name: biz_action
+                  type: varchar(64)
+                  constraints:
+                    nullable: true
+                    comment: '业务动作'
+              - column:
+                  name: request_id
+                  type: varchar(128)
+                  constraints:
+                    nullable: true
+                    comment: '请求ID'
+              - column:
+                  name: tag
+                  type: varchar(64)
+                  constraints:
+                    nullable: true
+                    comment: '日志类型'
+              - column:
+                  name: message
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+                    comment: '日志信息'
+              - column:
+                  name: extra
+                  type: text
+                  constraints:
+                    nullable: true
+                    comment: '日志扩展信息'
+              - column:
+                  name: success
+                  type: tinyint
+                  constraints:
+                    nullable: true
+                    comment: '操作结果'
+              - column:
+                  name: execute_time
+                  type: int
+                  constraints:
+                    nullable: true
+                    comment: '操作处理时间'
+              - column:
+                  name: tenant_id
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+                    defaultValue: 'GLOBAL'
+                    comment: '租户ID'
+              - column:
+                  name: created_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_time
+                  type: timestamp(0)
+              - column:
+                  name: updated_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_time
+                  type: timestamp(0)
+              - column:
+                  name: deleted
+                  type: tinyint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted_by
+                  type: bigint
+              - column:
+                  name: deleted_time
+                  type: timestamp(0)
+        - createIndex:
+            indexName: idx_op_logs_tenant_id_operator_id
+            tableName: op_logs
+            columns:
+              - column:
+                  name: tenant_id
+              - column:
+                  name: operator_id

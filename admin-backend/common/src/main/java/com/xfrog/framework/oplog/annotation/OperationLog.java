@@ -47,7 +47,7 @@ public @interface OperationLog {
     /**
      * 日志标签
      */
-    String tag() default "'operation'";
+    String tag() default "operation";
 
     /**
      * 额外信息
