@@ -22,12 +22,12 @@ public class OpLogRepositoryImpl extends BasePageableApplicationRepository<OpLog
     private static final CaseInsensitiveMap<String, String> ORDER_FIELD_MAP =
             new CaseInsensitiveMap<>(Map.of(
                     "createdTime", "log.created_time",
-                    "bizType", "log.bizType",
+                    "bizType", "log.biz_type",
                     "bizAction", "log.biz_action",
                     "tag", "log.tag",
                     "operatorUserName", "operatorUserName",
                     "operatorName", "operatorName",
-                    "bizCode", "log.bizCode"));
+                    "bizCode", "log.biz_code"));
 
     @Override
     protected Map<String, String> orderedFieldMap() {

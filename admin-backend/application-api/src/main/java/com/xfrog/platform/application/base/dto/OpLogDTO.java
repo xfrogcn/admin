@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -39,4 +41,6 @@ public class OpLogDTO extends IdDTO {
     private Boolean success;
     @Schema(description = "操作耗时")
     private Long executeTime;
+    @Schema(description = "创建时间")
+    private LocalDateTime createdTime;
 }
