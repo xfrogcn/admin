@@ -40,5 +40,8 @@
                     OR log.biz_code LIKE CONCAT('%', #{queryDTO.keyword}, '%'))
             </if>
         </where>
+        <if test="queryDTO.sortItems == null or queryDTO.sortItems.size == 0">
+            order by log.created_time desc
+        </if>
     </select>
 </mapper>
