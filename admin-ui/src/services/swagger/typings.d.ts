@@ -315,14 +315,6 @@ declare namespace API {
     userId: number;
   };
 
-  type ExceptionResponseExtendValidationResult = {
-    errorCode?: string;
-    code?: number;
-    message?: string;
-    details?: string;
-    data?: ValidationResultItem[];
-  };
-
   type getDataScopesParams = {
     targetType: 'USER' | 'ROLE';
     targetId: number;
@@ -435,6 +427,34 @@ declare namespace API {
     arg0: QueryOrganizationRequestDTO;
   };
 
+  type OpLogDTO = {
+    id?: number;
+    /** 业务ID */
+    bizId?: string;
+    /** 业务编码 */
+    bizCode?: string;
+    /** 请求ID */
+    requestId?: string;
+    /** 操作类型 */
+    tag?: string;
+    /** 业务类型 */
+    bizType?: string;
+    /** 操作动作 */
+    bizAction?: string;
+    /** 扩展信息 */
+    extra?: string;
+    /** 操作信息 */
+    message?: string;
+    /** 操作人ID */
+    operatorId?: number;
+    /** 操作人名称 */
+    operatorName?: string;
+    /** 操作结果 */
+    success?: boolean;
+    /** 操作耗时 */
+    executeTime?: number;
+  };
+
   type OrganizationDTO = {
     id?: number;
     /** 组织名称 */
@@ -483,6 +503,14 @@ declare namespace API {
     total?: number;
     pages?: number;
     data?: LangDTO[];
+  };
+
+  type PageDTOOpLogDTO = {
+    pageNum?: number;
+    pageSize?: number;
+    total?: number;
+    pages?: number;
+    data?: OpLogDTO[];
   };
 
   type PageDTOTenantDTO = {
@@ -547,6 +575,21 @@ declare namespace API {
     application?: string;
     /** 是否启用 */
     enabled?: boolean;
+  };
+
+  type QueryOpLogRequestDTO = {
+    pageNum: number;
+    pageSize: number;
+    sortItems?: SortItem[];
+    /** 日志类型 */
+    tags?: string[];
+    /** 业务类型 */
+    bizTypes?: string[];
+    /** 业务动作 */
+    bizActions?: string[];
+    /** 关键字 */
+    keyword?: string;
+    timeRange?: DateTimeRange;
   };
 
   type QueryOrganizationRequestDTO = {
@@ -807,10 +850,5 @@ declare namespace API {
     langs?: LangDTO[];
     /** 用户参数 */
     parameters?: Record<string, any>;
-  };
-
-  type ValidationResultItem = {
-    member?: string;
-    messages?: string[];
   };
 }

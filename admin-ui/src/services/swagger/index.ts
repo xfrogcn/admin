@@ -7,6 +7,7 @@ import * as dicApi from './dicApi';
 import * as langApi from './langApi';
 import * as langCorpusApi from './langCorpusApi';
 import * as maintenanceApi from './maintenanceApi';
+import * as opLogApi from './opLogApi';
 import * as organizationApi from './organizationApi';
 import * as permissionItemApi from './permissionItemApi';
 import * as roleApi from './roleApi';
@@ -23,6 +24,7 @@ export default {
   dataScopeApi,
   permissionItemApi,
   organizationApi,
+  opLogApi,
   langApi,
   maintenanceApi,
 };
