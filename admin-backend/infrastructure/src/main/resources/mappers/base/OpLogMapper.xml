@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xfrog.platform.infrastructure.base.mapper.OpLogMapper">
+    <select id="queryBy" resultType="com.xfrog.platform.application.base.dto.OpLogDTO">
+        SELECT
+          log.*,
+          u.user_name as operatorUserName,
+          u.name as operatorName
+        FROM
+        op_logs log
+        left join users u on log.operator_id = u.id
+        <where>
+            log.deleted = false
+            <if test="queryDTO.bizActions != null and queryDTO.bizActions.size > 0">
+                AND log.biz_action IN
+                <foreach collection="queryDTO.bizActions" item="bizAction" open="(" separator="," close=")">
+                    #{bizAction}
+                </foreach>
+            </if>
+            <if test="queryDTO.bizTypes != null and queryDTO.bizTypes.size > 0">
+                AND log.biz_type IN
+                <foreach collection="queryDTO.bizTypes" item="bizType" open="(" separator="," close=")">
+                    #{bizType}
+                </foreach>
+            </if>
+            <if test="queryDTO.tags != null and queryDTO.tags.size > 0">
+                AND log.tag IN
+                <foreach collection="queryDTO.tags" item="tag" open="(" separator="," close=")">
+                    #{tag}
+                </foreach>
+            </if>
+            <include refid="common.rangeCondition">
+                <property name="range" value="queryDTO.timeRange"/>
+                <property name="fieldName" value="log.created_time"/>
+            </include>
+            <if test="queryDTO.keyword != null and queryDTO.keyword != ''">
+                AND (u.name LIKE CONCAT('%', #{queryDTO.keyword}, '%')
+                    OR u.user_name LIKE CONCAT('%', #{queryDTO.keyword}, '%')
+                    OR log.biz_id LIKE CONCAT('%', #{queryDTO.keyword}, '%')
+                    OR log.biz_code LIKE CONCAT('%', #{queryDTO.keyword}, '%'))
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -24,6 +24,8 @@ public class BaseApiFixtures {
 
     public final static String SQL_TRUNCATE_USER_PARAMTERS = "truncate table user_parameters";
 
+    public final static String SQL_TRUNCATE_OP_LOGS = "truncate table op_logs";
+
     @Autowired
     private DicDomainRepository dicDomainRepository;
 

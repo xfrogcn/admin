@@ -34,6 +34,7 @@ class OpLoggerTest {
         String bizCode = "testBizCode";
 
         // Act
+        OpLogMDC.put("traceId", "123");
         opLogger.success(operatorId, logType, bizType, bizAction, bizId, bizCode);
 
         // Assert
@@ -43,6 +44,7 @@ class OpLoggerTest {
 
         assertEquals(1, opLogs.size());
         OpLog opLog = opLogs.get(0);
+        assertEquals("123", opLog.getRequestId());
         assertEquals(operatorId, opLog.getOperatorId());
         assertEquals(logType, opLog.getTag());
         assertEquals(bizType, opLog.getBizType());
