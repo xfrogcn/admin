@@ -5,6 +5,7 @@ import com.xfrog.framework.oplog.OpLogger;
 import com.xfrog.framework.oplog.OperationActionConstants;
 import com.xfrog.platform.application.authserver.constant.AuthServerOperationLogConstants;
 import com.xfrog.platform.application.authserver.dto.UserDetailsDTO;
+import com.xfrog.platform.application.authserver.service.impl.UserLastLoginTimeUpdater;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationListener;
@@ -28,6 +29,8 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
     private final SessionRegistry sessionRegistry;
 
     private final OAuth2AuthorizationService authorizationService;
+
+    private final UserLastLoginTimeUpdater userLastLoginTimeUpdater;
 
     private final ObjectProvider<OpLogger> opLoggerProvider;
 
@@ -67,6 +70,11 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
                     return;
                 }
                 EventPublisher.publishEvent(new SessionAuthorizationEvent(authorization));
+            } else if (authenticationSuccessEvent.getAuthentication() instanceof UsernamePasswordAuthenticationToken token) {
+                UserDetailsDTO userDetailsDTO = (UserDetailsDTO) token.getPrincipal();
+                if (userDetailsDTO != null) {
+                    userLastLoginTimeUpdater.updateLastLoginTime(userDetailsDTO.getUserId());
+                }
             }
         }
     }
