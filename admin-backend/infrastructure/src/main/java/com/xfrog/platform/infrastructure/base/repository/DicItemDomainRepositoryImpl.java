@@ -22,9 +22,10 @@ public class DicItemDomainRepositoryImpl extends BaseDomainRepository<DicItem, D
     }
 
     @Override
-    public boolean existsByDisplayText(String displayText, List<Long> excludeIds) {
+    public boolean existsByDisplayText(Long dicId, String displayText, List<Long> excludeIds) {
         LambdaQueryWrapper<DicItemPO> queryWrapper = new LambdaQueryWrapper<DicItemPO>()
                 .eq(DicItemPO::getDeleted, false)
+                .eq(DicItemPO::getDicId, dicId)
                 .eq(DicItemPO::getDisplayText, displayText);
 
         if (!CollectionUtils.isEmpty(excludeIds)) {

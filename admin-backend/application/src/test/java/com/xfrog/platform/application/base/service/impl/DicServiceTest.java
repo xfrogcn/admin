@@ -178,7 +178,7 @@ class DicServiceTest {
         CreateDicItemRequestDTO createDicItemRequestDTO = DicDTOFixtures.defaultCreateDicItemRequestDTO().build();
 
         when(dicDomainRepository.findById(dic.getId())).thenReturn(dic);
-        when(dicItemDomainRepository.existsByDisplayText(eq(createDicItemRequestDTO.getDisplayText()), any())).thenReturn(true);
+        when(dicItemDomainRepository.existsByDisplayText(eq(dic.getId()), eq(createDicItemRequestDTO.getDisplayText()), any())).thenReturn(true);
         assertThrows(FailedPreconditionException.class, () -> dicService.createDicItem(dic.getId(), createDicItemRequestDTO));
     }
 
@@ -188,7 +188,7 @@ class DicServiceTest {
         CreateDicItemRequestDTO createDicItemRequestDTO = DicDTOFixtures.defaultCreateDicItemRequestDTO().build();
 
         when(dicDomainRepository.findById(dic.getId())).thenReturn(dic);
-        when(dicItemDomainRepository.existsByDisplayText(eq(createDicItemRequestDTO.getDisplayText()), any())).thenReturn(false);
+        when(dicItemDomainRepository.existsByDisplayText(eq(dic.getId()), eq(createDicItemRequestDTO.getDisplayText()), any())).thenReturn(false);
         when(dicItemDomainRepository.save(any(DicItem.class))).thenReturn(DicFixtures.createDefaultDicItem(dic.getId()).build());
 
         Long resultId = dicService.createDicItem(dic.getId(), createDicItemRequestDTO);
@@ -231,7 +231,7 @@ class DicServiceTest {
         UpdateDicItemRequestDTO requestDTO = DicDTOFixtures.defaultUpdateDicItemRequestDTO().build();
 
         when(dicDomainRepository.findById(dic.getId())).thenReturn(dic);
-        when(dicItemDomainRepository.existsByDisplayText(eq(requestDTO.getDisplayText()), any())).thenReturn(true);
+        when(dicItemDomainRepository.existsByDisplayText(eq(dic.getId()), eq(requestDTO.getDisplayText()), any())).thenReturn(true);
 
         assertThrows(FailedPreconditionException.class, () ->
                 dicService.updateDicItem(dic.getId(), dicItem.getId(), requestDTO));
@@ -251,7 +251,7 @@ class DicServiceTest {
                 .build();
 
         when(dicDomainRepository.findById(dic.getId())).thenReturn(dic);
-        when(dicItemDomainRepository.existsByDisplayText(eq(requestDTO.getDisplayText()), any())).thenReturn(false);
+        when(dicItemDomainRepository.existsByDisplayText(eq(dic.getId()), eq(requestDTO.getDisplayText()), any())).thenReturn(false);
         when(dicItemDomainRepository.findById(dicItem.getId())).thenReturn(dicItem);
 
         dicService.updateDicItem(dic.getId(), dicItem.getId(), requestDTO);

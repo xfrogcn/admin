@@ -131,7 +131,7 @@ public class DicServiceImpl implements DicService {
             throw new NotFoundException("dic not found");
         }
 
-        if (dicItemDomainRepository.existsByDisplayText(requestDTO.getDisplayText(), null)) {
+        if (dicItemDomainRepository.existsByDisplayText(dicId, requestDTO.getDisplayText(), null)) {
             throw new FailedPreconditionException("dic item display text exists");
         }
 
@@ -155,7 +155,7 @@ public class DicServiceImpl implements DicService {
             throw new NotFoundException("dic not found");
         }
 
-        if (dicItemDomainRepository.existsByDisplayText(requestDTO.getDisplayText(), List.of(itemId))) {
+        if (dicItemDomainRepository.existsByDisplayText(dicId, requestDTO.getDisplayText(), List.of(itemId))) {
             throw new FailedPreconditionException("dic item display text exists");
         }
 
