@@ -12,6 +12,7 @@ import { Access, FormattedMessage, useAccess, useIntl, useParams } from '@umijs/
 import { Button, Flex } from 'antd';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import EditForm from './components/EditForm';
+import { enabledStatusEnum } from '@/utils/bizUtils';
 
 const handleAdd = useMessageBox<{ dicId: number; body: API.CreateDicItemRequestDTO }, number>(
   (args) => createDicItem({ dicId: args.dicId }, args.body),
@@ -57,7 +58,7 @@ const DicItemList: React.FC = () => {
   }, [params]);
 
   const operationRender = useMemo(() => {
-    return withAccessRender<API.DicDTO>(
+    return withAccessRender<API.DicItemDTO>(
       {
         'admin:platform:dic:edititem': (_, record) => (
           <LinkButton
@@ -112,6 +113,15 @@ const DicItemList: React.FC = () => {
       sorter: false,
     },
     {
+      title: <FormattedMessage id="admin.ui.pages.lang.label-enabled" />,
+      dataIndex: 'enabled',
+      valueType: 'text',
+      valueEnum: enabledStatusEnum(intl),
+      width: '7em',
+      sorter: false,
+      hideInSearch: true,
+    },
+    {
       title: <FormattedMessage id="admin.ui.pages.dicitem.label-memo" />,
       dataIndex: 'memo',
       valueType: 'text',
@@ -145,7 +155,7 @@ const DicItemList: React.FC = () => {
     <PageContainer pageHeaderRender={false}>
       <ProTablePage<API.DicItemDTO, API.getDicParams>
         headerTitle={`${intl.formatMessage({
-          id: 'admin.ui.pages.dic.table-title',
+          id: 'admin.ui.pages.dicitem.table-title',
         })} - [${dic?.name}(${dic?.type})]`}
         actionRef={actionRef}
         rowKey="id"

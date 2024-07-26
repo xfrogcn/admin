@@ -1,3 +1,5 @@
+import { ProColumnType } from "@ant-design/pro-components";
+
 export const stopEvent = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -18,3 +20,28 @@ export function isArr(value: any): value is Array<any> {
 export function isFn(value: any): value is Function {
     return typeof value === "function"
 }
+
+export const defaultWidth = {
+    dateTime: '14em',
+    userName: '8em',
+    code: '16em',
+    status2: '8em',
+}
+
+export const columnProperties: Record<string, ProColumnType<any>> = {
+    userName: {
+        width: defaultWidth.userName,
+        align: 'center'
+    },
+    dateTime: {
+        hideInSearch: true,
+        width: defaultWidth.dateTime,
+        align: 'center',
+        valueType: 'dateTime',
+    },
+    center: {
+        align: 'center',
+        ellipsis: true
+    }
+}
+

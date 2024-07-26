@@ -453,6 +453,8 @@ declare namespace API {
     success?: boolean;
     /** 操作耗时 */
     executeTime?: number;
+    /** 创建时间 */
+    createdTime?: string;
   };
 
   type OrganizationDTO = {

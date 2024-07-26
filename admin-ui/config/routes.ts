@@ -49,6 +49,13 @@ export default [
         access: 'canRoute',
         permissionCode: 'admin:system:role',
       },
+      {
+        name: 'oplog',
+        path: '/system/oplog',
+        component: './System/Oplog',
+        access: 'canRoute',
+        permissionCode: 'admin:system:oplog',
+      },
     ],
   },
   {

@@ -3,6 +3,7 @@ export default {
   "menu.system.organization": "组织管理",
   "menu.system.user": "用户管理",
   "menu.system.role": "角色管理",
+  "menu.system.oplog": "操作日志",
 
   "menu.platform": "平台管理",
   "menu.platform.dic": "字典管理",

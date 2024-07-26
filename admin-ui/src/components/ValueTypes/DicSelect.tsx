@@ -80,6 +80,7 @@ export const DicSelect: FC<ProFieldFCRenderProps> = (props) => {
         }
       }
       let dicItems = dic?.dicItems || [];
+      dicItems = dicItems.filter(it=> it.enabled);
       if (filter) {
         dicItems = filter(dicItems);
       }
