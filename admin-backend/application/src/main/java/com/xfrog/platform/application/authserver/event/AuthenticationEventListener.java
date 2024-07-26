@@ -1,8 +1,14 @@
 package com.xfrog.platform.application.authserver.event;
 
 import com.xfrog.framework.common.EventPublisher;
+import com.xfrog.framework.oplog.OpLogger;
+import com.xfrog.framework.oplog.OperationActionConstants;
+import com.xfrog.platform.application.authserver.constant.AuthServerOperationLogConstants;
+import com.xfrog.platform.application.authserver.dto.UserDetailsDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.session.SessionInformation;
@@ -23,6 +29,8 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
 
     private final OAuth2AuthorizationService authorizationService;
 
+    private final ObjectProvider<OpLogger> opLoggerProvider;
+
     @Override
     public void onApplicationEvent(AbstractAuthenticationEvent event) {
         if (event instanceof AuthenticationSuccessEvent authenticationSuccessEvent) {
@@ -34,6 +42,24 @@ public class AuthenticationEventListener implements ApplicationListener<Abstract
                         sessionInformation.expireNow();
                     }
                 }
+
+                OpLogger opLogger = opLoggerProvider.getIfAvailable();
+                if (opLogger != null) {
+                    UsernamePasswordAuthenticationToken userLogin = (UsernamePasswordAuthenticationToken) authenticationToken.getPrincipal();
+                    if (userLogin != null) {
+                        UserDetailsDTO userDetailsDTO = (UserDetailsDTO) userLogin.getPrincipal();
+                        if (userDetailsDTO != null) {
+                            opLogger.success(
+                                    userDetailsDTO.getUserId(),
+                                    AuthServerOperationLogConstants.OP_TYPE_AUTH,
+                                    AuthServerOperationLogConstants.BIZ_TYPE_AUTH,
+                                    OperationActionConstants.LOGOUT,
+                                    String.valueOf(userDetailsDTO.getUserId()),
+                                    userDetailsDTO.getUsername());
+                        }
+                    }
+                }
+
             } else if (authenticationSuccessEvent.getAuthentication() instanceof OAuth2AccessTokenAuthenticationToken accessTokenAuthenticationToken) {
                 // 关联Session与Authorization
                 OAuth2Authorization authorization = authorizationService.findByToken(accessTokenAuthenticationToken.getAccessToken().getTokenValue(), OAuth2TokenType.ACCESS_TOKEN);

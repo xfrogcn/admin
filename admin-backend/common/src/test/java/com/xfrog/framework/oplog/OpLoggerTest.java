@@ -26,6 +26,7 @@ class OpLoggerTest {
     @Test
     void success_5p() {
         // Arrange
+        Long operatorId = 1L;
         String logType = "testType";
         String bizType = "testBizType";
         String bizAction = "testBizAction";
@@ -33,7 +34,7 @@ class OpLoggerTest {
         String bizCode = "testBizCode";
 
         // Act
-        opLogger.success(logType, bizType, bizAction, bizId, bizCode);
+        opLogger.success(operatorId, logType, bizType, bizAction, bizId, bizCode);
 
         // Assert
         ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
@@ -42,6 +43,7 @@ class OpLoggerTest {
 
         assertEquals(1, opLogs.size());
         OpLog opLog = opLogs.get(0);
+        assertEquals(operatorId, opLog.getOperatorId());
         assertEquals(logType, opLog.getTag());
         assertEquals(bizType, opLog.getBizType());
         assertEquals(bizAction, opLog.getBizAction());
@@ -56,6 +58,7 @@ class OpLoggerTest {
     @Test
     void success_6p() {
         // Arrange
+        Long operatorId = 1L;
         String logType = "testType";
         String bizType = "testBizType";
         String bizAction = "testBizAction";
@@ -64,7 +67,7 @@ class OpLoggerTest {
         Long execTime = 1L;
 
         // Act
-        opLogger.success(logType, bizType, bizAction, bizId, bizCode, execTime);
+        opLogger.success(operatorId, logType, bizType, bizAction, bizId, bizCode, execTime);
 
         // Assert
         ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
@@ -73,6 +76,7 @@ class OpLoggerTest {
 
         assertEquals(1, opLogs.size());
         OpLog opLog = opLogs.get(0);
+        assertEquals(operatorId, opLog.getOperatorId());
         assertEquals(logType, opLog.getTag());
         assertEquals(bizType, opLog.getBizType());
         assertEquals(bizAction, opLog.getBizAction());
@@ -87,6 +91,7 @@ class OpLoggerTest {
     @Test
     void success_7p() {
         // Arrange
+        Long operatorId = 1L;
         String logType = "testType";
         String bizType = "testBizType";
         String bizAction = "testBizAction";
@@ -96,7 +101,7 @@ class OpLoggerTest {
         String message = "message";
 
         // Act
-        opLogger.success(logType, bizType, bizAction, bizId, bizCode, execTime, message);
+        opLogger.success(operatorId, logType, bizType, bizAction, bizId, bizCode, execTime, message);
 
         // Assert
         ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
@@ -105,6 +110,7 @@ class OpLoggerTest {
 
         assertEquals(1, opLogs.size());
         OpLog opLog = opLogs.get(0);
+        assertEquals(operatorId, opLog.getOperatorId());
         assertEquals(logType, opLog.getTag());
         assertEquals(bizType, opLog.getBizType());
         assertEquals(bizAction, opLog.getBizAction());
@@ -119,6 +125,7 @@ class OpLoggerTest {
     @Test
     void success_8p() {
         // Arrange
+        Long operatorId = 1L;
         String logType = "testType";
         String bizType = "testBizType";
         String bizAction = "testBizAction";
@@ -129,7 +136,7 @@ class OpLoggerTest {
         String extra = "extra";
 
         // Act
-        opLogger.success(logType, bizType, bizAction, bizId, bizCode, execTime, message, extra);
+        opLogger.success(operatorId, logType, bizType, bizAction, bizId, bizCode, execTime, message, extra);
 
         // Assert
         ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
@@ -138,6 +145,7 @@ class OpLoggerTest {
 
         assertEquals(1, opLogs.size());
         OpLog opLog = opLogs.get(0);
+        assertEquals(operatorId, opLog.getOperatorId());
         assertEquals(logType, opLog.getTag());
         assertEquals(bizType, opLog.getBizType());
         assertEquals(bizAction, opLog.getBizAction());
@@ -152,6 +160,7 @@ class OpLoggerTest {
     @Test
     void fail_5p() {
         // Arrange
+        Long operatorId = 1L;
         String logType = "testType";
         String bizType = "testBizType";
         String bizAction = "testBizAction";
@@ -159,7 +168,7 @@ class OpLoggerTest {
         String bizCode = "testBizCode";
 
         // Act
-        opLogger.fail(logType, bizType, bizAction, bizId, bizCode);
+        opLogger.fail(operatorId, logType, bizType, bizAction, bizId, bizCode);
 
         // Assert
         ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
@@ -168,6 +177,7 @@ class OpLoggerTest {
 
         assertEquals(1, opLogs.size());
         OpLog opLog = opLogs.get(0);
+        assertEquals(operatorId, opLog.getOperatorId());
         assertEquals(logType, opLog.getTag());
         assertEquals(bizType, opLog.getBizType());
         assertEquals(bizAction, opLog.getBizAction());
@@ -182,6 +192,7 @@ class OpLoggerTest {
     @Test
     void fail_6p() {
         // Arrange
+        Long operatorId = 1L;
         String logType = "testType";
         String bizType = "testBizType";
         String bizAction = "testBizAction";
@@ -190,7 +201,7 @@ class OpLoggerTest {
         Long execTime = 1L;
 
         // Act
-        opLogger.fail(logType, bizType, bizAction, bizId, bizCode, execTime);
+        opLogger.fail(operatorId, logType, bizType, bizAction, bizId, bizCode, execTime);
 
         // Assert
         ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
@@ -199,6 +210,7 @@ class OpLoggerTest {
 
         assertEquals(1, opLogs.size());
         OpLog opLog = opLogs.get(0);
+        assertEquals(operatorId, opLog.getOperatorId());
         assertEquals(logType, opLog.getTag());
         assertEquals(bizType, opLog.getBizType());
         assertEquals(bizAction, opLog.getBizAction());
@@ -213,6 +225,7 @@ class OpLoggerTest {
     @Test
     void fail_7p() {
         // Arrange
+        Long operatorId = 1L;
         String logType = "testType";
         String bizType = "testBizType";
         String bizAction = "testBizAction";
@@ -222,7 +235,7 @@ class OpLoggerTest {
         String message = "message";
 
         // Act
-        opLogger.fail(logType, bizType, bizAction, bizId, bizCode, execTime, message);
+        opLogger.fail(operatorId, logType, bizType, bizAction, bizId, bizCode, execTime, message);
 
         // Assert
         ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
@@ -231,6 +244,7 @@ class OpLoggerTest {
 
         assertEquals(1, opLogs.size());
         OpLog opLog = opLogs.get(0);
+        assertEquals(operatorId, opLog.getOperatorId());
         assertEquals(logType, opLog.getTag());
         assertEquals(bizType, opLog.getBizType());
         assertEquals(bizAction, opLog.getBizAction());
@@ -245,6 +259,7 @@ class OpLoggerTest {
     @Test
     void fail_8p() {
         // Arrange
+        Long operatorId = 1L;
         String logType = "testType";
         String bizType = "testBizType";
         String bizAction = "testBizAction";
@@ -255,7 +270,7 @@ class OpLoggerTest {
         String extra = "extra";
 
         // Act
-        opLogger.fail(logType, bizType, bizAction, bizId, bizCode, execTime, message, extra);
+        opLogger.fail(operatorId, logType, bizType, bizAction, bizId, bizCode, execTime, message, extra);
 
         // Assert
         ArgumentCaptor<List<OpLog>> captor = ArgumentCaptor.forClass(List.class);
@@ -264,6 +279,7 @@ class OpLoggerTest {
 
         assertEquals(1, opLogs.size());
         OpLog opLog = opLogs.get(0);
+        assertEquals(operatorId, opLog.getOperatorId());
         assertEquals(logType, opLog.getTag());
         assertEquals(bizType, opLog.getBizType());
         assertEquals(bizAction, opLog.getBizAction());
