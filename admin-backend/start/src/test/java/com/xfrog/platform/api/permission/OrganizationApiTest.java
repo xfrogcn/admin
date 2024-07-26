@@ -1,8 +1,8 @@
 package com.xfrog.platform.api.permission;
 
 import com.xfrog.platform.api.permission.fixtures.PermissionApiFixtures;
-import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.UpdateOrganizationRequestDTO;
+import com.xfrog.platform.application.permission.dto.CreateOrganizationRequestDTO;
+import com.xfrog.platform.application.permission.dto.UpdateOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.domain.permission.aggregate.Organization;
 import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;

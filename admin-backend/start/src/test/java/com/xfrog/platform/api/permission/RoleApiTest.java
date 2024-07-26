@@ -1,8 +1,8 @@
 package com.xfrog.platform.api.permission;
 
 import com.xfrog.platform.api.permission.fixtures.PermissionApiFixtures;
-import com.xfrog.platform.application.permission.api.dto.CreateRoleRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.UpdateRoleRequestDTO;
+import com.xfrog.platform.application.permission.dto.CreateRoleRequestDTO;
+import com.xfrog.platform.application.permission.dto.UpdateRoleRequestDTO;
 import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
 import com.xfrog.platform.domain.permission.aggregate.Role;

@@ -2,8 +2,8 @@ package com.xfrog.platform.application.permission.repository;
 
 
 import com.xfrog.framework.repository.CacheableApplicationRepository;
-import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
-import com.xfrog.platform.application.permission.api.dto.QueryOrganizationRequestDTO;
+import com.xfrog.platform.application.permission.dto.OrganizationDTO;
+import com.xfrog.platform.application.permission.dto.QueryOrganizationRequestDTO;
 
 import java.util.List;
 

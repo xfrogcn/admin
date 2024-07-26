@@ -1,7 +1,7 @@
 package com.xfrog.platform.api.permission;
 
 import com.xfrog.platform.api.permission.fixtures.PermissionApiFixtures;
-import com.xfrog.platform.application.permission.api.dto.GrantDataScopeRequestDTO;
+import com.xfrog.platform.application.permission.dto.GrantDataScopeRequestDTO;
 import com.xfrog.platform.domain.permission.aggregate.Organization;
 import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
 import com.xfrog.platform.domain.share.permission.DataScopeTargetType;

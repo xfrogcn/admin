@@ -1,9 +1,9 @@
 package com.xfrog.platform.api.permission;
 
 import com.xfrog.platform.api.permission.fixtures.PermissionApiFixtures;
-import com.xfrog.platform.application.permission.api.dto.CreateTenantRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.QueryTenantRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.UpdateTenantRequestDTO;
+import com.xfrog.platform.application.permission.dto.CreateTenantRequestDTO;
+import com.xfrog.platform.application.permission.dto.QueryTenantRequestDTO;
+import com.xfrog.platform.application.permission.dto.UpdateTenantRequestDTO;
 import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.domain.permission.aggregate.PermissionFixtures;
 import com.xfrog.platform.domain.permission.aggregate.Tenant;

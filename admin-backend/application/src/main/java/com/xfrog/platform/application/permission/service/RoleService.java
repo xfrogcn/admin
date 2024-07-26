@@ -1,10 +1,10 @@
 package com.xfrog.platform.application.permission.service;
 
 
-import com.xfrog.platform.application.permission.api.dto.CreateRoleRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
-import com.xfrog.platform.application.permission.api.dto.RoleDTO;
-import com.xfrog.platform.application.permission.api.dto.UpdateRoleRequestDTO;
+import com.xfrog.platform.application.permission.dto.CreateRoleRequestDTO;
+import com.xfrog.platform.application.permission.dto.PermissionItemDTO;
+import com.xfrog.platform.application.permission.dto.RoleDTO;
+import com.xfrog.platform.application.permission.dto.UpdateRoleRequestDTO;
 
 import java.util.List;
 

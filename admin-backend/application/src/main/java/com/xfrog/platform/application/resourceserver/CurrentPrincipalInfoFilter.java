@@ -5,7 +5,7 @@ import com.xfrog.framework.principal.CurrentPrincipalContext;
 import com.xfrog.framework.principal.DataPermissionItem;
 import com.xfrog.framework.principal.PrincipalInfo;
 import com.xfrog.platform.application.authserver.dto.UserDetailsDTO;
-import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
+import com.xfrog.platform.application.permission.dto.DataScopeDTO;
 import com.xfrog.platform.application.permission.service.DataScopeService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

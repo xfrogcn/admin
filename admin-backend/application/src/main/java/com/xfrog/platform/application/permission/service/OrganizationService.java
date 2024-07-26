@@ -1,10 +1,10 @@
 package com.xfrog.platform.application.permission.service;
 
 
-import com.xfrog.platform.application.permission.api.dto.CreateOrganizationRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
-import com.xfrog.platform.application.permission.api.dto.QueryOrganizationRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.UpdateOrganizationRequestDTO;
+import com.xfrog.platform.application.permission.dto.CreateOrganizationRequestDTO;
+import com.xfrog.platform.application.permission.dto.OrganizationDTO;
+import com.xfrog.platform.application.permission.dto.QueryOrganizationRequestDTO;
+import com.xfrog.platform.application.permission.dto.UpdateOrganizationRequestDTO;
 
 import java.util.List;
 

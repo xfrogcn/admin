@@ -1,8 +1,8 @@
 package com.xfrog.platform.application.permission.service.impl;
 
-import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
-import com.xfrog.platform.application.permission.api.dto.GrantDataScopeRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
+import com.xfrog.platform.application.permission.dto.DataScopeDTO;
+import com.xfrog.platform.application.permission.dto.GrantDataScopeRequestDTO;
+import com.xfrog.platform.application.permission.dto.OrganizationDTO;
 import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.application.permission.repository.DataScopeRepository;
 import com.xfrog.platform.application.permission.repository.OrganizationRepository;

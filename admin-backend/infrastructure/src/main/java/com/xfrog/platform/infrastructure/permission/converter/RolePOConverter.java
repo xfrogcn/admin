@@ -2,7 +2,7 @@ package com.xfrog.platform.infrastructure.permission.converter;
 
 import com.xfrog.framework.converter.DomainAndPOConverter;
 import com.xfrog.framework.converter.POToDTOConverter;
-import com.xfrog.platform.application.permission.api.dto.RoleDTO;
+import com.xfrog.platform.application.permission.dto.RoleDTO;
 import com.xfrog.platform.domain.permission.aggregate.Role;
 import com.xfrog.platform.infrastructure.permission.dataobject.RolePO;
 import org.mapstruct.Mapper;

@@ -1,7 +1,7 @@
 package com.xfrog.platform.api.permission;
 
-import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
+import com.xfrog.platform.application.permission.dto.CreatePermissionItemRequestDTO;
+import com.xfrog.platform.application.permission.dto.UpdatePermissionItemRequestDTO;
 import com.xfrog.platform.application.permission.dto.PermissionDTOFixtures;
 import com.xfrog.platform.domain.permission.aggregate.PermissionItem;
 import lombok.SneakyThrows;

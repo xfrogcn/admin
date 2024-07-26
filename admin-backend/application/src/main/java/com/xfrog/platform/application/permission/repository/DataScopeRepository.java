@@ -1,6 +1,6 @@
 package com.xfrog.platform.application.permission.repository;
 
-import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
+import com.xfrog.platform.application.permission.dto.DataScopeDTO;
 import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
 
 import java.util.List;

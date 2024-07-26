@@ -1,7 +1,7 @@
 package com.xfrog.platform.infrastructure.permission.mapper;
 
-import com.xfrog.platform.application.permission.api.dto.QueryUserRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.UserDTO;
+import com.xfrog.platform.application.permission.dto.QueryUserRequestDTO;
+import com.xfrog.platform.application.permission.dto.UserDTO;
 import com.xfrog.platform.infrastructure.permission.dataobject.UserPO;
 import com.xfrog.platform.infrastructure.persistent.mapper.PageableMapper;
 import org.apache.ibatis.annotations.Mapper;

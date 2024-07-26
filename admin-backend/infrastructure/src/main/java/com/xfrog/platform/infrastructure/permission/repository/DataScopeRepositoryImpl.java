@@ -1,7 +1,7 @@
 package com.xfrog.platform.infrastructure.permission.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
+import com.xfrog.platform.application.permission.dto.DataScopeDTO;
 import com.xfrog.platform.application.permission.repository.DataScopeRepository;
 import com.xfrog.platform.domain.share.permission.DataScopeTargetType;
 import com.xfrog.platform.infrastructure.permission.common.PermissionCacheNames;

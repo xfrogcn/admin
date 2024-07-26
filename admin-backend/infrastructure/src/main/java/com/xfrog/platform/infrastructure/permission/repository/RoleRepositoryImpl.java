@@ -1,8 +1,8 @@
 package com.xfrog.platform.infrastructure.permission.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
-import com.xfrog.platform.application.permission.api.dto.RoleDTO;
+import com.xfrog.platform.application.permission.dto.PermissionItemDTO;
+import com.xfrog.platform.application.permission.dto.RoleDTO;
 import com.xfrog.platform.application.permission.repository.RoleRepository;
 import com.xfrog.platform.infrastructure.permission.common.PermissionCacheNames;
 import com.xfrog.platform.infrastructure.permission.converter.RolePOConverter;

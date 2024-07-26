@@ -2,7 +2,7 @@ package com.xfrog.platform.infrastructure.permission.converter;
 
 import com.xfrog.framework.converter.DomainAndPOConverter;
 import com.xfrog.framework.converter.POToDTOConverter;
-import com.xfrog.platform.application.permission.api.dto.DataScopeDTO;
+import com.xfrog.platform.application.permission.dto.DataScopeDTO;
 import com.xfrog.platform.domain.permission.aggregate.DataScope;
 import com.xfrog.platform.infrastructure.permission.dataobject.DataScopePO;
 import org.mapstruct.Mapper;

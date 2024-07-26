@@ -1,7 +1,7 @@
 package com.xfrog.platform.application.permission.converter;
 
 import com.xfrog.framework.converter.DTOToCreateCommandConverter;
-import com.xfrog.platform.application.permission.api.dto.CreateTenantRequestDTO;
+import com.xfrog.platform.application.permission.dto.CreateTenantRequestDTO;
 import com.xfrog.platform.domain.permission.command.CreateTenantCommand;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

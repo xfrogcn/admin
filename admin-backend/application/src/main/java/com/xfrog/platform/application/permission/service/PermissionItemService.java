@@ -1,9 +1,9 @@
 package com.xfrog.platform.application.permission.service;
 
 
-import com.xfrog.platform.application.permission.api.dto.CreatePermissionItemRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
-import com.xfrog.platform.application.permission.api.dto.UpdatePermissionItemRequestDTO;
+import com.xfrog.platform.application.permission.dto.CreatePermissionItemRequestDTO;
+import com.xfrog.platform.application.permission.dto.PermissionItemDTO;
+import com.xfrog.platform.application.permission.dto.UpdatePermissionItemRequestDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

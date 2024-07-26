@@ -1,7 +1,7 @@
 package com.xfrog.platform.infrastructure.permission.repository;
 
-import com.xfrog.platform.application.permission.api.dto.OrganizationDTO;
-import com.xfrog.platform.application.permission.api.dto.QueryOrganizationRequestDTO;
+import com.xfrog.platform.application.permission.dto.OrganizationDTO;
+import com.xfrog.platform.application.permission.dto.QueryOrganizationRequestDTO;
 import com.xfrog.platform.application.permission.repository.OrganizationRepository;
 import com.xfrog.platform.infrastructure.permission.common.PermissionCacheNames;
 import com.xfrog.platform.infrastructure.permission.converter.OrganizationPOConverter;

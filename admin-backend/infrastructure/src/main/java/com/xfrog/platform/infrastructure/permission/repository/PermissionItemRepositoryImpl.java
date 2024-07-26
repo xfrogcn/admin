@@ -1,7 +1,7 @@
 package com.xfrog.platform.infrastructure.permission.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
+import com.xfrog.platform.application.permission.dto.PermissionItemDTO;
 import com.xfrog.platform.application.permission.repository.PermissionItemRepository;
 import com.xfrog.platform.infrastructure.permission.converter.PermissionItemPOConverter;
 import com.xfrog.platform.infrastructure.permission.dataobject.PermissionItemPO;

@@ -1,8 +1,8 @@
 package com.xfrog.platform.application.permission.converter;
 
 import com.xfrog.framework.converter.DomainToDTOConverter;
-import com.xfrog.platform.application.permission.api.dto.CurrentUserInfoDTO;
-import com.xfrog.platform.application.permission.api.dto.UserDTO;
+import com.xfrog.platform.application.permission.dto.CurrentUserInfoDTO;
+import com.xfrog.platform.application.permission.dto.UserDTO;
 import com.xfrog.platform.domain.permission.aggregate.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

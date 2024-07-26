@@ -2,11 +2,11 @@ package com.xfrog.platform.application.permission.service;
 
 
 import com.xfrog.framework.dto.PageDTO;
-import com.xfrog.platform.application.permission.api.dto.CreateUserRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.CurrentUserInfoDTO;
-import com.xfrog.platform.application.permission.api.dto.QueryUserRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.UpdateUserRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.UserDTO;
+import com.xfrog.platform.application.permission.dto.CreateUserRequestDTO;
+import com.xfrog.platform.application.permission.dto.CurrentUserInfoDTO;
+import com.xfrog.platform.application.permission.dto.QueryUserRequestDTO;
+import com.xfrog.platform.application.permission.dto.UpdateUserRequestDTO;
+import com.xfrog.platform.application.permission.dto.UserDTO;
 
 import java.util.List;
 

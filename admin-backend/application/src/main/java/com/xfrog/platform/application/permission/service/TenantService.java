@@ -1,10 +1,10 @@
 package com.xfrog.platform.application.permission.service;
 
 import com.xfrog.framework.dto.PageDTO;
-import com.xfrog.platform.application.permission.api.dto.CreateTenantRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.QueryTenantRequestDTO;
-import com.xfrog.platform.application.permission.api.dto.TenantDTO;
-import com.xfrog.platform.application.permission.api.dto.UpdateTenantRequestDTO;
+import com.xfrog.platform.application.permission.dto.CreateTenantRequestDTO;
+import com.xfrog.platform.application.permission.dto.QueryTenantRequestDTO;
+import com.xfrog.platform.application.permission.dto.TenantDTO;
+import com.xfrog.platform.application.permission.dto.UpdateTenantRequestDTO;
 
 public interface TenantService {
 

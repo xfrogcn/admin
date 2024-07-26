@@ -1,7 +1,7 @@
 package com.xfrog.platform.infrastructure.permission.converter;
 
 import com.xfrog.framework.converter.DomainAndPOConverter;
-import com.xfrog.platform.application.permission.api.dto.PermissionItemDTO;
+import com.xfrog.platform.application.permission.dto.PermissionItemDTO;
 import com.xfrog.platform.domain.permission.aggregate.PermissionItem;
 import com.xfrog.platform.infrastructure.permission.dataobject.PermissionItemPO;
 import org.mapstruct.Mapper;
