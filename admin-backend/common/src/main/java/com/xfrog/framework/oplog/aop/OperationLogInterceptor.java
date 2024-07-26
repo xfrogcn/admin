@@ -67,7 +67,7 @@ public class OperationLogInterceptor implements MethodInterceptor, Serializable 
                 target,
                 targetClass,
                 targetMethod,
-                OperationLogExpressionEvaluator.RESULT_UNAVAILABLE, operatorId);
+                OperationLogExpressionEvaluator.NO_RESULT, operatorId);
         AnnotatedElementKey elementKey = new AnnotatedElementKey(targetMethod, targetClass);
 
         List<OperationLog> afterLogs = new ArrayList<>(annotations.length);

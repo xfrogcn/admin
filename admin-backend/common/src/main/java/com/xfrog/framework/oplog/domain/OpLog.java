@@ -27,5 +27,5 @@ public class OpLog extends AuditEntity {
     private Boolean success;
     @Builder.Default
     private Long executeTime = 0L;
-    private Long tenantId;
+    private String tenantId;
 }

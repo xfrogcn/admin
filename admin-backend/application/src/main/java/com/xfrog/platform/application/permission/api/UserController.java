@@ -31,7 +31,7 @@ public class UserController implements UserApi {
 
     @Authorization("admin:system:user:create")
     @Override
-    @OperationLog(bizId = "#return", bizCode = "#p0.userName", bizType = PermissionOperationLogConstants.BIZ_TYPE_USER, bizAction = OperationActionConstants.CREATE)
+    @OperationLog(bizId = "#result", bizCode = "#p0.userName", bizType = PermissionOperationLogConstants.BIZ_TYPE_USER, bizAction = OperationActionConstants.CREATE)
     public Long createUser(CreateUserRequestDTO user) {
         return userService.createUser(user);
     }

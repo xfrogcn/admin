@@ -22,7 +22,7 @@ public class OrganizationController implements OrganizationApi {
 
     @Authorization("admin:system:organization:create")
     @Override
-    @OperationLog(bizId = "#return", bizCode = "#p0.name", bizType = PermissionOperationLogConstants.BIZ_TYPE_ORGANIZATION, bizAction = OperationActionConstants.CREATE)
+    @OperationLog(bizId = "#result", bizCode = "#p0.name", bizType = PermissionOperationLogConstants.BIZ_TYPE_ORGANIZATION, bizAction = OperationActionConstants.CREATE)
     public Long createOrganization(CreateOrganizationRequestDTO organization) {
         return organizationService.createOrganization(organization);
     }

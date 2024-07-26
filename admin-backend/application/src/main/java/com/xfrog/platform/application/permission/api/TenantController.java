@@ -20,7 +20,7 @@ public class TenantController implements TenantApi {
 
     @Authorization("admin:platform:tenant:create")
     @Override
-    @OperationLog(bizId = "#return", bizCode = "#p0.code", bizType = PermissionOperationLogConstants.BIZ_TYPE_TENANT, bizAction = OperationActionConstants.CREATE)
+    @OperationLog(bizId = "#result", bizCode = "#p0.code", bizType = PermissionOperationLogConstants.BIZ_TYPE_TENANT, bizAction = OperationActionConstants.CREATE)
     public Long createTenant(CreateTenantRequestDTO tenantDTO) {
         return tenantService.createTenant(tenantDTO);
     }

@@ -61,17 +61,17 @@ class OperationLogInterceptorTest {
              return false;
         }
 
-        @OperationLog(bizId = "#p0", bizType = "type", bizAction = "action", msg = "format('msg %s',1)", extra = "json('extra')", success = "#return", tag = "tag")
+        @OperationLog(bizId = "#p0", bizType = "type", bizAction = "action", msg = "format('msg %s',1)", extra = "json('extra')", success = "#result", tag = "tag")
         public boolean annotatedMethodWithException(Long id) {
             throw new NotFoundException("not found");
         }
 
-        @OperationLog(bizId = "#p0", bizTypeSpel = "'type'", bizActionSpel = "'action'", msg = "format('msg %s',1)", extra = "json('extra')", success = "#return", tag = "tag")
+        @OperationLog(bizId = "#p0", bizTypeSpel = "'type'", bizActionSpel = "'action'", msg = "format('msg %s',1)", extra = "json('extra')", success = "#result", tag = "tag")
         public boolean annotatedAfterMethod(Long id) {
              return false;
         }
 
-        @OperationLog(condition = "#id == 2", bizId = "#p0", bizType = "type", bizAction = "action", msg = "format('msg %s',1)", extra = "json('extra')", success = "#return", tag = "tag")
+        @OperationLog(condition = "#id == 2", bizId = "#p0", bizType = "type", bizAction = "action", msg = "format('msg %s',1)", extra = "json('extra')", success = "#result", tag = "tag")
         public boolean annotatedAfterMethodCondition(Long id) {
             return false;
         }

@@ -28,7 +28,7 @@ public class DicController implements DicApi {
 
     @Override
     @Authorization("admin:platform:dic:create")
-    @OperationLog(bizId = "#return", bizCode = "#p0.type", bizType = BaseOperationLogConstants.BIZ_TYPE_DIC, bizAction = OperationActionConstants.CREATE)
+    @OperationLog(bizId = "#result", bizCode = "#p0.type", bizType = BaseOperationLogConstants.BIZ_TYPE_DIC, bizAction = OperationActionConstants.CREATE)
     public Long createDic(CreateDicRequestDTO dic) {
         return dicService.createDic(dic);
     }
@@ -66,7 +66,7 @@ public class DicController implements DicApi {
 
     @Override
     @Authorization("admin:platform:dic:createitem")
-    @OperationLog(bizId = "#return", bizCode = "#p1.displayText", bizType = BaseOperationLogConstants.BIZ_TYPE_DIC_ITEM, bizAction = OperationActionConstants.CREATE)
+    @OperationLog(bizId = "#result", bizCode = "#p1.displayText", bizType = BaseOperationLogConstants.BIZ_TYPE_DIC_ITEM, bizAction = OperationActionConstants.CREATE)
     public Long createDicItem(Long dicId, CreateDicItemRequestDTO requestDTO) {
         return dicService.createDicItem(dicId, requestDTO);
     }

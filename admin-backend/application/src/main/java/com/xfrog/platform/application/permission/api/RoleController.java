@@ -21,7 +21,7 @@ public class RoleController implements RoleApi {
 
     @Authorization("admin:system:role:create")
     @Override
-    @OperationLog(bizId = "#return", bizCode = "#p0.name", bizType = PermissionOperationLogConstants.BIZ_TYPE_ROLE, bizAction = OperationActionConstants.CREATE)
+    @OperationLog(bizId = "#result", bizCode = "#p0.name", bizType = PermissionOperationLogConstants.BIZ_TYPE_ROLE, bizAction = OperationActionConstants.CREATE)
     public Long createRole(CreateRoleRequestDTO createRoleRequestDTO) {
         return roleService.createRole(createRoleRequestDTO);
     }

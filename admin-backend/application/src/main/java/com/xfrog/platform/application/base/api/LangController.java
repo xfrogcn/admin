@@ -21,7 +21,7 @@ public class LangController implements LangApi {
 
     @Authorization("admin:platform:lang:create")
     @Override
-    @OperationLog(bizId = "#return", bizCode = "#p0.application + '-' + #p0.code", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG, bizAction = OperationActionConstants.CREATE)
+    @OperationLog(bizId = "#result", bizCode = "#p0.application + '-' + #p0.code", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG, bizAction = OperationActionConstants.CREATE)
     public Long createLanguage(CreateLangRequestDTO language) {
         return languageService.createLanguage(language);
     }

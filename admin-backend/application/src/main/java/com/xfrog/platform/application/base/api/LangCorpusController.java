@@ -24,7 +24,7 @@ public class LangCorpusController implements LangCorpusApi {
 
     @Authorization("admin:platform:langcorpus:create")
     @Override
-    @OperationLog(bizId = "#return", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG_CORPUS, bizAction = OperationActionConstants.CREATE)
+    @OperationLog(bizId = "#result", bizType = BaseOperationLogConstants.BIZ_TYPE_LANG_CORPUS, bizAction = OperationActionConstants.CREATE)
     public List<Long> createLangCorpus(CreateLangCorpusRequestDTO langCorpus) {
         return langCorpusService.createLangCorpus(langCorpus);
     }

@@ -21,7 +21,7 @@ public class PermissionItemController implements PermissionItemApi {
 
     @Authorization("admin:platform:permissionitem:create")
     @Override
-    @OperationLog(bizId = "#return", bizCode = "#p0.code", bizType = PermissionOperationLogConstants.BIZ_TYPE_PERMISSION_ITEM, bizAction = OperationActionConstants.CREATE)
+    @OperationLog(bizId = "#result", bizCode = "#p0.code", bizType = PermissionOperationLogConstants.BIZ_TYPE_PERMISSION_ITEM, bizAction = OperationActionConstants.CREATE)
     public Long createPermissionItem(CreatePermissionItemRequestDTO permissionItemRequestDTO) {
         return permissionItemService.createPermissionItem(permissionItemRequestDTO);
     }
