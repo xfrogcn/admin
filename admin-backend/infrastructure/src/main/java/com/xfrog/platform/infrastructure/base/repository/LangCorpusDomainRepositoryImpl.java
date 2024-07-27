@@ -29,11 +29,11 @@ public class LangCorpusDomainRepositoryImpl extends BaseDomainRepository<LangCor
     }
 
     @Override
-    public boolean existsByApplicationAndCodes(String application, List<String> codes) {
+    public List<LangCorpus> findByApplicationAndCodes(String application, List<String> codes) {
         LambdaQueryWrapper<LangCorpusPO> queryWrapper = new LambdaQueryWrapper<LangCorpusPO>()
                 .eq(LangCorpusPO::getDeleted, false)
                 .eq(LangCorpusPO::getApplication, application)
                 .in(LangCorpusPO::getCorpusCode, codes);
-        return mapper.exists(queryWrapper);
+        return converter.toDomainList(mapper.selectList(queryWrapper));
     }
 }

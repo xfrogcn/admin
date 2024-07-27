@@ -2,7 +2,6 @@ package com.xfrog.platform.application.base.service.impl;
 
 import com.xfrog.framework.domain.IdEntity;
 import com.xfrog.framework.dto.PageDTO;
-import com.xfrog.framework.exception.business.AlreadyExistsException;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
 import com.xfrog.framework.oplog.OpLogMDC;
@@ -28,7 +27,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,17 +56,35 @@ public class LangCorpusServiceImpl implements LangCorpusService {
         if (corpusCodes.size() != langCorpusRequestDTO.getCorpusItems().size()) {
             throw new FailedPreconditionException("repeated corpus code");
         }
-        if (langCorpusDomainRepository.existsByApplicationAndCodes(langCorpusRequestDTO.getApplication(), corpusCodes)) {
-            throw new AlreadyExistsException("corpus code exists");
-        }
+        List<LangCorpus> existsCorpus = langCorpusDomainRepository.findByApplicationAndCodes(langCorpusRequestDTO.getApplication(), corpusCodes);
         OpLogMDC.putBizCode(String.join(",", corpusCodes));
+
+        List<LangCorpus> toBeSaveLangCorpus = new ArrayList<>(corpusCodes.size());
         // 保存语言定义
         List<CreateLangCorpusCommand> createCommands = langCorpusRequestDTO.getCorpusItems().stream()
+                .filter(it -> existsCorpus.stream().noneMatch(old-> old.getCorpusCode().equals(it.getCorpusCode())))
                 .map(it -> LangCorpusDTOConverter.INSTANCE.toCreateCommand(langCorpusRequestDTO, it))
                 .toList();
-        List<LangCorpus> langCorpus = createCommands.stream().map(LangCorpus::create).toList();
-        List<LangCorpus> savedLangCorpus = langCorpusDomainRepository.saveAll(langCorpus);
+        if (!createCommands.isEmpty()) {
+            List<LangCorpus> langCorpus = createCommands.stream().map(LangCorpus::create).toList();
+            toBeSaveLangCorpus.addAll(langCorpus);
+        }
+        if (!existsCorpus.isEmpty()) {
+            Map<String, UpdateLangCorpusCommand> updateCommands = langCorpusRequestDTO.getCorpusItems().stream()
+                    .filter(it -> existsCorpus.stream().anyMatch(old -> old.getCorpusCode().equals(it.getCorpusCode())))
+                    .map(it -> Map.entry(it.getCorpusCode(), UpdateLangCorpusCommand.builder()
+                            .corpusGroup(langCorpusRequestDTO.getCorpusGroup())
+                            .corpusType(langCorpusRequestDTO.getCorpusType())
+                            .memo(it.getMemo())
+                            .build()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+            existsCorpus.forEach(langCorpus -> {
+                langCorpus.update(updateCommands.get(langCorpus.getCorpusCode()));
+            });
+            toBeSaveLangCorpus.addAll(existsCorpus);
+        }
+        List<LangCorpus> savedLangCorpus = langCorpusDomainRepository.saveAll(toBeSaveLangCorpus);
         // 保存本地化配置
         fillLanguageCorpusLocal(langCorpusRequestDTO.getApplication(), savedLangCorpus, langCorpusRequestDTO.getCorpusItems().stream()
                 .collect(Collectors.toMap(LangCorpusItemDTO::getCorpusCode, LangCorpusItemDTO::getLangLocales, (a, b) -> a)));
@@ -181,13 +200,13 @@ public class LangCorpusServiceImpl implements LangCorpusService {
                 if (existsLangLocal == null) {
                     // 不存在，新建默认本地化配置
                     existsLangLocal = LangLocal.createFromCorpus(corpus, lang);
-                    if (local != null) {
+                    if (StringUtils.hasText(local)) {
                         existsLangLocal.updateLocalValue(local);
                     }
                     newLangLocals.add(existsLangLocal);
                 } else {
                     // 存在, 如果传入有初始化设置，则更新
-                    if (local != null) {
+                    if (StringUtils.hasText(local)) {
                         existsLangLocal.updateLocalValue(local);
                         newLangLocals.add(existsLangLocal);
                     }

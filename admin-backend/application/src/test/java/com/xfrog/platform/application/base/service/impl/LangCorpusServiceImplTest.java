@@ -1,6 +1,5 @@
 package com.xfrog.platform.application.base.service.impl;
 
-import com.xfrog.framework.exception.business.AlreadyExistsException;
 import com.xfrog.framework.exception.business.FailedPreconditionException;
 import com.xfrog.framework.exception.business.NotFoundException;
 import com.xfrog.platform.application.base.dto.CreateLangCorpusRequestDTO;
@@ -82,31 +81,28 @@ class LangCorpusServiceImplTest {
         assertThrows(FailedPreconditionException.class, () -> langCorpusService.createLangCorpus(requestDTO));
     }
 
-    @Test
-    void createLangCorpus_should_throw_exception_when_corpus_code_exists() {
-        // Given
-        CreateLangCorpusRequestDTO requestDTO = LangDTOFixtures.defaultCreateLangCorpusRequestDTO()
-                .corpusItems(List.of(LangDTOFixtures.defaultLangCorpusItemDTO().corpusCode("test").build()))
-                .build();
-
-        doReturn(true)
-                .when(langCorpusDomainRepository)
-                .existsByApplicationAndCodes(anyString(), anyList());
-
-        // When / Then
-        assertThrows(AlreadyExistsException.class, () -> langCorpusService.createLangCorpus(requestDTO));
-    }
 
     @Test
     void createLangCorpus_should_success() {
         // Given
+        LangCorpus old = LangFixtures.createDefaultCorpus()
+                .corpusCode("old")
+                .corpusType("oldType")
+                .corpusGroup("oldGroup")
+                .memo("oldMemo")
+                .build();
         CreateLangCorpusRequestDTO requestDTO = LangDTOFixtures.defaultCreateLangCorpusRequestDTO()
-                .corpusItems(List.of(LangDTOFixtures.defaultLangCorpusItemDTO().corpusCode("test").build()))
+                .corpusType("newType")
+                .corpusGroup("newGroup")
+                .corpusItems(List.of(
+                        LangDTOFixtures.defaultLangCorpusItemDTO().corpusCode("new").build(),
+                        LangDTOFixtures.defaultLangCorpusItemDTO().corpusCode("old").memo("newMemo").build()
+                ))
                 .build();
 
-        doReturn(false)
+        doReturn(List.of(old))
                 .when(langCorpusDomainRepository)
-                .existsByApplicationAndCodes(anyString(), anyList());
+                .findByApplicationAndCodes(anyString(), anyList());
         Mockito.doAnswer(invocation -> {
                     return invocation.getArgument(0);
                 }).when(langCorpusDomainRepository)
@@ -119,7 +115,28 @@ class LangCorpusServiceImplTest {
         assertThat(result).isNotNull();
 
         assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(1);
+        assertThat(result).hasSize(2);
+        verify(langCorpusDomainRepository, times(1))
+                .saveAll(argThat(langCorpusList -> {
+                    assertThat(langCorpusList).hasSize(2);
+                    LangCorpus update = langCorpusList.stream()
+                            .filter(langCorpus -> langCorpus.getCorpusCode().equals("old"))
+                            .findFirst()
+                            .orElse(null);
+
+                    assertThat(update).isNotNull();
+                    assertThat(update.getCorpusType()).isEqualTo("newType");
+                    assertThat(update.getCorpusGroup()).isEqualTo("newGroup");
+                    assertThat(update.getMemo()).isEqualTo("newMemo");
+
+                    LangCorpus add = langCorpusList.stream()
+                            .filter(langCorpus -> langCorpus.getCorpusCode().equals("new"))
+                            .findFirst()
+                            .orElse(null);
+                    assertThat(add).isNotNull();
+                    assertThat(add.getId()).isNull();
+                    return true;
+                }));
     }
 
     @Test
