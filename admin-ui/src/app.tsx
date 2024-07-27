@@ -1,7 +1,7 @@
 import { AvatarDropdown, AvatarName, Question, SelectLang } from '@/components';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { ProConfigProvider, SettingDrawer } from '@ant-design/pro-components';
+import { ProConfigProvider } from '@ant-design/pro-components';
 import type { RequestOptions, RunTimeLayoutConfig } from '@umijs/max';
 import { Link, addLocale, getLocale, history, setLocale, useIntl } from '@umijs/max';
 import { ConfigProvider } from 'antd';
@@ -108,14 +108,32 @@ export async function getInitialState(): Promise<{
     }
 
     const langLocale = await getLangLocal({ application: applicationCode(), langCode: userLang });
-    console.log(userLang, langLocale, getLocale());
+
+    const antdLocale: any = {};
+    Object.keys(langLocale)
+      .filter((it) => it.startsWith('antd.'))
+      .forEach((key) => {
+        const keys = key.split('.');
+        if (keys.length > 1) {
+          const obj = keys.reduce((pre, cur, index) => {
+            if (index === keys.length - 1) {
+              pre[cur] = langLocale[key];
+            } else {
+              pre[cur] = pre[cur] || {};
+            }
+            return pre[cur];
+          }, antdLocale);
+        } else {
+          antdLocale[keys[0]] = langLocale[key];
+        }
+      });
+
     addLocale(userLang, langLocale, {
       momentLocale: userLang,
-      antd: { locale: userLang,    
-        Popconfirm: {
-          cancelText: '取消',
-          okText: '确定'
-      }},
+      antd: {
+        locale: userLang,
+        ...antdLocale['antd'],
+      },
     });
     if (userLang !== getLocale()) {
       setLocale(userLang, false);
@@ -125,7 +143,7 @@ export async function getInitialState(): Promise<{
       fetchUserInfo,
       currentUser,
       permissions: permissionMap,
-      settings: {...defaultSettings, ...userLayoutSettings} as Partial<LayoutSettings>,
+      settings: { ...defaultSettings, ...userLayoutSettings } as Partial<LayoutSettings>,
       langs: userSettings.langs,
       userParameters: userSettings.parameters,
     };
@@ -204,8 +222,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
               <PageTabs />
             </ProConfigProvider>
           </ConfigProvider>
-        
-            {/* <SettingDrawer
+
+          {/* <SettingDrawer
               disableUrlParams
               enableDarkTheme
               settings={initialState?.settings}
@@ -216,7 +234,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 }));
               }}
             /> */}
-          
         </>
       );
     },
