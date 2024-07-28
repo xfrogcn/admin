@@ -3,6 +3,7 @@ import { CloseOutlined, ReloadOutlined } from '@ant-design/icons';
 import { RouteContext } from '@ant-design/pro-components';
 import { FormattedMessage, history, useAppData } from '@umijs/max';
 import { Button, Flex, Tabs, Tooltip } from 'antd';
+import QueueAnim from 'rc-queue-anim';
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useLocation, useOutlet } from 'react-router';
 
@@ -228,7 +229,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         }}
         onEdit={onEdit}
       />
-
+      <QueueAnim delay={300} className="queue-simple">
       <KeepAlive
         activeName={cacheKey}
         cache={isCache}
@@ -237,7 +238,7 @@ export const PageTabs = (props: PageTabsProps): JSX.Element => {
         aliveRef={keepalive}
       >
         <PageTabContext.Provider value={pageTabContext}>{outlet}</PageTabContext.Provider>
-      </KeepAlive>
+      </KeepAlive></QueueAnim>
     </Flex>
   );
 };
